@@ -1,83 +1,128 @@
 ;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;; test/bitmap-vector.lisp
+;;; test/node.lisp
 ;;;
-;;;  testing bitmap-vectors
+;;;  testing node related things
 ;;;
 ;;; -----
 
-(in-package #:bitmap-vector-test)
+(in-package #:persidastricl)
 
-(def-suite bitmap-vector-tests
+(def-suite :bitmap-vector-tests
   :description ""
-  :in master-suite)
+  :in p::master-suite)
 
-(in-suite bitmap-vector-tests)
+(in-suite :bitmap-vector-tests)
 
 (defun bv-equal-p (bv1 bv2)
-  (and (equalp (:bitmap bv1) (:bitmap bv2))
-       (equalp (:data bv1) (:data bv2))))
+  (and (== (:bitmap bv1) (:bitmap bv2))
+       (== (:data bv1) (:data bv2))))
 
-(test create-bitmap-vector-test
+(test create-bitmap-node-vector-test
   :description "creating empty bitmap-vector is as expected (EMPTY)"
-  (let ((bv (make-instance 'bitmap-vector)))
-    (is (bv-equal-p bv EMPTY))))
+  (let ((bv (make-instance 'persistent-node-bitmap-vector)))
+    (is (bv-equal-p bv (EMPTY-PERSISTENT-NODE-BITMAP-VECTOR)))))
 
-(test simple-insert-test
-  :description "insert item in bitmap-vector"
-  (let ((bv (bv:insert EMPTY 31 "test")))
-    (is (and (equalp (:bitmap bv) #b10000000000000000000000000000000)
-             (equalp (:data bv) #("test"))))))
+(test create-bitmap-key-value-vector-test
+  :description "creating empty bitmap-vector is as expected (EMPTY)"
+  (let ((bv (make-instance 'persistent-key-value-bitmap-vector)))
+    (is (bv-equal-p bv (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR)))))
 
+(test simple-insert-key-value-test
+  :description "insert map-entry in key/value bitmap-vector"
+  (let ((bv (insert (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR) 31 (e:map-entry "k1" "v1"))))
+    (is (and (== (:bitmap bv) #b10000000000000000000000000000000)
+             (== (:data bv) #("k1" "v1"))))))
 
-(test simple-insert-test
-  :description "insert item in bitmap-vector"
-  (let ((bv (bv:insert EMPTY 31 "test")))
-    (is (and (equalp (:bitmap bv) #b10000000000000000000000000000000)
-             (equalp (:data bv) #("test"))))))
+(defparameter *pkvbv* (-> (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR)
+                        (insert 31 (e:map-entry :k1 :v1))
+                        (insert 0  (e:map-entry :k2 :v2))
+                        (insert 15 (e:map-entry :k3 :v3))))
 
-(defparameter *bv* (arrow-macros:-> EMPTY
-                     (bv:insert 31 :a)
-                     (bv:insert 0  :b)
-                     (bv:insert 15 :c)))
-
-(test multiple-insert-test
+(test multiple-insert-key-value-test
   :description ""
-  (let ((bv *bv*))
-    (is (and (equalp (:bitmap bv) #b10000000000000001000000000000001)
-             (equalp (:data bv) #(:b :c :a))))))
+  (let ((bv *pkvbv*))
+    (is (and (== (:bitmap bv) #b10000000000000001000000000000001)
+             (== (:data bv) #(:k2 :v2 :k3 :v3 :k1 :v1))))))
 
-(test update-test
+(test update-key-value-test
   :description ""
-  (let ((bv *bv*)
-        (expected (make-instance 'bitmap-vector
+  (let ((bv *pkvbv*)
+        (expected (make-instance 'persistent-key-value-bitmap-vector
                                  :bitmap #b10000000000000001000000000000001
-                                 :data #(:b :c :updated))))
-    (is (bv-equal-p expected (bv:update bv 31 :updated)))))
+                                 :data #(:k2 :v2 :k3 :v3 :k1 :updated))))
+    (is (bv-equal-p expected (update bv 31 (e:map-entry :k1  :updated))))))
 
-(test delete-test
+(test delete-key-value-test
   :description ""
-  (let ((bv *bv*)
-        (expected (make-instance 'bitmap-vector
+  (let ((bv *pkvbv*)
+        (expected (make-instance 'persistent-key-value-bitmap-vector
                                  :bitmap #b00000000000000001000000000000001
-                                 :data #(:b :c))))
-    (is (bv-equal-p expected (bv:delete bv 31)))))
+                                 :data #(:k2 :v2 :k3 :v3))))
+    (is (bv-equal-p expected (remove bv 31)))))
 
-(test set?-test
+(test is-set-key-value-test
   :description ""
-  (let ((bv *bv*))
-    (is-true  (bv:set? bv 15))
-    (is-false (bv:set? bv 2))))
+  (let ((bv *pkvbv*))
+    (is-true  (is-set bv 15))
+    (is-false (is-set bv 2))))
 
-(test get-test
+(test at-position-key-value-test
   :description ""
-  (let ((bv *bv*))
-    (is (equalp :c  (bv:get bv 15)))
-    (is (equalp nil (bv:get bv 2)))))
-
+  (let ((bv *pkvbv*))
+    (is (== (e:map-entry :k3 :v3) (at-position bv 15)))
+    (is (== nil (at-position bv 2)))))
 
 (test count-test
   :description ""
-  (let ((bv *bv*))
-    (is (= 3 (c:count bv)))))
+  (let ((bv *pkvbv*))
+    (is (== 3 (count bv)))))
+
+
+(defparameter sub-node-1 (make-instance 'persistent-node-bitmap-vector :bitmap #b0001 :data #(1)))
+(defparameter sub-node-2 (make-instance 'persistent-node-bitmap-vector :bitmap #b0010 :data #(2)))
+(defparameter sub-node-3 (make-instance 'persistent-node-bitmap-vector :bitmap #b0100 :data #(4)))
+(defparameter updated-node (make-instance 'persistent-node-bitmap-vector :bitmap #b1000 :data #(8)))
+
+(defparameter *pnbv* (-> (EMPTY-PERSISTENT-NODE-BITMAP-VECTOR)
+                       (insert 31 sub-node-1)
+                       (insert 0  sub-node-2)
+                       (insert 15 sub-node-3)))
+
+(defun ->array (&rest elements)
+  (make-array (length elements) :initial-contents elements))
+
+(test multiple-insert-node-test
+  :description ""
+  (let ((bv *pnbv*))
+    (is (and (== (:bitmap bv) #b10000000000000001000000000000001)
+             (== (:data bv) (->array sub-node-2 sub-node-3 sub-node-1))))))
+
+(test update-node-test
+  :description ""
+  (let ((bv *pnbv*)
+        (expected (make-instance 'persistent-node-bitmap-vector
+                                 :bitmap #b10000000000000001000000000000001
+                                 :data (->array sub-node-2 sub-node-3 updated-node))))
+    (is (bv-equal-p expected (update bv 31 updated-node)))))
+
+(test delete-key-value-test
+  :description ""
+  (let ((bv *pnbv*)
+        (expected (make-instance 'persistent-node-bitmap-vector
+                                 :bitmap #b00000000000000001000000000000001
+                                 :data (->array sub-node-2 sub-node-3))))
+    (is (bv-equal-p expected (remove bv 31)))))
+
+(test is-set-node-test
+  :description ""
+  (let ((bv *pnbv*))
+    (is-true  (is-set bv 15))
+    (is-false (is-set bv 2))))
+
+(test at-position-node-test
+  :description ""
+  (let ((bv *pnbv*))
+    (is (== sub-node-3 (at-position bv 15)))
+    (is (== nil (at-position bv 2)))))

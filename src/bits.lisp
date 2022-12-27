@@ -7,7 +7,7 @@
 ;;;
 ;;; -----
 
-(in-package #:bitop)
+(in-package #:bits)
 
 (defun set? (bit-position bitmap)
   "Is the `bit-position` bit on?"
@@ -21,7 +21,7 @@
   "Set the `bit-position` bit off"
   (if (set? bit-position bitmap)
       (logxor (ash 1 bit-position) bitmap)
-      bitmap))
+    bitmap))
 
 (defun bits (hash depth &optional (size 5))
   "Given a `hash`, break the `hash` into `size` bit slices and return

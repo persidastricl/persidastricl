@@ -3,90 +3,148 @@
 ;;;
 ;;;   node.lisp
 ;;;
-;;; classes for nodes
-;;;
 ;;; -----
 
-(in-package #:node)
+(in-package #:persidastricl)
+
+(defgeneric put (target item context))
+(defgeneric del (target item context))
+(defgeneric get (target item context))
 
 (defclass node ()
   ((dmap :initarg :dmap :reader :dmap :documentation "bitmap-vector for value data")
-   (nmap :initarg :nmap :reader :nmap :documentation "bitmap-vector for node data"))
-  (:default-initargs :dmap bv:EMPTY :nmap bv:EMPTY))
+   (nmap :initarg :nmap :reader :nmap :documentation "bitmap-vector for node data")))
 
-(defparameter EMPTY (make-instance 'node))
+(defun single-value-node? (node)
+  (and (= (count (:dmap node)) 1)
+       (= (count (:nmap node)) 0)))
 
-(defun insert-item (node entry bits)
-  (make-instance 'node :dmap (bv:insert (:dmap node) bits entry) :nmap (:nmap node)))
+(defclass transient-node (node) ())
+(define-immutable-class persistent-node (node) ())
 
-(defun update-item (node entry bits)
-  (make-instance 'node :dmap (bv:update (:dmap node) bits entry) :nmap (:nmap node)))
+;; -----
+;;  hash-set-node
+;;
+;;  mixin class for both persistent/transient -hash-set-nodes
 
-(defun delete-item (node bits)
-  (make-instance 'node :dmap (bv:delete (:dmap node) bits) :nmap (:nmap node)))
+(defclass hash-set-node (node) ())
 
-(defun insert-node (node new-node bits)
-  (make-instance 'node :dmap (:dmap node) :nmap (bv:insert (:nmap node) bits new-node)))
-
-(defun update-node (node new-node bits)
-  (make-instance 'node :dmap (:dmap node) :nmap (bv:update (:nmap node) bits new-node)))
-
-(defun delete-node (node bits)
-  (make-instance 'node :dmap (:dmap node) :nmap (bv:delete (:nmap node) bits)))
-
-(defun put (node entry context)
+(defmethod put ((node hash-set-node) item context)
   (with-slots (dmap nmap) node
     (destructuring-bind (hash depth) context
-      (let ((key (elt entry 0))
-            (bits (b:bits hash depth)))
+      (let ((position (b:bits hash depth)))
         ;; do we have data already?
-        (if (bv:set? dmap bits)
-            (let* ((current-entry (bv:get dmap bits))
-                   (current-key (e:key current-entry)))
-              ;; do we have the same key?
-              (if (equal key current-key)
-                  (update-item node entry bits)
-                  (let ((new-node (-> EMPTY
-                                    (put current-entry (list (h:hash current-key) (1+ depth)))
-                                    (put entry         (list hash (1+ depth))))))
+        (if (is-set dmap position)
+            (let* ((current (at-position dmap position)))
+              ;; do we have the same item?
+              (if (== item current)
+                  node
+                  (let ((new-node (-> (empty node)
+                                    (put current (list (h:hash current) (1+ depth)))
+                                    (put item    (list hash (1+ depth))))))
                     (-> node
-                      (delete-item bits)
-                      (insert-node new-node bits)))))
+                      (remove position)
+                      (insert position new-node)))))
             ;; no data, so do we have a node already then for this depth
-            (if (bv:set? nmap bits)
-                (update-node node (put (bv:get nmap bits) entry (list hash (1+ depth))) bits)
-                ;; no data, no node, so just add the entry to this node
-                (insert-item node entry bits)))))))
+            (if (is-set nmap position)
+                (update node position (put (at-position nmap position) item (list hash (1+ depth))))
+                ;; no data, no node, so just add the item to this node
+                (insert node position item)))))))
 
-(defun get (node key context)
+(defmethod get ((node hash-set-node) item context)
   (with-slots (dmap nmap) node
     (destructuring-bind (hash depth default) context
-      (let ((bits (b:bits hash depth)))
-        (if (bv:set? dmap bits)
-            (let ((target (bv:get dmap bits)))
+      (let ((position (b:bits hash depth)))
+        (if (is-set dmap position)
+            (let ((target (at-position dmap position)))
+              (if (== item target)
+                  target
+                  default))
+            (if (is-set nmap position)
+                (get (at-position nmap position) item (list hash (1+ depth) default))
+                default))))))
+
+(defmethod del ((node hash-set-node) item context)
+  (with-slots (dmap nmap) node
+    (destructuring-bind (hash depth) context
+      (let ((position (b:bits hash depth)))
+        (if (is-set dmap position)
+            (let* ((current (at-position dmap position)))
+              (when (== item current)
+                (remove node position)))
+            (when (is-set nmap position)
+              (let* ((sub-node (at-position nmap position))
+                     (new-node (del sub-node item (list hash (1+ depth)))))
+                (if (single-value-node? new-node)
+                    (let ((keep (at-index (:dmap new-node) 0)))
+                      (-> node
+                        (remove position)
+                        (insert position keep)))
+                    (update node position new-node)))))))))
+
+(defmethod contains? ((node hash-set-node) item)
+  (not (== :not-found (get node item (list (h:hash item) 0 :not-found)))))
+
+
+;; -----
+;;  hash-map-node
+;;
+;; mixin class for both persistent/transient -hash-map-nodes
+
+(defclass hash-map-node (node) ())
+
+(defmethod put ((node hash-map-node) entry context)
+  (with-slots (dmap nmap) node
+    (destructuring-bind (hash depth) context
+      (let ((key (e:key entry))
+            (position (b:bits hash depth)))
+        ;; do we have data already?
+        (if (is-set dmap position)
+            (let* ((current (at-position dmap position))
+                   (current-key (e:key current)))
+              ;; do we have the same key?
+              (if (equal key current-key)
+                  (update node position entry)
+                  (let ((new-node (-> (empty node)
+                                    (put current (list (h:hash current-key) (1+ depth)))
+                                    (put entry    (list hash (1+ depth))))))
+                    (-> node
+                      (remove position)
+                      (insert position new-node)))))
+            ;; no data, so do we have a node already then for this depth
+            (if (is-set nmap position)
+                (update node position (put (at-position nmap position) entry (list hash (1+ depth))))
+                ;; no data, no node, so just add the entry to this node
+                (insert node position entry)))))))
+
+(defmethod get ((node hash-map-node) key context)
+  (with-slots (dmap nmap) node
+    (destructuring-bind (hash depth default) context
+      (let ((position (b:bits hash depth)))
+        (if (is-set dmap position)
+            (let ((target (at-position dmap position)))
               (if (equal key (e:key target))
                   (e:value target)
                   default))
-            (if (bv:set? nmap bits)
-                (get (bv:get nmap bits) key (list hash (1+ depth) default))
+            (if (is-set nmap position)
+                (get (at-position nmap position) key (list hash (1+ depth) default))
                 default))))))
 
-(defun single-value-node? (node)
-  (and (= (c:count (:dmap node)) 1)
-       (= (c:count (:nmap node)) 0)))
-
-(defun delete (node key context)
+(defmethod del ((node hash-map-node) key context)
   (with-slots (dmap nmap) node
-    (destructuring-bind (hash depth default) context
-      (let ((bits (b:bits hash depth)))
-        (if (bv:set? dmap bits)
-            (delete-item node bits)
-            (if (bv:set? nmap bits)
-                (let* ((new-node (delete (bv:get nmap bits) key (list hash (1+ depth) default))))
-                  (if (single-value-node? new-node)
-                      (let ((keep (elt (:data (:dmap new-node)) 0)))
-                        (-> node
-                          (delete-node bits)
-                          (insert-item keep bits)))
-                      (update-node node new-node bits)))
-                default))))))
+    (destructuring-bind (hash depth) context
+      (let ((position (b:bits hash depth)))
+        (if (is-set dmap position)
+            (let* ((current (at-position dmap position))
+                   (current-key (e:key current)))
+              (when (equal key current-key)
+                (remove node position)))
+            (when (is-set nmap position)
+              (let* ((sub-node (at-position nmap position))
+                     (new-node (del sub-node key (list hash (1+ depth)))))
+                (if (single-value-node? new-node)
+                    (let ((keep (at-index (:dmap new-node) 0)))
+                      (-> node
+                        (remove position)
+                        (insert position keep)))
+                    (update node position new-node)))))))))

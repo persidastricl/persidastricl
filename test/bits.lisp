@@ -7,13 +7,13 @@
 ;;;
 ;;; -----
 
-(in-package #:bitop-test)
+(in-package #:persidastricl)
 
-(def-suite bitop-tests
-  :description ""
+(def-suite :bits-tests
+  :description "testing bit operations"
   :in master-suite)
 
-(in-suite bitop-tests)
+(in-suite :bits-tests)
 
 (test set?-tests
   :description "test the checking of set bit positions in a bitmap"

@@ -3,18 +3,18 @@
 ;;;
 ;;; test/node.lisp
 ;;;
-;;;  testing hashing
+;;;  testing various nodes
 ;;;
 ;;; -----
 
-(in-package #:node-test)
+(in-package #:persidastricl)
 
-(def-suite node-tests
+(def-suite :node-tests
   :description ""
   :in master-suite)
 
-(in-suite node-tests)
+(in-suite :node-tests)
 
-(test fixme
-  :description "placeholder"
+(test simple-node-tests
+  :description ""
   (is (= 1 1)))

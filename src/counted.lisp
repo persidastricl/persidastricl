@@ -7,8 +7,13 @@
 ;;;
 ;;; -----
 
-(in-package #:counted)
+(in-package #:persidastricl)
 
 (defclass counted ()
   ((count :type integer :initarg :count :reader :count))
   (:default-initargs :count 0))
+
+(defgeneric count (thing))
+
+(defmethod count (thing)
+  (length thing))

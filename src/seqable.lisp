@@ -7,6 +7,10 @@
 ;;;
 ;;; -----
 
-(in-package #:seqable)
+(in-package #:persidastricl)
 
 (defclass seqable () ())
+
+(defgeneric cons (seqable item))
+(defgeneric first (seqable))
+(defgeneric rest (seqable))

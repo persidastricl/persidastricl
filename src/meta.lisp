@@ -7,7 +7,7 @@
 ;;;
 ;;; -----
 
-(in-package #:metadata)
+(in-package #:persidastricl)
 
 (defclass metadata ()
   ((meta :initarg :meta :reader :meta :documentation "map of metadata"))

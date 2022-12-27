@@ -1,9 +1,6 @@
 ;;;; package.lisp
 
-(defpackage #:persidastricl
-  (:use #:cl))
-
-(defpackage #:bitop
+(defpackage #:bits
   (:nicknames #:bit #:b)
   (:use #:cl)
   (:shadow #:cl #:set)
@@ -14,20 +11,19 @@
            #:below
            #:index))
 
-
-(defpackage #:entry
-  (:nicknames #:e)
-  (:use #:cl)
-  (:export #:entry
-           #:key
-           #:value))
-
-
 (defpackage #:hash
   (:nicknames #:h)
   (:use #:cl #:cl-murmurhash)
   (:export #:hash))
 
+(defpackage #:entry
+  (:nicknames #:e)
+  (:use #:cl)
+  (:export #:Entry.
+           #:map-entry
+           #:entry
+           #:key
+           #:value))
 
 (defpackage #:vector
   (:nicknames #:v)
@@ -38,50 +34,12 @@
            #:delete))
 
 
-(defpackage #:util
-  (:nicknames #:u)
-  (:use #:cl))
-
-
-(defpackage #:counted
-  (:nicknames #:c)
-  (:use #:cl)
-  (:shadow #:cl #:count)
-  (:export #:count
-           #:counted))
-
-
-(defpackage #:metadata
-  (:nicknames #:m)
-  (:use #:cl)
-  (:export #:metadata))
-
-
-(defpackage #:seqable
-  (:nicknames #:seq)
-  (:use #:cl)
-  (:export #:seqable))
-
-
-(defpackage #:bitmap-vector
-  (:nicknames #:bv)
-  (:use #:cl #:counted)
-  (:shadow #:cl #:count #:get #:delete)
-  (:export #:bitmap-vector
-           #:empty
-           #:insert
-           #:update
-           #:delete
-           #:set?
-           #:get))
-
-
-(defpackage #:node
-  (:use #:cl)
-  (:shadow #:cl #:put #:get #:delete)
-  (:import-from #:arrow-macros #:->)
-  (:export #:empty
-           #:node
-           #:put
-           #:get
-           #:delete))
+(defpackage #:persidastricl
+  (:nicknames :pds :p)
+  (:use #:cl #:arrow-macros)
+  (:shadow #:cl #:assoc #:count #:dissoc #:get #:delete #:remove #:cons #:first #:rest)
+  (:export #:persistent-hash-map
+           #:assoc
+           #:dissoc
+           #:lookup
+           #:==))
