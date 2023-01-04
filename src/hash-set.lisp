@@ -14,4 +14,4 @@
 
 (defmethod contains? ((hs hash-set) item)
   (with-slots (root) hs
-    (contains? root item)))
+    (not (== :not-found (get root item (list (h:hash item) 0 :not-found))))))

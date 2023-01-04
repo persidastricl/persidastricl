@@ -82,10 +82,6 @@
                         (insert position keep)))
                     (update node position new-node)))))))))
 
-(defmethod contains? ((node hash-set-node) item)
-  (not (== :not-found (get node item (list (h:hash item) 0 :not-found)))))
-
-
 ;; -----
 ;;  hash-map-node
 ;;

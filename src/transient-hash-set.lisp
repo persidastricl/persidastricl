@@ -65,7 +65,7 @@
       ths
       (with-slots (root) ths
         (labels ((conj* (node item)
-                   (if (contains? node item)
+                   (if (contains? ths item)
                        node
                        (put node item (list (h:hash item) 0)))))
           (setf root (reduce #'conj* items :initial-value root))
@@ -76,7 +76,7 @@
       ths
       (with-slots (root) ths
         (labels ((disj* (node item)
-                   (if (contains? node item)
+                   (if (contains? ths item)
                        (del node item (list (h:hash item) 0))
                        node)))
           (setf root (reduce #'disj* items :initial-value root))

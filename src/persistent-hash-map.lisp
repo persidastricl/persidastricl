@@ -104,20 +104,39 @@ for key, and (1+ (* 2 determined-bit-count)) for value"
     (let* ((hash (h:hash key)))
       (get root key (list hash 0 default)))))
 
-(defmethod assoc ((m persistent-hash-map) key value)
-  (let ((current (lookup m key)))
-    (if (== current value)
-        m
-        (with-slots (root meta) m
-          (let* ((hash (h:hash key))
-                 (entry (e:map-entry key value))
-                 (context (list hash 0)))
-            (make-instance 'persistent-hash-map :root (put root entry context) :meta meta))))))
+(defmethod assoc ((phm persistent-hash-map) &rest kv-pairs)
+  (if (emptyp kv-pairs)
+      phm
+      (labels ((assoc* (node k v)
+                 (let* ((hash (h:hash k))
+                        (current (get node k (list hash 0 :not-found))))
+                   (if (== current v)
+                       node
+                       (put node (e:map-entry k v) (list hash 0))))))
+        (make-instance 'persistent-hash-map
+                       :root (reduce
+                              (lambda (node kv-pair)
+                                (destructuring-bind (k v) kv-pair
+                                  (assoc* node k v)))
+                              (split-list kv-pairs 2)
+                              :initial-value (:root phm))
+                       :meta (:meta phm)))))
 
-(defmethod dissoc ((m persistent-hash-map) key)
-  (let ((current (lookup m key :not-found)))
-    (if (== current :not-found)
-        m
-        (with-slots (root meta) m
-          (let* ((hash (h:hash key)))
-            (make-instance 'persistent-hash-map :root (del root key (list hash 0)) :meta meta))))))
+(defmethod dissoc ((phm persistent-hash-map) &rest keys)
+  (if (emptyp keys)
+      phm
+      (labels ((dissoc* (node k)
+                 (let* ((hash (h:hash k))
+                        (current (get node k (list hash 0 :not-found))))
+                   (if (== current :not-found)
+                       node
+                       (del node k (list hash 0))))))
+        (make-instance 'pershstent-hash-map
+                       :root (reduce #'dissoc* keys :initial-value (:root phm))
+                       :mea (:meta phm)))))
+
+(defun persistent-hash-map (&rest kvs)
+  (let (m (make-instance 'persistent-hash-map))
+    (if-not (emptyp kvs)
+            (apply #'assoc m kvs)
+            m)))

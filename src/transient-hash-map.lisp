@@ -95,6 +95,9 @@ for key, and (1+ (* 2 determined-bit-count)) for value"
         (setf nmap (remove nmap position))))
   node)
 
+(defmethod lookup ((node transient-hash-map-node) key &optional (default nil))
+  (let (hash (h:hash key))
+    (get node key (list hash ))))
 
 ;; -----
 ;; transient-hash-map
@@ -106,26 +109,30 @@ for key, and (1+ (* 2 determined-bit-count)) for value"
   ((root :type 'transient-hash-map-node :initarg :root :reader :root :documentation "root node of hash-map"))
   (:default-initargs :root (make-instance 'transient-hash-map-node) :meta nil))
 
-(defmethod lookup ((m transient-hash-map) key &optional (default nil))
-  (with-slots (root) m
+(defmethod lookup ((thm transient-hash-map) key &optional (default nil))
+  (with-slots (root) thm
     (let ((hash (h:hash key)))
       (get root key (list hash 0 default)))))
 
-(defmethod assoc ((m transient-hash-map) key value)
-  (let ((current (lookup m key)))
-    (when (not (== current value))
-      (with-slots (root meta) m
-        (let* ((hash (h:hash key))
-               (entry (e:map-entry key value))
-               (context (list hash 0)))
-          (setf root (put root entry context))))))
-  m)
+(defmethod assoc ((thm transient-hash-map) &rest kv-pairs)
+  (when-not (empty kv-pairs)
+    (with-slots (root) thm
+      (labels ((assoc* (node kv-pair)
+                 (destructuring-bind (k v) kv-pair
+                   (let ((current (lookup thm k :not-found)))
+                     (if (== current value)
+                         node
+                         (put node (e:map-entry k v) (list (h:hash k) 0)))))))
+        (setf root (reduce #'assoc* (split-list kv-pairs 2) :initial-value root)))))
+  thm)
 
-(defmethod dissoc ((m transient-hash-map) key)
-  (let ((current (lookup m key :not-found)))
-    (when (not (== current :not-found))
-      (with-slots (root meta) m
-        (let* ((hash (h:hash key))
-               (context (list hash 0)))
-          (setf root (del root key context))))))
-  m)
+(defmethod dissoc ((m transient-hash-map) &rest keys)
+  (when-not (empty keys)
+    (with-slots (root) thm
+      (labels ((assoc* (node key)
+                 (let ((current (lookup thm k :not-found)))
+                   (if (== current :not-found)
+                       node
+                       (del node k (list (h:hash k) 0))))))
+        (setf root (reduce #'assoc* keys :initial-value root)))))
+  thm)

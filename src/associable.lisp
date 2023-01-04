@@ -11,6 +11,6 @@
 
 (defclass asscciable () ())
 
-(defgeneric assoc (associable k v))
-(defgeneric dissoc (associable k))
+(defgeneric assoc (associable &rest kv-pairs))
+(defgeneric dissoc (associable &rest keys))
 (defgeneric lookup (associable k &optional default))
