@@ -1,5 +1,19 @@
 ;;;; package.lisp
 
+(defpackage #:string
+  (:nicknames #:s #:str)
+  (:use #:cl)
+  (:shadow #:cl #:replace)
+  (:export #:to-string
+           #:str
+           #:join
+           #:condense
+           #:trim
+           #:blank?
+           #:replace
+           #:replace-all
+           #:->keyword))
+
 (defpackage #:bits
   (:nicknames #:bit #:b)
   (:use #:cl)
@@ -14,7 +28,8 @@
 (defpackage #:hash
   (:nicknames #:h)
   (:use #:cl #:cl-murmurhash)
-  (:export #:hash))
+  (:export #:hash
+           #:size))
 
 (defpackage #:entry
   (:nicknames #:e)
@@ -23,7 +38,11 @@
            #:map-entry
            #:entry
            #:key
-           #:value))
+           #:value
+           #:->vec
+           #:->list
+           #:->cons
+           #:list->entry))
 
 (defpackage #:vector
   (:nicknames #:v)
@@ -37,9 +56,13 @@
 (defpackage #:persidastricl
   (:nicknames :pds :p)
   (:use #:cl #:arrow-macros)
-  (:shadow #:cl #:assoc #:count #:dissoc #:get #:delete #:remove #:cons #:first #:rest)
+  (:shadow #:cl #:assoc #:count #:dissoc #:get #:delete #:remove)
   (:export #:persistent-hash-map
+           #:transient-hash-map
+           #:persistent-hash-set
+           #:transient-hash-set
            #:assoc
            #:dissoc
            #:lookup
-           #:==))
+           #:==
+           #:syntax))

@@ -11,7 +11,7 @@
 
 (def-suite :bitmap-vector-tests
   :description ""
-  :in p::master-suite)
+  :in master-suite)
 
 (in-suite :bitmap-vector-tests)
 
@@ -90,21 +90,21 @@
                        (insert 0  sub-node-2)
                        (insert 15 sub-node-3)))
 
-(defun ->array (&rest elements)
+(defun new-array (&rest elements)
   (make-array (length elements) :initial-contents elements))
 
 (test multiple-insert-node-test
   :description ""
   (let ((bv *pnbv*))
     (is (and (== (:bitmap bv) #b10000000000000001000000000000001)
-             (== (:data bv) (->array sub-node-2 sub-node-3 sub-node-1))))))
+             (== (:data bv) (new-array sub-node-2 sub-node-3 sub-node-1))))))
 
 (test update-node-test
   :description ""
   (let ((bv *pnbv*)
         (expected (make-instance 'persistent-node-bitmap-vector
                                  :bitmap #b10000000000000001000000000000001
-                                 :data (->array sub-node-2 sub-node-3 updated-node))))
+                                 :data (new-array sub-node-2 sub-node-3 updated-node))))
     (is (bv-equal-p expected (update bv 31 updated-node)))))
 
 (test delete-key-value-test
@@ -112,7 +112,7 @@
   (let ((bv *pnbv*)
         (expected (make-instance 'persistent-node-bitmap-vector
                                  :bitmap #b00000000000000001000000000000001
-                                 :data (->array sub-node-2 sub-node-3))))
+                                 :data (new-array sub-node-2 sub-node-3))))
     (is (bv-equal-p expected (remove bv 31)))))
 
 (test is-set-node-test
