@@ -68,7 +68,7 @@
 (defmethod print-object ((object persistent-hash-set) stream)
   (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
       (format stream "#{~{~s~^ ~}}" (seq object))
-      (format stream "(persidastricl:list->persistent-hash-set (list ~{~s~^ ~}))" (seq object))))
+      (format stream "(persidastricl:persistent-hash-set (list ~{~s~^ ~}))" (seq object))))
 
 (defmethod make-load-form ((obj persistent-hash-set) &optional env)
   (declare (ignore env))

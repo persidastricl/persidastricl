@@ -17,3 +17,6 @@
 
 (defmethod count (thing)
   (length thing))
+
+(defmethod count ((thing counted))
+  (:count thing))

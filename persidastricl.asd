@@ -36,7 +36,12 @@
                              (:file "entry")
                              (:file "vector")))
 
-               (:module "metclass"
+               (:module "lazy-sequences"
+                :pathname "src/lazy-seq"
+                :serial t
+                :components ((:file "lazy-sequence")))
+
+               (:module "metaclass"
                 :pathname "src/metaclass"
                 :serial t
                 :components ((:file "immutable-class")))
@@ -104,10 +109,16 @@
                              (:file "transient-hash-map")
                              (:file "persistent-hash-map")))
 
-               (:module "methods"
-                :pathname "src/impl"
+               (:module "vector"
+                :pathname "src/vector"
                 :serial t
-                :components ((:file "methods")))
+                :components ((:file "vector")))
+
+               (:module "methods"
+                :pathname "src"
+                :serial t
+                :components ((:file "impl/methods")
+                             (:file "lazy-seq/methods")))
 
                (:module "syntax"
                 :pathname "src/impl"

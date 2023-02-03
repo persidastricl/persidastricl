@@ -62,7 +62,7 @@
 (defmethod print-object ((object transient-hash-set) stream)
   (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
       (format stream "@#{~{~s~^ ~}}" (seq object))
-      (format stream "(persidastricl:list->transient-hash-set (list ~{~s~^ ~}))" (seq object))))
+      (format stream "(persidastricl:transient-hash-set (list ~{~s~^ ~}))" (seq object))))
 
 (defmethod make-load-form ((obj transient-hash-set) &optional env)
   (declare (ignore env))

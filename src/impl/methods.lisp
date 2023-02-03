@@ -17,15 +17,19 @@
 (defgeneric ->vector (object))
 (defgeneric ->vec (object))
 
-(defgeneric ->list (object))
+(defgeneric ->list (object)
+  (:method ((obj (eql nil))) nil))
 (defgeneric ->pist (object))
 (defgeneric ->alist (object))
 
-(defgeneric ->seq (s)
-  (:method (s) (coerce (seq s) 'list)))
 
-(defmethod ->seq ((s hash-map))
-  (flatten (map 'list e:->list (seq s))))
+(defgeneric ->seq (s)
+  (:method (s) (coerce (->list s) 'list)))
+
+(defmethod ->seq ((m hash-map))
+  (flatten (map 'list e:->list (->list m))))
+
+
 
 (defgeneric into (obj sequence))
 
@@ -33,10 +37,13 @@
   (apply #'conj obj (->seq sequence)))
 
 (defmethod into ((obj hash-set) (hs hash-set))
-  (apply #'conj obj (seq hs)))
+  (apply #'conj obj (->seq hs)))
 
 (defmethod into ((obj hash-map) (sequence sequence))
   (apply #'assoc obj (->seq sequence)))
 
 (defmethod into ((obj hash-map) (hm hash-map))
-  (apply #'assoc obj (->seq (seq hm))))
+  (apply #'assoc obj (->seq hm)))
+
+(defmethod into ((obj hash-set) (lazy-seq lazy-sequence))
+  (apply #'conj obj (->seq lazy-seq)))

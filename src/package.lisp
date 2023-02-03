@@ -47,8 +47,10 @@
 (defpackage #:vector
   (:nicknames #:v)
   (:use #:cl)
-  (:shadow #:cl #:delete)
-  (:export #:insert
+  (:shadow #:append #:cl #:delete)
+  (:export #:copy
+           #:append
+           #:insert
            #:update
            #:delete))
 
@@ -56,7 +58,7 @@
 (defpackage #:persidastricl
   (:nicknames :pds :p)
   (:use #:cl #:arrow-macros)
-  (:shadow #:cl #:assoc #:count #:dissoc #:get #:delete #:remove)
+  (:shadow #:cl #:cons #:first #:rest #:append #:assoc #:count #:dissoc #:get #:delete #:remove)
   (:export #:persistent-hash-map
            #:transient-hash-map
            #:persistent-hash-set

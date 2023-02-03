@@ -26,10 +26,10 @@
 (defun next-iterator (stack)
   (if (emptyp stack)
       (values nil nil)
-      (let ((node (first stack)))
+      (let ((node (cl:first stack)))
         (if (> (count node) 0)
-            (values (iterator node) (concatenate 'list (sub-nodes node) (rest stack)))
-            (next-iterator (concatenate 'list (sub-nodes node) (rest stack)))))))
+            (values (iterator node) (concatenate 'list (sub-nodes node) (cl:rest stack)))
+            (next-iterator (concatenate 'list (sub-nodes node) (cl:rest stack)))))))
 
 (defmethod current ((iterator hamt-iterator))
   (with-slots (current) iterator

@@ -9,6 +9,19 @@
 
 (in-package #:vector)
 
+(defun append (v &rest items)
+  "non-destructively append `items` onto the end of vector `v`"
+  (let* ((n (length items))
+         (len (length v))
+         (new (make-array (+ len n))))
+    (loop for i from 0 below len
+          do
+             (setf (elt new i) (elt v i)))
+    (loop for i from len below (+ len n)
+          do
+             (setf (elt new i) (elt items (- i len))))
+    new))
+
 (defun insert (v index &rest items)
   "non-destructively insert `items` into a vector `v` at the given
 `index`; elements after the inserted `items` at `index` are now shifted
@@ -28,7 +41,7 @@ by (length items)"
     new))
 
 (defun update (v index &rest items)
-  "non-destructively update a vector `v` at `index` with the new `item`"
+  "non-destructively update a vector `v` at `index` with the new `items`"
   (let ((len (length v)))
     (assert (<= index (1- len)))
     (let* ((n (length items))

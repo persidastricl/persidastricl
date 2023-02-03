@@ -99,12 +99,22 @@
     collect (transform-primitive object) into objects
     finally (return (apply #'transient-hash-set objects))))
 
+(defun read-persistent-vector-literal (stream char)
+  (declare (ignore char))
+  (loop
+    for object = (read-next-object (list +space+ +comma+) +right-bracket+ stream)
+    while object
+    collect (transform-primitive object) into objects
+    finally (return (apply #'persistent-vector objects))))
+
 (named-readtables:defreadtable syntax
-    (:merge :standard)
-  (:macro-char +right-brace+ #'read-delimiter nil)
-  (:macro-char +left-brace+ #'read-persistent-map-literal nil)
+  (:merge :standard)
   (:macro-char +at+ :dispatch)
   (:macro-char +exclamation+ :dispatch)
+  (:macro-char +right-brace+ #'read-delimiter nil)
+  (:macro-char +left-brace+ #'read-persistent-map-literal nil)
   (:dispatch-macro-char +at+ +left-brace+ #'read-transient-map-literal)
   (:dispatch-macro-char +hash+ +left-brace+ #'read-persistent-set-literal)
-  (:dispatch-macro-char +at+ +hash+ #'read-transient-set-literal))
+  (:dispatch-macro-char +at+ +hash+ #'read-transient-set-literal)
+  (:macro-char +right-bracket+ #'read-delimiter nil)
+  (:macro-char +left-bracket+ #'read-persistent-vector-literal nil))
