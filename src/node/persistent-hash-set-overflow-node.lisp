@@ -16,10 +16,10 @@
 
 (defmethod put ((node persistent-hash-set-overflow-node) item context)
   (with-slots (hash data) node
-    (when hash (assert (eq hash (first context))))
-    (make-instance 'persistent-hash-set-overflow-node :hash (or hash (first context)) :data (adjoin item data :test #'==))))
+    (when hash (assert (eq hash (cl:first context))))
+    (make-instance 'persistent-hash-set-overflow-node :hash (or hash (cl:first context)) :data (adjoin item data :test #'==))))
 
 (defmethod del ((node persistent-hash-set-overflow-node) item context)
   (with-slots (hash data) node
-    (when hash (assert (eq hash (first context))))
-    (make-instance 'persistent-hash-set-overflow-node :hash (or hash (first context)) :data (remove-if (lambda (e) (== item e)) data))))
+    (when hash (assert (eq hash (cl:first context))))
+    (make-instance 'persistent-hash-set-overflow-node :hash (or hash (cl:first context)) :data (remove-if (lambda (e) (== item e)) data))))

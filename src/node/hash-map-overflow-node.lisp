@@ -16,15 +16,15 @@
 
 (defmethod at-index ((node hash-map-overflow-node) index)
   (let ((e (elt (:data node) index)))
-    (e:map-entry (first e) (rest e))))
+    (e:map-entry (cl:first e) (cl:rest e))))
 
 (defmethod single-remaining-data ((node hash-map-overflow-node))
-  (let ((target (first (:data node))))
-    (e:map-entry (first target) (rest target))))
+  (let ((target (cl:first (:data node))))
+    (e:map-entry (cl:first target) (cl:rest target))))
 
 (defmethod get ((node hash-map-overflow-node) key context)
   (with-slots (hash data) node
-    (when hash (assert (eq hash (first context))))
+    (when hash (assert (eq hash (cl:first context))))
     (if-let (target (cl:assoc key data :test #'==))
-      (rest target)
-      (last context))))
+      (cl:rest target)
+      (cl:last context))))

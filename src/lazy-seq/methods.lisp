@@ -17,12 +17,18 @@
     (reduce* (ensure-seq s) initial-value)))
 
 (defun take (n seq)
-  (labels ((take* (n seq acc)
-             (if (or (<= n 0) (null seq))
-                 acc
-                 (let ((v (head seq)))
-                   (take* (1- n) (tail seq) (conj acc v))))))
-    (take* n (ensure-seq seq) (persistent-vector))))
+  (when seq
+    (let ((seq (ensure-seq seq)))
+      (when (> n 0)
+        (lazy-seq (head seq) (take (1- n) (tail seq)))))))
+
+
+(defun drop (n seq)
+  (when seq
+    (let ((seq (ensure-seq seq)))
+      (if(> n 0)
+         (drop (1- n) (tail seq))
+         seq))))
 
 (defun drop (n seq)
   (labels ((drop* (n seq)
@@ -64,8 +70,8 @@
 (defvar fib (cl:cons 0 (lazy-seq 1 (lmap #'+ fib (tail fib)))))
 
 
-(take 10 (drop 1000 (integers)))
+;; (take 10 (drop 1000 (integers)))
 
-(into #{} (filter (lambda (i) (= 0 (rem i 3))) '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18)))
+;; (into #{} (filter (lambda (i) (= 0 (rem i 3))) '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18)))
 
-(take 10 (drop 100 (filter (lambda (i) (= 0 (rem i 3))) '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18))))
+;; (take 2 (drop 10 (filter (lambda (i) (= 0 (rem i 3))) fib)))

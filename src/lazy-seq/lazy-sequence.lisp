@@ -41,7 +41,7 @@
    (tail :initarg :tail :reader :tail)))
 
 (defmethod print-object ((object lazy-sequence) stream)
-  (format stream "(~a ...)" (:head lazy-sequence)))
+  (format stream "(~{~s~^ ~} ...)" (->list (take 5 object))))
 
 (defmacro lazy-seq (head tail)
   `(make-instance 'lazy-sequence :head ,head :tail (delay ,tail)))
@@ -49,7 +49,12 @@
 (defmethod seq ((object lazy-sequence)) object)
 
 (defmethod ->seq ((s lazy-sequence))
-  (cl:cons (head s) (->seq (tail s))))
+  (when s
+    (cl:cons (head s) (->seq (tail s)))))
+
+(defmethod ->list ((s lazy-sequence))
+  (when s
+    (cl:cons (head s) (->list (tail s)))))
 
 (defmethod head ((seq lazy-sequence))
   (:head seq))
