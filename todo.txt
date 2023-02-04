@@ -20,8 +20,7 @@ Things to do:
 
 *  add as many of clojure's core functions to the library as we can (don't get in a hurry ... add things in a way that fit it will with lisp as-is)
 
-14. for vectors, is it possible to change the default 32/5 partition to a 64/6 or 64/8 partition relatively quickly/seamlessly when we hit the limits of 32/5 (like lisp's arithmetic stack) ?????
-
+*  for vectors, is it possible to change the default 32/5 partition to a 64/6 or 64/8 partition relatively quickly/seamlessly when we hit the limits of 32/5 (like lisp's arithmetic stack) ?????
 
 ;; long term
 
