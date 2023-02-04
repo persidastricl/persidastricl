@@ -44,5 +44,8 @@
 (defmethod into ((obj hash-map) (sequence sequence))
   (apply #'assoc obj (->seq sequence)))
 
+(defmethod into ((obj hash-map) (lazy-seq lazy-sequence))
+  (apply #'assoc obj (->seq lazy-seq)))
+
 (defmethod into ((obj hash-map) (hm hash-map))
   (apply #'assoc obj (->seq hm)))
