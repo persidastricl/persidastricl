@@ -1,36 +1,32 @@
 Things to do:
 
-0.  push up what we have (even without tests/vectors/refactoring) and do this more often please
+*  profile/work-on efficiency
 
-1. reorganize .asd modules and folders
+*  push up what we have (even without tests/vectors/refactoring) and do this more often please
+
+*  reorganize .asd modules and folders
  -- separate hamt (hashed array mapped trie -- maps and sets) from bpvt (bit partitioned vector trie -- vectors)
  -- do we have any 'common' classes that these two share??  where to put them
 
-2.  improve tests
+*  add generics for much of CL's functions with proper default methods (length, cons, first, rest, etc) as needed
 
-3.  move the persistent-vetor code over and work into this codebase (bpvt)
+*  improve tests
 
-6.  add the sb-sequence iterator protocol to each capable ds  (vector and seqs) ??
+*  move the persistent-vetor code over and work into this codebase (bpvt)
 
-7.  add the sb-sequence protocol to each ds
+*  make a transient data structure from a persistent one (just add the data to a new transient instance)
+*  make a persistent data strucure out of a transient (use change-class ?? for speed)
+*  default to using transients when constructing persistent ds with &rest args for speed
 
-8. make a transient data structure from a persistent one (just add the data to a new transient instance)
+*  add as many of clojure's core functions to the library as we can (don't get in a hurry ... add things in a way that fit it will with lisp as-is)
 
-9. make a persistent data strucure out of a transient (use change-class ?? for speed)
-
-10. default to  using transients when constructing persistent ds with &rest args for speed
-
-11a. review Winston's LISP book for how he did lazy sequences
-11b. review how clojure does lazy sequences
-11c. add lazy sequences to persidastricl
-
-12. add some of clojure's core functions to the library (don't get in a hurry ... add things in a way that fit it will with lisp as-is)
-
-13. rewrite the matcher program in lisp using new ds's and see how it feels works
+14. for vectors, is it possible to change the default 32/5 partition to a 64/6 or 64/8 partition relatively quickly/seamlessly when we hit the limits of 32/5 (like lisp's arithmetic stack) ?????
 
 
-14. for vectors is it possible to change a 32/5 partition to a 64/6 or 64/8 partition relatively quickly when we hit the limits of 32/5 (like lisp's arithmetic stack) ?????
+;; long term
 
-15. at this point (if all this is implemented) see if anyone wants to help refine/improve it??? present it?????
+*  at this point (if all this is implemented) open-source it (BSD license) ??????
 
-16. at some point do we want to rewrite the backend of clockpartners in persidastricl/common-lisp and have a re-frame or reagent front end???
+*  rewrite the matcher program in lisp using new ds's and see how it feels works
+
+*  at some point do we want to rewrite the backend of clockpartners in persidastricl/common-lisp and have a re-frame or reagent front end???
