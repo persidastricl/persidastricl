@@ -15,5 +15,5 @@
   (:method ((object sequence)) object)
   (:method ((object seqable)) (let ((seq '())
                                     (it (iterator object)))
-                                (while (has-next? it) (setf seq (cl:cons (next it) seq)))
+                                (while (has-next? it) (setf seq (cons (next it) seq)))
                                 (nreverse seq))))

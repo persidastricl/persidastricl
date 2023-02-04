@@ -14,7 +14,7 @@
 
 (defclass hash-set-node (hamt-node) ())
 
-(defmethod put ((node hash-set-node) item context)
+(defmethod put-it ((node hash-set-node) item context)
   (with-slots (dmap nmap) node
     (destructuring-bind (hash depth bit-size) context
       (let ((position (b:bits hash depth bit-size)))
@@ -25,18 +25,18 @@
               (if (== item current)
                   node
                   (let ((new-node (-> (empty-node node context)
-                                    (put current (list (h:hash current) (1+ depth) bit-size))
-                                    (put item    (list hash (1+ depth) bit-size)))))
+                                    (put-it current (list (h:hash current) (1+ depth) bit-size))
+                                    (put-it item    (list hash (1+ depth) bit-size)))))
                     (-> node
                       (remove position)
                       (insert position new-node)))))
             ;; no data, so do we have a node already then for this depth
             (if (is-set nmap position)
-                (update node position (put (at-position nmap position) item (list hash (1+ depth) bit-size)))
+                (update node position (put-it (at-position nmap position) item (list hash (1+ depth) bit-size)))
                 ;; no data, no node, so just add the item to this node
                 (insert node position item)))))))
 
-(defmethod get ((node hash-set-node) item context)
+(defmethod get-it ((node hash-set-node) item context)
   (with-slots (dmap nmap) node
     (destructuring-bind (hash depth bit-size default) context
       (let ((position (b:bits hash depth bit-size)))
@@ -46,10 +46,10 @@
                   target
                   default))
             (if (is-set nmap position)
-                (get (at-position nmap position) item (list hash (1+ depth) bit-size default))
+                (get-it (at-position nmap position) item (list hash (1+ depth) bit-size default))
                 default))))))
 
-(defmethod del ((node hash-set-node) item context)
+(defmethod del-it ((node hash-set-node) item context)
   (with-slots (dmap nmap) node
     (destructuring-bind (hash depth bit-size) context
       (let ((position (b:bits hash depth bit-size)))
@@ -59,7 +59,7 @@
                 (remove node position)))
             (when (is-set nmap position)
               (let* ((sub-node (at-position nmap position))
-                     (new-node (del sub-node item (list hash (1+ depth) bit-size))))
+                     (new-node (del-it sub-node item (list hash (1+ depth) bit-size))))
                 (if (single-value-node? new-node)
                     (let ((keep (single-remaining-data new-node)))
                       (-> node

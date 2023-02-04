@@ -29,7 +29,7 @@
                             (current (lookup phm k :not-found)))
                        (if (== current v)
                            (values node 0)
-                           (values (put node (e:map-entry k v) (list hash 0 (:bit-size phm)))
+                           (values (put-it node (e:map-entry k v) (list hash 0 (:bit-size phm)))
                                    (if (== current :not-found) 1 0)))))))
           (destructuring-bind (root count) (reduce
                                             (lambda (twople kv-pair)
@@ -52,7 +52,7 @@
                         (current (lookup phm k :not-found)))
                    (if (== current :not-found)
                        (values node 0)
-                       (values (del node k (list hash 0 (:bit-size phm))) 1)))))
+                       (values (del-it node k (list hash 0 (:bit-size phm))) 1)))))
         (destructuring-bind (root count) (reduce
                                           (lambda (twople k)
                                             (destructuring-bind (node count) twople

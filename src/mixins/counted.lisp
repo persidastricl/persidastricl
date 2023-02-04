@@ -13,10 +13,10 @@
   ((count :type integer :initarg :count :reader :count))
   (:default-initargs :count 0))
 
-(defgeneric count (thing))
+(defgeneric count (thing)
+  (:method (thing) (cl:length thing))
+  (:method ((thing counted)) (:count thing)))
 
-(defmethod count (thing)
-  (length thing))
-
-(defmethod count ((thing counted))
-  (:count thing))
+(defgeneric length (thing)
+  (:method (thing) (cl:length thing))
+  (:method ((thing counted)) (:count thing)))

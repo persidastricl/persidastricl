@@ -39,6 +39,8 @@
 
 (take 3000 FIB)
 
+(into #{} )
+
 (take 10 fib)
 
 (->seq (take 2 (primes-seq)))

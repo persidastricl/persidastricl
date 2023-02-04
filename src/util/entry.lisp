@@ -36,4 +36,4 @@
   (list (key entry) (value entry)))
 
 (defun ->cons (entry)
-  (cl:cons (key entry) (value entry)))
+  (cons (key entry) (value entry)))

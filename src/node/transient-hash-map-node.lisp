@@ -57,6 +57,3 @@
         (setf nmap (remove nmap position))))
   node)
 
-(defmethod lookup ((node transient-hash-map-node) key &optional (default nil))
-  (let (hash (h:hash key))
-    (get node key (list hash ))))

@@ -23,7 +23,7 @@
       (labels ((conj* (node item)
                  (if (contains? phs item)
                      (values node 0)
-                     (values (put node item (list (h:hash item) 0 (:bit-size phs))) 1))))
+                     (values (put-it node item (list (h:hash item) 0 (:bit-size phs))) 1))))
         (destructuring-bind (root count) (reduce
                                           (lambda (twople item)
                                             (destructuring-bind (node count) twople
@@ -43,7 +43,7 @@
       phs
       (labels ((disj* (node item)
                  (if (contains? phs item)
-                     (values (del node item (list (h:hash item) 0 (:bit-size phs))) 1)
+                     (values (del-it node item (list (h:hash item) 0 (:bit-size phs))) 1)
                      (values node 0))))
         (destructuring-bind (root count) (reduce
                                           (lambda (twople item)

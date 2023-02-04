@@ -58,7 +58,7 @@
 (defpackage #:persidastricl
   (:nicknames :pds :p)
   (:use #:cl #:arrow-macros)
-  (:shadow #:cl #:cons #:first #:rest #:append #:assoc #:count #:dissoc #:get #:delete #:remove)
+  (:shadow #:cl #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count)
   (:export #:persistent-hash-map
            #:transient-hash-map
            #:persistent-hash-set

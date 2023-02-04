@@ -23,9 +23,9 @@
 
 ;; get walks nodes based on level ... recursive to level indexed node node (returns value)
 
-(defmethod get ((node vector-node) index context)
+(defmethod get-it ((node vector-node) index context)
   (let ((i (b:bits index (:level node))))
-    (get (elt (:data node) i) index context)))
+    (get-it (elt (:data node) i) index context)))
 
 ;; assoc ;; changes the value at index (returns new root)
 
@@ -59,7 +59,7 @@
 
 ;; get value at level 0 index
 
-(defmethod get ((node persistent-vector-leaf-node) index context)
+(defmethod get-it ((node persistent-vector-leaf-node) index context)
   (destructuring-bind (default) context
     (let* ((i (b:bits index 0))
            (v (elt (:data node) i)))
@@ -108,23 +108,21 @@
 
           (make-instance 'persistent-vector :root root :tail (cons value tail) :tail-offset tail-offset :count (1+ count))))))
 
-;; TODO:  get needs to be renamed/redefined for nodes in maps and sets (or packaged?) so that the signature is (get ds item & optional (default nil))
-
-(defmethod _get ((pv persistent-vector) index &optional (default nil))
+(defmethod get ((pv persistent-vector) index &optional (default nil))
   (if (< index (:count pv))
       (if (>= index (:tail-offset pv))
-          (get (:tail pv) index (list default))
-          (get (:root pv) index (list default)))
+          (get-it (:tail pv) index (list default))
+          (get-it (:root pv) index (list default)))
       default))
 
 (defmethod seq ((pv persistent-vector))
   (labels ((next (i)
-             (when-let (v (_get pv i))
+             (when-let (v (get pv i))
                (lazy-seq v (next (1+ i))))))
     (next 0)))
 
 (defmethod ->list ((pv persistent-vector))
-  (map 'list (lambda (i) (_get pv i)) (loop for i from 0 below (:count pv) collect i)))
+  (map 'list (lambda (i) (get pv i)) (loop for i from 0 below (:count pv) collect i)))
 
 (defun persistent-vector (&rest items)
   (reduce
@@ -138,7 +136,7 @@
       (format stream "[~{~s~^ ~}]" (->list object))
       (format stream "(persidastricl:persistent-vector  ~{~s~^ ~})" (->list object))))
 
-(defmethod make-load-form ((obj persistent-hash-set) &optional env)
+(defmethod make-load-form ((obj persistent-vector) &optional env)
   (declare (ignore env))
   (let ((items (flatten (seq obj))))
     `(persidastricl::persistent-vector ,@items)))
@@ -164,7 +162,7 @@
 ;;       (get* root level))))
 
 
-;; (defmethod get ((pv persistentvector) index)
+;; (defmethod get ((pv persistentvector) index &optional (default nil))
 ;;   (with-slots (partitioner level count root tail) pv
 ;;     (labels ((get* (node level)
 ;;                (let* ((offset (bit:bits partitioner level index))

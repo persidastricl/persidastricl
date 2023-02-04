@@ -8,10 +8,10 @@
 (in-package #:persidastricl)
 
 (defgeneric head (obj)
-  (:method (obj) (car obj)))
+  (:method (obj) (first obj)))
 
 (defgeneric tail (obj)
-  (:method (obj) (cdr obj)))
+  (:method (obj) (rest obj)))
 
 ;; -----
 ;; thunk
@@ -50,11 +50,11 @@
 
 (defmethod ->seq ((s lazy-sequence))
   (when s
-    (cl:cons (head s) (->seq (tail s)))))
+    (cons (head s) (->seq (tail s)))))
 
 (defmethod ->list ((s lazy-sequence))
   (when s
-    (cl:cons (head s) (->list (tail s)))))
+    (cons (head s) (->list (tail s)))))
 
 (defmethod head ((seq lazy-sequence))
   (:head seq))

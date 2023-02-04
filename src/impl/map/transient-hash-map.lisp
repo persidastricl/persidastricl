@@ -26,7 +26,7 @@
                      (when (== current :not-found) (incf added))
                      (if (== current v)
                          node
-                         (put node (e:map-entry k v) (list (h:hash k) 0 bit-size)))))))
+                         (put-it node (e:map-entry k v) (list (h:hash k) 0 bit-size)))))))
         (setf root (reduce
                     #'assoc*
                     (partition kv-pairs 2)
@@ -43,7 +43,7 @@
                      (when-not (== current :not-found) (incf removed))
                      (if (== current :not-found)
                          node
-                         (del node k (list (h:hash k) 0 bit-size))))))
+                         (del-it node k (list (h:hash k) 0 bit-size))))))
           (setf root (reduce
                       #'dissoc*
                       keys

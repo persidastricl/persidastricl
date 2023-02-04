@@ -15,11 +15,11 @@
 (defclass hash-set-overflow-node (overflow-node) ())
 
 (defmethod single-remaining-data ((node hash-set-overflow-node))
-  (cl:first (:data node)))
+  (first (:data node)))
 
-(defmethod get ((node hash-set-overflow-node) item context)
+(defmethod get-it ((node hash-set-overflow-node) item context)
   (with-slots (hash data) node
-    (when hash (assert (eq hash (cl:first context))))
+    (when hash (assert (eq hash (first context))))
     (if-let (target (member item data :test #'==))
-      (cl:first target)
-      (cl:first (cl:last context)))))
+      (first target)
+      (first (last context)))))

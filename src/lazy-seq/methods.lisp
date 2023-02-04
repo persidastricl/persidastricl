@@ -52,7 +52,7 @@
       (let ((n (count seqs))
             (seqs (map 'list #'ensure-seq seqs)))
         (labels ((apply* (args)
-                   (cl:apply f args))
+                   (apply f args))
                  (map* (s)
                    (let ((args (remove-if #'null (map 'list #'head s))))
                      (when (= n (count args))
@@ -67,7 +67,7 @@
   (when (> n 0)
     (lazy-seq start (range (1- n) :start (+ start step) :step step))))
 
-(defvar fib (cl:cons 0 (lazy-seq 1 (lmap #'+ fib (tail fib)))))
+(defvar fib (cons 0 (lazy-seq 1 (lmap #'+ fib (tail fib)))))
 
 
 ;; (take 10 (drop 1000 (integers)))

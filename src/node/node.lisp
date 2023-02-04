@@ -7,9 +7,9 @@
 
 (in-package #:persidastricl)
 
-(defgeneric put (target item context))
-(defgeneric del (target item context))
-(defgeneric get (target item context))
+(defgeneric put-it (target item context))
+(defgeneric del-it (target item context))
+(defgeneric get-it (target item context))
 
 ;; -----
 ;;  base class for all node objects

@@ -25,6 +25,11 @@
                 :serial t
                 :components ((:file "package")))
 
+               (:module "pre"
+                :pathname "src/pre"
+                :serial t
+                :components ((:file "methods")))
+
                (:module "utilities"
                 :pathname "src/util"
                 :serial t

@@ -1,15 +1,11 @@
 ;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;;   node.lisp
+;;;   hamt-node.lisp
 ;;;
 ;;; -----
 
 (in-package #:persidastricl)
-
-(defgeneric put (target item context))
-(defgeneric del (target item context))
-(defgeneric get (target item context))
 
 ;; -----
 ;;  base class for all hamt node objects
