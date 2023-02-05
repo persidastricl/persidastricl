@@ -20,10 +20,8 @@
        (sb-mop:slot-value-using-class _class obj slot-def))
      (sb-mop:class-slots _class))))
 
-(defgeneric == (obj1 obj2))
-
-(defmethod == (obj1 obj2)
-  (equalp obj1 obj2))
+(defgeneric == (obj1 obj2)
+  (:method (obj1 obj2) (equalp obj1 obj2)))
 
 ;; -----
 ;; equality of CLOS objects is defined here as:

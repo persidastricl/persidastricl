@@ -33,7 +33,7 @@ all bits currently set below it in the bitmap."
 determinded by the bit-count of bit-position with respect to all bits
 currently set below it in the bitmap."
   (with-slots (bitmap data) bv
-    (setf data (v:update data (b:index bit-position bitmap) item)))
+    (v:modify data (b:index bit-position bitmap) item))
   bv)
 
 (defmethod remove ((bv transient-bitmap-vector) bit-position)

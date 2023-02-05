@@ -35,5 +35,5 @@ the `size` bits at the `depth` slice"
 (defun index (bit-position bitmap)
   "Determine the number of `1` or `on` bits below
 bit-position (exclusive) (which will be the index into the data array
-of a bitmap-vector used in HAMT)"
+of a bitmap-indexed-vector (biv) used in HAMT)"
   (logcount (below bit-position bitmap)))

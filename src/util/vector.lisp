@@ -72,3 +72,16 @@ elements after `index` by -1"
             do
                (setf (elt new (- i n)) (elt v i)))
       new)))
+
+;;
+;; destructive update
+;;
+
+(defun modify (v index &rest items)
+  "destructively update a vector `v` at `index` with the new `items`"
+  (let ((n-items (length items)))
+    (assert (<= index (- (length v) n-items)))
+    (loop for i from 0 below n-items
+          do
+             (setf (elt v (+ index i)) (elt items i)))
+    v))

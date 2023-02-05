@@ -52,7 +52,8 @@
            #:append
            #:insert
            #:update
-           #:delete))
+           #:delete
+           #:modify))
 
 
 (defpackage #:persidastricl

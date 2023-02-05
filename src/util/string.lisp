@@ -7,13 +7,10 @@
 
 (in-package :string)
 
-(defgeneric to-string (obj))
-
-(defmethod to-string ((obj string))
-  obj)
-
-(defmethod to-string (obj)
-  (format nil "~s" (or obj "")))
+(defgeneric to-string (obj)
+  (:method (obj) (format nil "~s" (or obj "")))
+  (:method ((obj (eql nil))) "")
+  (:method ((s string)) s))
 
 (defun str (&rest things)
   "take a list and concatenate the elements into a string"
@@ -32,11 +29,10 @@
   "remove redundant whitespace within a string s"
   (join " " (cl-ppcre:all-matches-as-strings "\\S+" s)))
 
-(defconstant WHITESPACE '(#\TAB #\SPACE #\LINEFEED #\RETURN #\NEWLINE #\PAGE))
-
-(defun trim (s)
-  "remave all whitespace from the ends of the string s"
-  (when s (string-trim WHITESPACE s)))
+(let ((WHITESPACE '(#\TAB #\SPACE #\LINEFEED #\RETURN #\NEWLINE #\PAGE)))
+  (defun trim (s)
+    "remave all whitespace from the ends of the string s"
+    (when s (string-trim WHITESPACE s))))
 
 (defun blank? (s)
   (= (length (trim s)) 0))
