@@ -76,15 +76,16 @@
 (defmethod cons (item (node persistent-vector-tail))
   (make-instance (type-of node) :level 0 :data (v:append (:data node) item)))
 
-
-
-
-(define-immutable-class persistent-vector (counted collection seqable)
+(defclass bpvt (counted collection seqable)
   ((root :initarg :root :reader :root)
    (tail :initarg :tail :reader :tail)
-   (tail-offset :initarg :tail-offset :reader :tail-offset))
-  (:default-initargs :root (make-instance 'persistent-vector-node) :tail (make-instance 'persistent-vector-tail) :tail-offset 0))
+   (tail-offset :initarg :tail-offset :reader :tail-offset)))
 
+(defmethod cl-murmurhash:murmurhash ((object bpvt) &key (seed cl-murmurhash:*default-seed*) mix-only)
+  (cl-murmurhash:murmurhash (->list object) :seed seed :mix-only mix-only))
+
+(define-immutable-class persistent-vector (bpvt) ()
+  (:default-initargs :root (make-instance 'persistent-vector-node) :tail (make-instance 'persistent-vector-tail) :tail-offset 0))
 
 (defun new-root? (node)
   (with-slots (data level) node
@@ -175,10 +176,10 @@
 ;;       (get* root level))))
 
 
-;; (defmethod assoc :before ((pv PersistentVector) position value)
+;; (defmethod assoc :before ((pv persistent-vector) position value)
 ;;   (check-type position Integer))
 
-;; (defmethod assoc ((pv PersistentVector) position value)
+;; (defmethod assoc ((pv persistent-vector) position value)
 ;;   (with-slots (level count root partitioner) pv
 ;;     (let* ((tail-index (bit:bits partitioner 0 position))
 ;;            (target (target-leaf-node pv position))

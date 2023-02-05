@@ -16,6 +16,9 @@
     (let ((hash (h:hash key)))
       (get-it root key (list hash 0 bit-size default)))))
 
+(defmethod get ((hm hash-map) key &optional (default nil))
+  (lookup hm key default))
+
 (defmethod ->vector ((hm hash-map))
   (map 'vector #'e:->vec (seq hm)))
 

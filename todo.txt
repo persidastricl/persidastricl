@@ -2,8 +2,6 @@ Things to do:
 
 *  profile/work-on efficiency
 
-*  push up what we have (even without tests/vectors/refactoring) and do this more often please
-
 *  reorganize .asd modules and folders
  -- separate hamt (hashed array mapped trie -- maps and sets) from bpvt (bit partitioned vector trie -- vectors)
  -- do we have any 'common' classes that these two share??  where to put them
@@ -12,7 +10,15 @@ Things to do:
 
 *  improve tests
 
-*  move the persistent-vetor code over and work into this codebase (bpvt)
+*  move the persistent-vector code over and work into this codebase (bpvt)
+*  --- add assoc to vector-node and vector-leaf-node
+*  --- add assoc to pv
+*  --- make transient versions of bpvt
+*  --- add ->persistent and ->transient conversions
+*  --- make persistent constructor use transients
+*  --- add  pop/disj (only removes the last value from tail and cleans up when empty tail (promotes last tail back to tail position))
+
+
 
 *  make a transient data structure from a persistent one (just add the data to a new transient instance)
 *  make a persistent data strucure out of a transient (use change-class ?? for speed)

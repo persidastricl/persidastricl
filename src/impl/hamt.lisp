@@ -16,3 +16,6 @@
 
 (defmethod count ((obj hamt))
   (:count obj))
+
+(defmethod cl-murmurhash:murmurhash ((object hamt) &key (seed cl-murmurhash:*default-seed*) mix-only)
+  (cl-murmurhash:murmurhash (->list object) :seed seed :mix-only mix-only))

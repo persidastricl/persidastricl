@@ -16,6 +16,14 @@
                  current-value)))
     (reduce* (ensure-seq s) initial-value)))
 
+(defun get-in (obj path &optional (default nil))
+  (or (lreduce
+       (lambda (obj k)
+         (get obj k))
+       path
+       :initial-value obj)
+      default))
+
 (defun take (n seq)
   (when seq
     (let ((seq (ensure-seq seq)))

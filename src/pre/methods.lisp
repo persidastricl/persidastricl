@@ -23,3 +23,17 @@
 
 (defgeneric butlast (thing &optional n)
   (:method (thing &optional (n 1)) (cl:butlast thing n)))
+
+(defgeneric empty (object)
+  (:documentation "return an empty data-object of the same type as the original object argument")
+  (:method ((object t)) (make-instance (type-of object))))
+
+(defgeneric ->array (object))
+(defgeneric ->vector (object))
+(defgeneric ->vec (object))
+
+(defgeneric ->list (object)
+  (:method ((obj (eql nil))) nil))
+
+(defgeneric ->pist (object))
+(defgeneric ->alist (object))
