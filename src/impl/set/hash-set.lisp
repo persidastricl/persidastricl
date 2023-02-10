@@ -9,11 +9,12 @@
 
 (in-package #:persidastricl)
 
-(defclass hash-set (hamt collection) ())
+(defclass hash-set (hamt collection)
+  ((root :initarg :root :reader :root)))
 
 (defmethod contains? ((hs hash-set) item)
-  (with-slots (root bit-size) hs
-    (not (== :not-found (get-it root item (list (h:hash item) 0 bit-size :not-found))))))
+  (with-slots (root) hs
+    (not (== :not-found (n:get root item (list (h:hash item) 0 :not-found))))))
 
 (defmethod ->vector ((hs hash-set))
   (map 'vector #'identity (seq hs)))
@@ -26,3 +27,6 @@
 
 (defmethod ->list ((hs hash-set))
   (seq hs))
+
+(defmethod count ((obj hash-set))
+  (count (->list obj)))

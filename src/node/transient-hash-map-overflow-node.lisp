@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:node)
 
 ;; -----
 ;;  transient-hash-map-overflow-node
@@ -14,7 +14,7 @@
 
 (defclass transient-hash-map-overflow-node (hash-map-overflow-node) ())
 
-(defmethod put-it ((node transient-hash-map-overflow-node) entry context)
+(defmethod put ((node transient-hash-map-overflow-node) entry context)
   (with-slots (hash data) node
     (when hash (assert (eq hash (first context))))
     (let ((key (e:key entry))
@@ -25,7 +25,7 @@
                    (acons key value)))))
   node)
 
-(defmethod del-it ((node transient-hash-map-overflow-node) key context)
+(defmethod delete ((node transient-hash-map-overflow-node) key context)
   (with-slots (hash data) node
     (when hash (assert (eq hash (first context))))
     (when-not hash (setf hash (first context)))

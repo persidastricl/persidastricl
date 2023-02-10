@@ -13,7 +13,7 @@
 
 (defmethod iterator ((target hamt))
   (let ((start (iterator (:root target)))
-        (stack (coerce (sub-nodes (:root target)) 'list)))
+        (stack (coerce (n:sub-nodes (:root target)) 'list)))
     (multiple-value-bind (current stack) (if (has-next? start)
                                              (values start stack)
                                              (next-iterator stack))
@@ -27,9 +27,9 @@
   (if (emptyp stack)
       (values nil nil)
       (let ((node (first stack)))
-        (if (> (count node) 0)
-            (values (iterator node) (concatenate 'list (sub-nodes node) (rest stack)))
-            (next-iterator (concatenate 'list (sub-nodes node) (rest stack)))))))
+        (if (> (n:count node) 0)
+            (values (iterator node) (concatenate 'list (n:sub-nodes node) (rest stack)))
+            (next-iterator (concatenate 'list (n:sub-nodes node) (rest stack)))))))
 
 (defmethod current ((iterator hamt-iterator))
   (with-slots (current) iterator

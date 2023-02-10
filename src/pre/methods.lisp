@@ -28,12 +28,18 @@
   (:documentation "return an empty data-object of the same type as the original object argument")
   (:method ((object t)) (make-instance (type-of object))))
 
-(defgeneric ->array (object))
-(defgeneric ->vector (object))
-(defgeneric ->vec (object))
-
 (defgeneric ->list (object)
-  (:method ((obj (eql nil))) nil))
+  (:method ((obj (eql nil))) nil)
+  (:method ((object list)) object))
+
+(defgeneric ->array (object)
+  (:method (object) (make-array (length object) :initial-contents object)))
+
+(defgeneric ->vector (object)
+  (:method (object) (->array object)))
+
+(defgeneric ->vec (object)
+  (:method (object) (->array object)))
 
 (defgeneric ->pist (object))
 (defgeneric ->alist (object))

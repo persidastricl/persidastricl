@@ -7,7 +7,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:bitmap-vector)
 
 (defgeneric insert (bv position x))
 (defgeneric update (bv position x))
@@ -15,6 +15,8 @@
 
 (defgeneric at-index (target index))
 (defgeneric at-position (target position))
+
+(defgeneric count (bv))
 
 ;; -----
 ;; bitmap-vector object

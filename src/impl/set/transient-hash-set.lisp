@@ -14,43 +14,25 @@
 ;; -----
 
 (defclass transient-hash-set (hash-set)
-  ((root :type transient-hash-set-node :initarg :root :reader :root :documentation "root node of hash-map"))
-  (:default-initargs :root (make-instance 'transient-hash-set-node) :bit-size 5))
+  ((root :type n:transient-hash-set-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  (:default-initargs :root (make-instance 'n:transient-hash-set-node)))
 
 (defmethod conj ((ths transient-hash-set) &rest items)
-  (when-not (emptyp items)
-    (with-slots (root count bit-size) ths
-      (labels ((conj* (node item)
-                 (if (contains? ths item)
-                     (values node 0)
-                     (values (put-it node item (list (h:hash item) 0 bit-size)) 1))))
-        (destructuring-bind (new-root new-count) (reduce
-                                                  (lambda (twople item)
-                                                    (destructuring-bind (node count) twople
-                                                      (multiple-value-bind (node added) (conj* node item)
-                                                        (list node (+ count added)))))
-                                                  items
-                                                  :initial-value (list root count))
-          (setf root new-root)
-          (setf count new-count)))))
+  (with-slots (root) ths
+    (setf root (reduce
+                (lambda (node item)
+                  (n:put node item (list (h:hash item) 0)))
+                items
+                :initial-value root)))
   ths)
 
 (defmethod disj ((ths transient-hash-set) &rest items)
-  (when-not (emptyp items)
-    (with-slots (root count bit-size) ths
-      (labels ((disj* (node item)
-                 (if (contains? ths item)
-                     (values (del-it node item (list (h:hash item) 0 bit-size)) 1)
-                     (values node 0))))
-        (destructuring-bind (new-root new-count) (reduce
-                                                  (lambda (twople item)
-                                                    (destructuring-bind (node count) twople
-                                                      (multiple-value-bind (node removed) (disj* node item)
-                                                        (list node (- count removed)))))
-                                                  items
-                                                  :initial-value (list root count))
-          (setf root new-root)
-          (setf count new-count)))))
+  (with-slots (root count) ths
+    (setf root (reduce
+                (lambda (node item)
+                  (n:delete node item (list (h:hash item) 0)))
+                items
+                :initial-value root)))
   ths)
 
 (defun transient-hash-set (&rest items)
@@ -68,3 +50,6 @@
   (declare (ignore env))
   (let ((items (flatten (seq obj))))
     `(persidastricl:transient-hash-set ,@items)))
+
+(defun t-set (object)
+  (into (transient-hash-set) (seq object)))

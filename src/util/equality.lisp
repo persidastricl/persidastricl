@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :persidastricl)
+(in-package :equality)
 
 ;; -----
 ;;  there is no defined notion of equality for CLOS objects in LISP

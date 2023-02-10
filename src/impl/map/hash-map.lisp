@@ -9,12 +9,20 @@
 
 (in-package #:persidastricl)
 
-(defclass hash-map (hamt associable) ())
+(defun ->entries (sequence)
+  (let ((sequence (->list sequence)))
+    (typecase (first sequence)
+      (e:entry sequence)
+      (cl:cons (map 'list (lambda (c) (apply #'e:map-entry c)) sequence))
+      (t (map 'list (lambda (kv) (apply #'e:map-entry kv)) (partition sequence 2))))))
+
+(defclass hash-map (hamt associable)
+  ((root :initarg :root :reader :root)))
 
 (defmethod lookup ((hm hash-map) key &optional (default nil))
-  (with-slots (root bit-size) hm
+  (with-slots (root) hm
     (let ((hash (h:hash key)))
-      (get-it root key (list hash 0 bit-size default)))))
+      (n:get root key (list hash 0 default)))))
 
 (defmethod get ((hm hash-map) key &optional (default nil))
   (lookup hm key default))
@@ -37,6 +45,9 @@
 (defmethod ->alist ((hm hash-map))
   (map 'list #'e:->cons (seq hm)))
 
+(defmethod count ((obj hash-map))
+  (count (->alist obj)))
+
 (defmethod with-meta ((object hamt) (meta hash-map))
-  (with-slots (root bit-size count) object
-    (make-instance (type-of object) :root root :bit-size bit-size :count count :meta meta)))
+  (with-slots (root) object
+    (make-instance (type-of object) :root root :meta meta)))

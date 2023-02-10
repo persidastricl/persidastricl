@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:node)
 
 ;; -----
 ;;  hash-set-overflow-node
@@ -17,7 +17,7 @@
 (defmethod single-remaining-data ((node hash-set-overflow-node))
   (first (:data node)))
 
-(defmethod get-it ((node hash-set-overflow-node) item context)
+(defmethod get ((node hash-set-overflow-node) item context)
   (with-slots (hash data) node
     (when hash (assert (eq hash (first context))))
     (if-let (target (member item data :test #'==))

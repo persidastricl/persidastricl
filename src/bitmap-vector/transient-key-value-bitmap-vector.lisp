@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :persidastricl)
+(in-package :bitmap-vector)
 
 ;; -----
 ;; transient-key-value-bitmap-vector object

@@ -25,6 +25,11 @@
                 :serial t
                 :components ((:file "package")))
 
+               (:module "equality"
+                :pathname "src/util"
+                :serial t
+                :components ((:file "equality")))
+
                (:module "pre"
                 :pathname "src/pre"
                 :serial t
@@ -69,6 +74,7 @@
                 :components ((:file "node")
 
                              (:file "overflow-node")
+                             (:file "persistent-overflow-node")
                              (:file "hash-set-overflow-node")
                              (:file "hash-map-overflow-node")
                              (:file "transient-hash-set-overflow-node")
@@ -84,7 +90,13 @@
                              (:file "transient-hash-map-node")
                              (:file "persistent-hash-map-node")
                              (:file "transient-hash-set-node")
-                             (:file "persistent-hash-set-node")))
+                             (:file "persistent-hash-set-node")
+
+                             (:file "bpvt-node")
+                             (:file "vector-node")
+                             (:file "persistent-vector-node")
+                             (:file "persistent-vector-leaf-node")
+                             (:file "persistent-vector-tail-node")))
 
                (:module "mixins"
                 :pathname "src/mixins"
@@ -99,6 +111,11 @@
                 :pathname "src/impl"
                 :serial t
                 :components ((:file "hamt")))
+
+               (:module "bpvt"
+                :pathname "src/impl"
+                :serial t
+                :components ((:file "bpvt")))
 
                (:module "set"
                 :pathname "src/impl/set"
@@ -115,9 +132,9 @@
                              (:file "persistent-hash-map")))
 
                (:module "vector"
-                :pathname "src/vector"
+                :pathname "src/impl/vector"
                 :serial t
-                :components ((:file "vector")))
+                :components ((:file "persistent-vector")))
 
                (:module "methods"
                 :pathname "src"
@@ -147,11 +164,11 @@
   :components ((:module "test"
                 :serial t
                 :components ((:file "master")
+                             (:file "immutable-class")
                              (:file "bits")
                              (:file "hash")
                              (:file "entry")
                              (:file "vector")
-                             (:file "immutable-class")
                              (:file "bitmap-vector")
                              (:file "transient-hash-map")
                              (:file "persistent-hash-map")

@@ -21,9 +21,11 @@
   "Set the `bit-position` bit off"
   (if (set? bit-position bitmap)
       (logxor (ash 1 bit-position) bitmap)
-    bitmap))
+      bitmap))
 
-(defun bits (hash depth &optional (size 5))
+(defparameter *default-hash-slice-bit-size* 5)
+
+(defun bits (hash depth &optional (size *default-hash-slice-bit-size*))
   "Given a `hash`, break the `hash` into `size` bit slices and return
 the `size` bits at the `depth` slice"
   (ldb (byte size (* size depth)) hash))

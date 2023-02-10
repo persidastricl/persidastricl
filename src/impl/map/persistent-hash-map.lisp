@@ -14,57 +14,31 @@
 ;; -----
 
 (define-immutable-class persistent-hash-map (hash-map)
-  ((root :type persistent-hash-map-node :initarg :root :reader :root :documentation "root node of hash-map"))
-  (:default-initargs :root (make-instance 'persistent-hash-map-node) :meta nil :count 0 :bit-size 5))
+  ((root :type n:persistent-hash-map-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  (:default-initargs :root (make-instance 'n:persistent-hash-map-node) :meta nil))
 
 (defmethod assoc ((phm persistent-hash-map) k v &rest kv-pairs)
-  (let ((kv-pairs (if (and k v)
-                      (list* k v kv-pairs)
-                      kv-pairs)))
-    (if (emptyp kv-pairs)
-        phm
-        (labels ((assoc* (node kv-pair)
-                   (destructuring-bind (k v) kv-pair
-                     (let* ((hash (h:hash k))
-                            (current (lookup phm k :not-found)))
-                       (if (== current v)
-                           (values node 0)
-                           (values (put-it node (e:map-entry k v) (list hash 0 (:bit-size phm)))
-                                   (if (== current :not-found) 1 0)))))))
-          (destructuring-bind (root count) (reduce
-                                            (lambda (twople kv-pair)
-                                              (destructuring-bind (node count) twople
-                                                (multiple-value-bind (node added) (assoc* node kv-pair)
-                                                  (list node (+ count added)))))
-                                            (partition kv-pairs 2)
-                                            :initial-value (list (:root phm) (:count phm)))
-            (make-instance 'persistent-hash-map
-                           :root root
-                           :meta (:meta phm)
-                           :count count
-                           :bit-size (:bit-size phm)))))))
+  (with-slots (root meta) phm
+    (let ((new-root (reduce
+                     (lambda (node kv-pair)
+                       (let ((entry (apply #'e:map-entry kv-pair)))
+                         (n:put node entry (list (h:hash (e:key entry)) 0))))
+                     (partition (list* k v kv-pairs) 2)
+                     :initial-value root)))
+      (if (== new-root root)
+          phm
+          (make-instance 'persistent-hash-map :root new-root :meta meta)))))
 
 (defmethod dissoc ((phm persistent-hash-map) &rest keys)
-  (if (emptyp keys)
-      phm
-      (labels ((dissoc* (node k)
-                 (let* ((hash (h:hash k))
-                        (current (lookup phm k :not-found)))
-                   (if (== current :not-found)
-                       (values node 0)
-                       (values (del-it node k (list hash 0 (:bit-size phm))) 1)))))
-        (destructuring-bind (root count) (reduce
-                                          (lambda (twople k)
-                                            (destructuring-bind (node count) twople
-                                              (multiple-value-bind (node removed) (dissoc* node k)
-                                                (list node (- count removed)))))
-                                          keys
-                                          :initial-value (list (:root phm) (:count phm)))
-          (make-instance 'persistent-hash-map
-                         :root root
-                         :meta (:meta phm)
-                         :count count
-                         :bit-size (:bit-size phm))))))
+  (with-slots (root meta) phm
+    (let ((new-root (reduce
+                     (lambda (node k)
+                       (n:delete node k (list (h:hash k) 0)))
+                     keys
+                     :initial-value root)))
+      (if (== new-root root)
+          phm
+          (make-instance 'persistent-hash-map :root new-root :meta meta)))))
 
 (defun persistent-hash-map (&rest kvs)
   (let ((m (make-instance 'persistent-hash-map)))

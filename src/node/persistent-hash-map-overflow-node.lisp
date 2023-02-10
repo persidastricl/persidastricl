@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:node)
 
 ;; -----
 ;;  persistent-hash-map-overflow-node
@@ -14,7 +14,7 @@
 
 (define-immutable-class persistent-hash-map-overflow-node (hash-map-overflow-node) ())
 
-(defmethod put-it ((node persistent-hash-map-overflow-node) entry context)
+(defmethod put ((node persistent-hash-map-overflow-node) entry context)
   (with-slots (hash data) node
     (when hash (assert (eq hash (first context))))
     (let ((key (e:key entry))
@@ -23,7 +23,7 @@
                                                                                                 (remove-if (lambda (e) (== (car e) key)))
                                                                                                 (acons key value))))))
 
-(defmethod del-it ((node persistent-hash-map-overflow-node) key context)
+(defmethod delete ((node persistent-hash-map-overflow-node) key context)
   (with-slots (hash data) node
     (when hash (assert (eq hash (first context))))
     (make-instance 'persistent-hash-map-overflow-node :hash (or hash (first context)) :data (remove-if (lambda (e) (== (car e) key)) data))))

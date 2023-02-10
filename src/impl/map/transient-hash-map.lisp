@@ -14,41 +14,26 @@
 ;; -----
 
 (defclass transient-hash-map (hash-map)
-  ((root :type transient-hash-map-node :initarg :root :reader :root :documentation "root node of hash-map"))
-  (:default-initargs :root (make-instance 'transient-hash-map-node) :meta nil :count 0 :bit-size 5))
+  ((root :type n:transient-hash-map-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  (:default-initargs :root (make-instance 'n:transient-hash-map-node) :meta nil))
 
 (defmethod assoc ((thm transient-hash-map) k v &rest kv-pairs)
-  (with-slots (root count bit-size) thm
-    (let ((added 0))
-      (labels ((assoc* (node kv-pair)
-                 (destructuring-bind (k v) kv-pair
-                   (let ((current (lookup thm k :not-found)))
-                     (when (== current :not-found) (incf added))
-                     (if (== current v)
-                         node
-                         (put-it node (e:map-entry k v) (list (h:hash k) 0 bit-size)))))))
-        (setf root (reduce
-                    #'assoc*
-                    (partition kv-pairs 2)
-                    :initial-value (assoc* root (list k v))))
-        (setf count (+ count added)))))
+  (with-slots (root) thm
+    (setf root (reduce
+                (lambda (node kv-pair)
+                  (let ((entry (apply #'e:map-entry kv-pair)))
+                    (n:put node entry (list (h:hash (e:key entry)) 0))))
+                (partition (list* k v  kv-pairs) 2)
+                :initial-value root)))
   thm)
 
 (defmethod dissoc ((thm transient-hash-map) &rest keys)
-  (when-not (emptyp keys)
-    (with-slots (root count bit-size) thm
-      (let ((removed 0))
-        (labels ((dissoc* (node k)
-                   (let ((current (lookup thm k :not-found)))
-                     (when-not (== current :not-found) (incf removed))
-                     (if (== current :not-found)
-                         node
-                         (del-it node k (list (h:hash k) 0 bit-size))))))
-          (setf root (reduce
-                      #'dissoc*
-                      keys
-                      :initial-value root))
-          (setf count (- count removed))))))
+  (with-slots (root) thm
+    (setf root (reduce
+                (lambda (node k)
+                  (n:delete node k (list (h:hash k) 0)))
+                keys
+                :initial-value root)))
   thm)
 
 (defun transient-hash-map (&rest kvs)

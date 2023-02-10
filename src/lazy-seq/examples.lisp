@@ -9,31 +9,37 @@
 
 (defvar fib (cons 0 (lazy-seq 1 (lmap #'+ fib (tail fib)))))
 
+(time
+ (into [] (take 1 (drop 1000 fib))))
+
 (defvar trib
-  (cons 0 (cons 1 (cons 1 (lazy-seq 2 (lmap #'+
-                                            (tail trib)
-                                            (tail (tail trib))
-                                            (tail (tail (tail trib)))))))))
+  (list* 0 1 1 (lazy-seq 2 (lmap #'+
+                                 (tail trib)
+                                 (tail (tail trib))
+                                 (tail (tail (tail trib)))))))
 
-(defvar lucas
-  (cons 2 (cons 1 (lazy-seq 3 (lmap #'+ (tail lucas) (tail (tail lucas)))))))
+(time
+ (into [] (take 1 (drop 1000 trib))))
 
-(defun catalan-seq (&optional (n 0))
+
+(defvar catalan-seq
   (labels ((fact (i)
-             (apply #'* (->list (range i :start i :step -1))))
+             (reduce #'* (->list (range i :start i :step -1))))
            (catalan* (i)
              (let ((v (/ (fact (* 2 i)) (* (fact (1+ i)) (fact i)))))
                (lazy-seq v (catalan* (1+ i))))))
-    (catalan* n)))
+    (catalan* 0)))
 
+(time
+ (lreduce #'+ (take 10 (drop 1000 catalan-seq)) :initial-value 0))
 
 ;; -----
 ;;  primes' sieve of erasthenos (sp)
 ;;
 ;; -----
 
-(defun primes-seq ()
-  (let ((sieve (transient-hash-map)))
+(defvar primes-seq
+  (let ((sieve @{}))
     (labels ((find-next-empty-multiple (factor multiple)
                (let ((target (* multiple factor)))
                  (if (and
@@ -60,8 +66,5 @@
                  (lazy-seq next (lazy-primes (+ next 2))))))
       (cons 2 (lazy-primes 3)))))
 
-
-(time (drop 100000 (primes-seq)) )
-
 (time
- (into [] (take 10 (drop 100000 (primes-seq)))))
+ (into [] (take 1 (drop 5000 primes-seq))))

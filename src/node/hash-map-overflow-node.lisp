@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:node)
 
 ;; -----
 ;;  hash-map-overflow-node
@@ -22,7 +22,7 @@
   (let ((target (first (:data node))))
     (e:map-entry (first target) (rest target))))
 
-(defmethod get-it ((node hash-map-overflow-node) key context)
+(defmethod get ((node hash-map-overflow-node) key context)
   (with-slots (hash data) node
     (when hash (assert (eq hash (first context))))
     (if-let (target (cl:assoc key data :test #'==))

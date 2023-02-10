@@ -56,6 +56,17 @@
   (when s
     (cons (head s) (->list (tail s)))))
 
+(defmethod ->array ((s lazy-sequence))
+  (when s
+    (let ((l (->list s)))
+      (make-array (length l) :initial-contents l))))
+
+(defmethod ->vector ((s lazy-sequence))
+  (->array s))
+
+(defmethod ->vec ((s lazy-sequence))
+  (->array s))
+
 (defmethod head ((seq lazy-sequence))
   (:head seq))
 
@@ -65,3 +76,8 @@
 (defun ensure-seq (s)
   (if (consp s) s (seq s)))
 
+(defmethod first ((seq lazy-sequence))
+  (:head seq))
+
+(defmethod rest ((seq lazy-sequence))
+  (tail seq))

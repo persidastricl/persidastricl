@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:node)
 
 ;; -----
 ;;  persistent-overflow-node
