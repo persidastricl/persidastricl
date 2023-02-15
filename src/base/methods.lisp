@@ -62,7 +62,7 @@
   (:method (object) (->array object))
   (:method ((s lazy-sequence)) (->array s)))
 
-(defgeneric ->pist (object))
+(defgeneric ->plist (object))
 (defgeneric ->alist (object))
 
 (defmethod first ((seq lazy-sequence))
