@@ -17,7 +17,8 @@
                #:cl-ppcre
                #:cl-murmurhash
                #:named-readtables
-               #:sip-hash)
+               #:sip-hash
+               #:stmx)
   :serial t
 
   :components ((:module "packaging"
@@ -43,6 +44,11 @@
                              (:file "hash")
                              (:file "entry")
                              (:file "vector")))
+
+               (:module "stm"
+                :pathname "src/stm"
+                :serial t
+                :components ((:file "atom")))
 
                (:module "lazy-sequences"
                 :pathname "src/lazy"

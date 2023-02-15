@@ -83,6 +83,6 @@
   "return list of all leaf nodes in x"
   (labels ((flatten* (x acc)
              (cond ((null x) acc)
-                   ((atom x) (cons x acc))
+                   ((cl:atom x) (cons x acc))
                    (t (flatten* (first x) (flatten* (rest x) acc))))))
     (flatten* x nil)))

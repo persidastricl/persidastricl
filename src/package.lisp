@@ -119,7 +119,7 @@
 (defpackage #:persidastricl
   (:nicknames :pds :p)
   (:use #:cl #:arrow-macros #:equality #:immutable #:util)
-  (:shadow #:cl #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector)
+  (:shadow #:cl #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector)
   (:export #:transient-hash-map
            #:persistent-hash-map
            #:transient-hash-set

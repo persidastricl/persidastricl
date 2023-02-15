@@ -46,23 +46,25 @@
 ;; -----
 
 (defvar primes-seq
-  (let ((sieve (transient-hash-map)))
+  (let ((sieve (atom (persistent-hash-map))))
     (labels ((find-next-empty-multiple (factor multiple)
                (let ((target (* multiple factor)))
                  (if (and
                       (oddp target)
-                      (null (lookup sieve target)))
+                      (null (lookup (deref sieve) target)))
                      multiple
                      (find-next-empty-multiple factor (+ multiple 2)))))
              (is-prime-p (n)
-               (if-let ((value (lookup sieve n)))
+               (if-let ((value (lookup (deref sieve) n)))
                  (destructuring-bind (factor multiple) value
                    (let ((next (find-next-empty-multiple factor multiple)))
-                     (-> (assoc sieve (* factor next) (list factor (+ next 2)))
-                       (dissoc n))
+                     (swap! sieve (lambda (sieve)
+                                    (-> sieve
+                                      (assoc (* factor next) (list factor (+ next 2)))
+                                      (dissoc n))))
                      nil))
                  (let ((next (find-next-empty-multiple n 3)))
-                   (assoc sieve (* n next ) (list n (+ next 2)))
+                   (swap! sieve #'assoc (* n next ) (list n (+ next 2)))
                    t)))
              (next-prime (p)
                (if (is-prime-p p)

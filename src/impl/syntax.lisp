@@ -16,7 +16,6 @@
 
 (defconstant +hash+ #\#)
 (defconstant +at+ #\@)
-(defconstant +exclamation+ #\!)
 (defconstant +left-brace+ #\{)
 (defconstant +right-brace+ #\})
 (defconstant +left-bracket+ #\[)
@@ -118,7 +117,6 @@
 (named-readtables:defreadtable syntax
   (:merge :standard)
   (:macro-char +at+ :dispatch)
-  (:macro-char +exclamation+ :dispatch)
   (:macro-char +right-brace+ #'read-delimiter nil)
   (:macro-char +left-brace+ #'read-persistent-map-literal nil)
   (:dispatch-macro-char +at+ +left-brace+ #'read-transient-map-literal)
