@@ -30,11 +30,15 @@
                 :serial t
                 :components ((:file "equality")))
 
-               (:module "utilities"
+               (:module "util"
+                :pathname "src/util"
+                :serial t
+                :components ((:file "util")))
+
+               (:module "helpers"
                 :pathname "src/util"
                 :serial t
                 :components ((:file "string")
-                             (:file "util")
                              (:file "bits")
                              (:file "hash")
                              (:file "entry")
@@ -44,11 +48,10 @@
                 :pathname "src/lazy"
                 :serial t
                 :components ((:file "thunk")
-                             (:file "lazy-sequence")
-                             (:file "methods")))
+                             (:file "lazy-sequence")))
 
-               (:module "pre"
-                :pathname "src/pre"
+               (:module "base"
+                :pathname "src/base"
                 :serial t
                 :components ((:file "methods")))
 
@@ -115,11 +118,6 @@
                 :serial t
                 :components ((:file "hamt")))
 
-               (:module "bpvt"
-                :pathname "src/impl"
-                :serial t
-                :components ((:file "bpvt")))
-
                (:module "set"
                 :pathname "src/impl/set"
                 :serial t
@@ -134,6 +132,11 @@
                              (:file "transient-hash-map")
                              (:file "persistent-hash-map")))
 
+               (:module "bpvt"
+                :pathname "src/impl"
+                :serial t
+                :components ((:file "bpvt")))
+
                (:module "vector"
                 :pathname "src/impl/vector"
                 :serial t
@@ -141,16 +144,11 @@
                              (:file "transient-vector")
                              (:file "persistent-vector")))
 
-               (:module "methods"
-                :pathname "src"
-                :serial t
-                :components ((:file "impl/methods")
-                             (:file "lazy/methods")))
-
                (:module "core"
                 :pathname "src/core"
                 :serial t
-                :components ((:file "core")))
+                :components ((:file "generics")
+                             (:file "functions")))
 
                (:module "sample-seqs"
                 :pathname "src/lazy"

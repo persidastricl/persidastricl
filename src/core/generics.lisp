@@ -1,9 +1,9 @@
 ;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;;   methods.lisp
+;;;   core/generics.lisp
 ;;;
-;;; generic functions
+;;;   core (generic) functions
 ;;;
 ;;; -----
 
