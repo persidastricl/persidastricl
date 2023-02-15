@@ -7,6 +7,8 @@
 
 (in-package #:node)
 
+(defgeneric add-leaf-node (node leaf first-index-of-values))
+
 ;; -----
 ;;  bpvt-node
 ;;

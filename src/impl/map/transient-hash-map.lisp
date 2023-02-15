@@ -23,7 +23,7 @@
                 (lambda (node kv-pair)
                   (let ((entry (apply #'e:map-entry kv-pair)))
                     (n:put node entry (list (h:hash (e:key entry)) 0))))
-                (partition (list* k v  kv-pairs) 2)
+                (->list (partition (list* k v  kv-pairs) 2))
                 :initial-value root)))
   thm)
 
@@ -38,14 +38,14 @@
 
 (defun transient-hash-map (&rest kvs)
   (let ((m (make-instance 'transient-hash-map)))
-    (when-not (emptyp kvs)
+    (when-not (empty? kvs)
       (apply #'assoc m kvs))
     m))
 
 (defmethod print-object ((object transient-hash-map) stream)
   (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-      (format stream "@{~{~s~^ ~}}" (flatten (map 'list #'e:->list (seq object))))
-      (format stream "(persidastricl:transient-hash-map ~{~s~^ ~})" (flatten (map 'list #'e:->list (seq object))))))
+      (format stream "@{~{~s~^ ~}}" (->list object))
+      (format stream "(persidastricl:transient-hash-map ~{~s~^ ~})" (->list object))))
 
 (defmethod make-load-form ((obj transient-hash-map) &optional env)
   (declare (ignore env))

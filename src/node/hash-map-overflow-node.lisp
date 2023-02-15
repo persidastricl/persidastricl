@@ -25,6 +25,6 @@
 (defmethod get ((node hash-map-overflow-node) key context)
   (with-slots (hash data) node
     (when hash (assert (eq hash (first context))))
-    (if-let (target (cl:assoc key data :test #'==))
+    (if-let ((target (cl:assoc key data :test #'==)))
       (rest target)
       (last context))))

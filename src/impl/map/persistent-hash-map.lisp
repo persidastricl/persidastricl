@@ -23,9 +23,9 @@
                      (lambda (node kv-pair)
                        (let ((entry (apply #'e:map-entry kv-pair)))
                          (n:put node entry (list (h:hash (e:key entry)) 0))))
-                     (partition (list* k v kv-pairs) 2)
+                     (->list (partition (list* k v kv-pairs) 2))
                      :initial-value root)))
-      (if (== new-root root)
+      (if (eq new-root root)
           phm
           (make-instance 'persistent-hash-map :root new-root :meta meta)))))
 
@@ -42,14 +42,14 @@
 
 (defun persistent-hash-map (&rest kvs)
   (let ((m (make-instance 'persistent-hash-map)))
-    (if-not (emptyp kvs)
+    (if-not (empty? kvs)
             (apply #'assoc m kvs)
             m)))
 
 (defmethod print-object ((object persistent-hash-map) stream)
   (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-      (format stream "{~{~s~^ ~}}" (flatten (map 'list #'e:->list (seq object))))
-      (format stream "(persidastricl:persistent-hash-map ~{~s~^ ~})" (flatten (map 'list #'e:->list (seq object))))))
+      (format stream "{~{~s~^ ~}}" (->list object))
+      (format stream "(persidastricl:persistent-hash-map ~{~s~^ ~})" (->list object))))
 
 (defmethod make-load-form ((obj persistent-hash-map) &optional env)
   (declare (ignore env))

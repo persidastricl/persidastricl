@@ -15,3 +15,34 @@
 (defgeneric dissoc (associable &rest keys))
 (defgeneric lookup (associable k &optional default))
 (defgeneric get (associable k &optional default))
+
+;; -----
+;;  do we really need these for lists and vectors
+;;  i.e. will we ever call them (I am thinking yes with update-in and assoc-in ???)
+
+(defmethod assoc ((lst list) k1 v1 &rest kv-pairs)
+  (labels ((assoc* (l k v)
+             (check-type k integer)
+             (let ((start (->list (take k l))))
+               (concatenate 'list start (list* v (->list (drop (1+  k) l)))))))
+    (reduce
+     (lambda (l kv-pair)
+       (apply #'assoc* l kv-pair))
+     (->list (partition (list* k1 v1 kv-pairs) 2))
+     :initial-value lst)))
+
+(defmethod lookup ((lst list) k1 &optional default)
+  (or (first (drop k1 lst)) default))
+
+(defmethod get ((lst list) k1 &optional default)
+  (lookup lst k1 default))
+
+(defmethod assoc ((vec array) k1 v1 &rest kv-pairs)
+  (labels ((assoc* (v k val)
+             (check-type k integer)
+             (v:update v k val)))
+    (reduce
+     (lambda (v kv-pair)
+       (apply #'assoc* v kv-pair))
+     (->list (partition (list* k1 v1 kv-pairs) 2))
+     :initial-value vec)))

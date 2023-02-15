@@ -30,16 +30,10 @@
                 :serial t
                 :components ((:file "equality")))
 
-               (:module "pre"
-                :pathname "src/pre"
-                :serial t
-                :components ((:file "methods")))
-
                (:module "utilities"
                 :pathname "src/util"
                 :serial t
                 :components ((:file "string")
-                             (:file "equality")
                              (:file "util")
                              (:file "bits")
                              (:file "hash")
@@ -47,9 +41,16 @@
                              (:file "vector")))
 
                (:module "lazy-sequences"
-                :pathname "src/lazy-seq"
+                :pathname "src/lazy"
                 :serial t
-                :components ((:file "lazy-sequence")))
+                :components ((:file "thunk")
+                             (:file "lazy-sequence")
+                             (:file "methods")))
+
+               (:module "pre"
+                :pathname "src/pre"
+                :serial t
+                :components ((:file "methods")))
 
                (:module "metaclass"
                 :pathname "src/metaclass"
@@ -94,9 +95,11 @@
 
                              (:file "bpvt-node")
                              (:file "vector-node")
+                             (:file "vector-leaf-node")
+                             (:file "transient-vector-node")
                              (:file "persistent-vector-node")
-                             (:file "persistent-vector-leaf-node")
-                             (:file "persistent-vector-tail-node")))
+                             (:file "transient-vector-leaf-node")
+                             (:file "persistent-vector-leaf-node")))
 
                (:module "mixins"
                 :pathname "src/mixins"
@@ -134,13 +137,25 @@
                (:module "vector"
                 :pathname "src/impl/vector"
                 :serial t
-                :components ((:file "persistent-vector")))
+                :components ((:file "vector")
+                             (:file "transient-vector")
+                             (:file "persistent-vector")))
 
                (:module "methods"
                 :pathname "src"
                 :serial t
                 :components ((:file "impl/methods")
-                             (:file "lazy-seq/methods")))
+                             (:file "lazy/methods")))
+
+               (:module "core"
+                :pathname "src/core"
+                :serial t
+                :components ((:file "core")))
+
+               (:module "sample-seqs"
+                :pathname "src/lazy"
+                :serial t
+                :components ((:file "sequences")))
 
                (:module "syntax"
                 :pathname "src/impl"

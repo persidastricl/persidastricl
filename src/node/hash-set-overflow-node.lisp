@@ -20,6 +20,6 @@
 (defmethod get ((node hash-set-overflow-node) item context)
   (with-slots (hash data) node
     (when hash (assert (eq hash (first context))))
-    (if-let (target (member item data :test #'==))
+    (if-let ((target (member item data :test #'==)))
       (first target)
       (first (last context)))))

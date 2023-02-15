@@ -37,7 +37,7 @@
 
 (defun transient-hash-set (&rest items)
   (let ((s (make-instance 'transient-hash-set)))
-    (when-not (emptyp s)
+    (when-not (empty? s)
       (apply #'conj s items))
     s))
 

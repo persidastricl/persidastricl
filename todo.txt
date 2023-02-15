@@ -10,15 +10,14 @@ Things to do:
 
 *  improve tests
 
-*  move the persistent-vector code over and work into this codebase (bpvt)
-*  --- add assoc to vector-node and vector-leaf-node
-*  --- add assoc to pv
-*  --- make transient versions of bpvt
 *  --- add ->persistent and ->transient conversions
 *  --- make persistent constructor use transients
 *  --- add  pop/disj (only removes the last value from tail and cleans up when empty tail (promotes last tail back to tail position))
+*  --- add subvec to get a slice of the vector
 
-
+* rethink iterators
+   -- need to iterate on the values in a collection
+   -- need to iterate on the ds structure itself (the nodes) (for class changes)
 
 *  make a transient data structure from a persistent one (just add the data to a new transient instance)
 *  make a persistent data strucure out of a transient (use change-class ?? for speed)
@@ -28,10 +27,9 @@ Things to do:
 
 *  for vectors, is it possible to change the default 32/5 partition to a 64/6 or 64/8 partition relatively quickly/seamlessly when we hit the limits of 32/5 (like lisp's arithmetic stack) ?????
 
-;; long term
-
-*  at this point (if all this is implemented) open-source it (BSD license) ??????
+;; long term things to think about
 
 *  rewrite the matcher program in lisp using new ds's and see how it feels works
-
 *  at some point do we want to rewrite the backend of clockpartners in persidastricl/common-lisp and have a re-frame or reagent front end???
+
+*  at this point (if all this is implemented) open-source it (BSD license) ??????

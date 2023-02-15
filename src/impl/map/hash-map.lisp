@@ -14,7 +14,7 @@
     (typecase (first sequence)
       (e:entry sequence)
       (cl:cons (map 'list (lambda (c) (apply #'e:map-entry c)) sequence))
-      (t (map 'list (lambda (kv) (apply #'e:map-entry kv)) (partition sequence 2))))))
+      (t (map 'list (lambda (kv) (apply #'e:map-entry kv)) (->list (partition sequence 2)))))))
 
 (defclass hash-map (hamt associable)
   ((root :initarg :root :reader :root)))
@@ -28,7 +28,7 @@
   (lookup hm key default))
 
 (defmethod ->vector ((hm hash-map))
-  (map 'vector #'e:->vec (seq hm)))
+  (map 'cl:vector #'e:->vec (seq hm)))
 
 (defmethod ->vec ((hm hash-map))
   (->vector hm))
@@ -37,7 +37,11 @@
   (->vector hm))
 
 (defmethod ->list ((hm hash-map))
-  (flatten (map 'list #'e:->list (seq hm))))
+  (reduce
+   (lambda (l e)
+     (list* (e:key e) (e:value e) l))
+   (seq hm)
+   :initial-value '()))
 
 (defmethod ->plist ((hm hash-map))
   (->list hm))

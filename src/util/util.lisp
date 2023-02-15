@@ -5,15 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
-
-(proclaim '(inline last-one single-p append-one conc-one ensure-list))
-
-(defun emptyp (sequence)
-  (typecase sequence
-    (null t)
-    (array (zerop (length sequence)))
-    (otherwise nil)))
+(in-package #:util)
 
 (defmacro while (condition &rest body)
   `(loop while ,condition
@@ -26,37 +18,26 @@
   `(when (not ,pred)
      ,@body))
 
-(defmacro if-let ((var test-form) then-form &optional else-form)
-  `(let ((,var ,test-form))
-     (if ,var ,then-form ,else-form)))
+(defmacro if-let (bindings then &optional else)
+  (let ((binding (first bindings)))
+    (assert (= (length binding) 2))
+    (let ((var (elt binding 0))
+          (form (elt binding 1))
+          (temp (gensym)))
+      `(let ((,temp ,form))
+         (if ,temp
+             (let ((,var ,temp))
+               ,then)
+             ,else)))))
 
-(defmacro when-let ((var test-form) &body body)
-  `(let ((,var ,test-form))
-     (when ,var
-       ,@body)))
+(defmacro when-let (bindings &body body)
+  (let ((binding (first bindings)))
+    (assert (= (length binding) 2))
+    (let ((var (elt binding 0))
+          (form (elt binding 1))
+          (temp (gensym)))
+      `(let ((,temp ,form))
+         (when ,temp
+           (let ((,var ,temp))
+             ,@body))))))
 
-(defun partition (source n)
-  "return list with source divided into lists of n items plus final list (< n) of remainders"
-  (when (zerop n) (error "partition is zero length"))
-  (labels ((rec (source acc)
-             (let ((more (nthcdr n source)))
-               (if (consp more)
-                   (rec more (cons (subseq source 0 n) acc))
-                   (nreverse (cons source acc))))))
-    (when source (rec source nil))))
-
-(defun flatten (x)
-  "return list of all leaf nodes in x"
-  (labels ((rec (x acc)
-             (cond ((null x) acc)
-                   ((atom x) (cons x acc))
-                   (t (rec (first x) (rec (rest x) acc))))))
-    (rec x nil)))
-
-(defun find-first (pred lst)
-  "return the values of first occurence of element in list that satisfies pred, and its result"
-  (when lst
-    (let ((result (funcall pred (first lst))))
-      (if result
-          (values (first lst) result)
-          (find-first pred (rest lst))))))

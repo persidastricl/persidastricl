@@ -7,13 +7,13 @@
 
 (in-package :node)
 
-(define-immutable-class persistent-vector-leaf-node (persistent-vector-node) ()
+(define-immutable-class persistent-vector-leaf-node (vector-leaf-node) ()
   (:default-initargs :level 0))
 
-;; get value at level 0 index
+(defmethod cons (item (node persistent-vector-leaf-node))
+  (make-instance (type-of node) :level 0 :data (v:append (:data node) item)))
 
-(defmethod get ((node persistent-vector-leaf-node) index context)
-  (destructuring-bind (default) context
-    (let* ((i (b:bits index 0))
-           (v (elt (:data node) i)))
-      (or v default))))
+(defmethod put ((node persistent-vector-leaf-node) item index)
+  (with-slots (data) node
+    (let ((i (b:bits index 0)))
+      (make-instance (type-of node) :level 0 :data (v:update (:data node) i item)))))

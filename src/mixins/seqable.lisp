@@ -11,9 +11,7 @@
 
 (defclass seqable () ())
 
-(defgeneric seq (seqable)
-  (:method ((object sequence)) object)
-  (:method ((object seqable)) (let ((seq '())
-                                    (it (iterator object)))
-                                (while (has-next? it) (setf seq (cons (next it) seq)))
-                                (nreverse seq))))
+(defmethod seq ((object seqable)) (let ((seq '())
+                                        (it (iterator object)))
+                                    (while (has-next? it) (setf seq (cons (next it) seq)))
+                                    (nreverse seq)))

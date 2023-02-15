@@ -4,6 +4,14 @@
   (:use #:cl)
   (:export #:==))
 
+(defpackage #:util
+  (:use #:cl)
+  (:export #:while
+           #:if-not
+           #:when-not
+           #:if-let
+           #:when-let))
+
 (defpackage #:immutable
   (:use #:cl)
   (:export #:immutable-class
@@ -84,7 +92,7 @@
 
 (defpackage #:node
   (:nicknames #:n)
-  (:use #:cl #:arrow-macros #:equality #:immutable)
+  (:use #:cl #:arrow-macros #:equality #:immutable #:util)
   (:shadow #:cl #:cons #:put #:get #:delete #:insert #:update #:remove #:count)
   (:export #:add-leaf-node
            #:at-index
@@ -96,9 +104,10 @@
            #:transient-hash-map-node
            #:persistent-hash-set-node
            #:persistent-hash-map-node
+           #:transient-vector-node
+           #:transient-vector-leaf-node
            #:persistent-vector-node
            #:persistent-vector-leaf-node
-           #:persistent-vector-tail-node
            #:cons
            #:put
            #:get
@@ -109,12 +118,14 @@
 
 (defpackage #:persidastricl
   (:nicknames :pds :p)
-  (:use #:cl #:arrow-macros #:equality #:immutable)
-  (:shadow #:cl #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set)
-  (:export #:persistent-hash-map
-           #:transient-hash-map
-           #:persistent-hash-set
+  (:use #:cl #:arrow-macros #:equality #:immutable #:util)
+  (:shadow #:cl #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector)
+  (:export #:transient-hash-map
+           #:persistent-hash-map
            #:transient-hash-set
+           #:persistent-hash-set
+           #:transient-vector
+           #:persistent-vector
            #:assoc
            #:dissoc
            #:lookup

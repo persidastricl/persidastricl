@@ -20,11 +20,11 @@
       (make-instance 'hamt-iterator :stack stack :current current))))
 
 (defmethod has-next? ((iterator hamt-iterator))
-  (when-let (current (:current iterator))
+  (when-let ((current (:current iterator)))
     (has-next? (:current iterator))))
 
 (defun next-iterator (stack)
-  (if (emptyp stack)
+  (if (empty? stack)
       (values nil nil)
       (let ((node (first stack)))
         (if (> (n:count node) 0)

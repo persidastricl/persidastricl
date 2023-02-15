@@ -17,7 +17,7 @@
     (not (== :not-found (n:get root item (list (h:hash item) 0 :not-found))))))
 
 (defmethod ->vector ((hs hash-set))
-  (map 'vector #'identity (seq hs)))
+  (map 'cl:vector #'identity (seq hs)))
 
 (defmethod ->array ((hs hash-set))
   (->vector hs))

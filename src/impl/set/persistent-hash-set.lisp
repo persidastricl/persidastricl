@@ -41,7 +41,7 @@
 
 (defun persistent-hash-set (&rest items)
   (let ((s (make-instance 'persistent-hash-set)))
-    (if-not (emptyp s)
+    (if-not (empty? s)
             (apply #'conj s items)
             s)))
 

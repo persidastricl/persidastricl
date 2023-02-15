@@ -107,6 +107,14 @@
     collect (transform-primitive object) into objects
     finally (return (apply #'persistent-vector objects))))
 
+(defun read-transient-vector-literal (stream char n-arg)
+  (declare (ignore char n-arg))
+  (loop
+    for object = (read-next-object (list +space+ +comma+) +right-bracket+ stream)
+    while object
+    collect (transform-primitive object) into objects
+    finally (return (apply #'transient-vector objects))))
+
 (named-readtables:defreadtable syntax
   (:merge :standard)
   (:macro-char +at+ :dispatch)
@@ -117,4 +125,5 @@
   (:dispatch-macro-char +hash+ +left-brace+ #'read-persistent-set-literal)
   (:dispatch-macro-char +at+ +hash+ #'read-transient-set-literal)
   (:macro-char +right-bracket+ #'read-delimiter nil)
-  (:macro-char +left-bracket+ #'read-persistent-vector-literal nil))
+  (:macro-char +left-bracket+ #'read-persistent-vector-literal nil)
+  (:dispatch-macro-char +at+ +left-bracket+ #'read-transient-vector-literal))

@@ -10,6 +10,7 @@
 (defgeneric to-string (obj)
   (:method (obj) (format nil "~s" (or obj "")))
   (:method ((obj (eql nil))) "")
+  (:method ((obj character)) (format nil "~a" (or obj "")))
   (:method ((s string)) s))
 
 (defun str (&rest things)

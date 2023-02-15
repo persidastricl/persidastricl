@@ -45,6 +45,9 @@
             (slot-values obj1)
             (slot-values obj2)))))
 
+(defmethod == ((s1 string) (s2 string))
+  (string= s1 s2))
+
 (defmethod == ((v1 simple-vector) (v2 simple-vector))
   (or (eq v1 v2)
       (and (== (length v1) (length v2))
