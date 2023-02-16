@@ -30,7 +30,8 @@
            #:blank?
            #:replace
            #:replace-all
-           #:->keyword))
+           #:->keyword
+           #:includes?))
 
 (defpackage #:bits
   (:nicknames #:bit #:b)

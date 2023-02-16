@@ -12,7 +12,6 @@ Things to do:
 
 *  --- add ->persistent and ->transient conversions
 *  --- make persistent constructor use transients
-*  --- add  pop/disj (only removes the last value from tail and cleans up when empty tail (promotes last tail back to tail position))
 *  --- add subvec to get a slice of the vector
 
 * rethink iterators
@@ -33,3 +32,4 @@ Things to do:
 *  at some point do we want to rewrite the backend of clockpartners in persidastricl/common-lisp and have a re-frame or reagent front end???
 
 *  at this point (if all this is implemented) open-source it (BSD license) ??????
+

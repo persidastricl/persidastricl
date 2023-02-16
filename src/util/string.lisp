@@ -46,3 +46,6 @@
 
 (defun ->keyword (s)
   (intern (string-upcase s) "KEYWORD"))
+
+(defun includes? (s subs-or-regex)
+  (cl-ppcre:scan-to-strings subs-or-regex s))

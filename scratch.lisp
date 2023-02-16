@@ -82,3 +82,76 @@
 
 (bitmap->dot 3)
 
+(defclass derp ()
+  ((data :initarg :data :accessor :data)))
+
+(defmacro doto (thing &body forms)
+  (let ((obj (gensym)))
+    `(let ((,obj ,thing))
+       ,@(mapcar
+          (lambda (f)
+            (cond
+              ((and (listp f)
+                    (equal (first f) 'lambda)) `(,f ,obj))
+              ((listp f) `(,(first f) ,obj ,@(rest f)))
+              (t `(funcall ,f ,obj))
+              ))
+          forms)
+       ,obj)))
+
+
+(doto (into @[] (range 10))
+  (conj 1 2 3)
+  (conj :a :b :c)
+  princ
+  (lambda (tv) (princ (count tv))))
+
+
+
+(defun slice (vector start &optional (end (count vector)))
+  (lreduce
+   (lambda (v i)
+     (conj (get vector i) v))
+   (range (- end start) :start start)
+   :initial-value (empty vector)))
+
+(defvar v (into #{} (take 10000 (integers))))
+
+(time
+ (subs v 10))
+
+(function coqns)
+
+(defun persistent->transient-name (persistent-object)
+  (let ((object-name (-> (type-of persistent-object)
+                       symbol-name)))
+    (when-not (s:includes? object-name "(?i)persistent")
+      (error "object ~a is not a persistent object!" object-name))
+    (-> object-name
+      (s:replace "(?i)persistent" "transient")
+      read-from-string)))
+
+(defun transient->persistent-name (transient-object)
+  (let ((object-name (-> (type-of transient-object)
+                       symbol-name)))
+    (when-not (s:includes? object-name "(?i)transient")
+      (error "object ~a is not a transient object!" object-name))
+    (-> object-name
+      (s:replace "(?i)transient" "persistent")
+      read-from-string)))
+
+(defun transient! (obj)
+  "create a new transient object copy of the type of persistent object given without modifying the persistent object"
+  (let ((lst (->list obj)))
+    (-> (persistent->transient-name obj)
+      (apply lst))))
+
+;; convert the transient object into a persistent object (destructive conversion, transient object is no longer usable)
+(defmethod persistent! ((obj hamt))
+  (let ((new-object-type (transient->persistent-name obj)))
+    (change-class obj new-object-type)))
+
+(transient! (into [] (range 1000)))
+
+
+(defun ->transient (obj))
