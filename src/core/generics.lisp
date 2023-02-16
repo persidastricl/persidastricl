@@ -11,6 +11,14 @@
 
 (defgeneric into (obj sequence))
 
+(defmethod into ((obj list) seq)
+  (->list seq))
+
+(defmethod into ((obj array) seq)
+  (let* ((lst (->list seq))
+         (size (length lst)))
+    (make-array size :fill-pointer size :initial-contents lst)))
+
 (defmethod into ((obj collection) (sequence sequence))
   (apply #'conj obj (->list sequence)))
 

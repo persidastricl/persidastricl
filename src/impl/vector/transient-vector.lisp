@@ -38,6 +38,22 @@
         (setf count (1+ count)))))
   tv)
 
+(defmethod pop ((tv transient-vector))
+  (with-slots (root count tail-offset tail) tv
+    (let ((new-tail (n:pop tail)))
+      (if (and (> tail-offset 0) (= (n:count new-tail) 0))
+          (let* ((new-tail-offset (max 0 (- tail-offset 32)))
+                 (leaf-node (n:get-leaf-node root new-tail-offset))
+                 (new-root (n:remove-leaf-node root new-tail-offset)))
+            (setf root (if (= (n:count new-root) 1)
+                           (elt (slot-value new-root 'data) 0)
+                           new-root)
+                  tail leaf-node
+                  tail-offset new-tail-offset))
+          (setf tail new-tail)))
+    (setf count (1- count)))
+  tv)
+
 (defgeneric t-vec (object)
   (:method (obj) (into (transient-vector) (seq obj))))
 

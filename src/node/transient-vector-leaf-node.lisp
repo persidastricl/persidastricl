@@ -20,3 +20,8 @@
     (let ((i (b:bits index 0)))
       (setf (elt data i) item)))
   node)
+
+(defmethod pop ((node transient-vector-leaf-node))
+  (with-slots (data) node
+    (vector-pop data))
+  node)

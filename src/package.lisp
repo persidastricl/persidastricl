@@ -10,7 +10,8 @@
            #:if-not
            #:when-not
            #:if-let
-           #:when-let))
+           #:when-let
+           #:empty?))
 
 (defpackage #:immutable
   (:use #:cl)
@@ -93,8 +94,11 @@
 (defpackage #:node
   (:nicknames #:n)
   (:use #:cl #:arrow-macros #:equality #:immutable #:util)
-  (:shadow #:cl #:cons #:put #:get #:delete #:insert #:update #:remove #:count)
+  (:shadow #:cl #:cons #:put #:get #:delete #:insert #:update #:remove #:count #:pop)
   (:export #:add-leaf-node
+           #:get-leaf-node
+           #:remove-leaf-node
+           #:pop
            #:at-index
            #:sub-nodes
            #:count
@@ -119,7 +123,7 @@
 (defpackage #:persidastricl
   (:nicknames :pds :p)
   (:use #:cl #:arrow-macros #:equality #:immutable #:util)
-  (:shadow #:cl #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector)
+  (:shadow #:cl #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector #:pop)
   (:export #:transient-hash-map
            #:persistent-hash-map
            #:transient-hash-set

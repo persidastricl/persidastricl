@@ -13,12 +13,6 @@
   (lambda (x &rest args)
     (apply f (or x default) args)))
 
-(defun empty? (sequence)
-  (typecase sequence
-    (null t)
-    (array (zerop (length sequence)))
-    (otherwise nil)))
-
 (defgeneric cons (se1 se2)
   (:method (se1 se2) (cl:cons se1 se2)))
 
@@ -40,6 +34,7 @@
 
 (defgeneric empty (object)
   (:documentation "return an empty data-object of the same type as the original object argument")
+  (:method ((lst list)) '())
   (:method ((object t)) (make-instance (type-of object))))
 
 (defgeneric ->list (object)

@@ -41,3 +41,8 @@
            (let ((,var ,temp))
              ,@body))))))
 
+(defun empty? (sequence)
+  (typecase sequence
+    (null t)
+    (array (zerop (length sequence)))
+    (otherwise nil)))

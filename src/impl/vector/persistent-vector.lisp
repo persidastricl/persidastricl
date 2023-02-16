@@ -32,6 +32,22 @@
 
             (make-instance 'persistent-vector :root root :tail (n:cons value tail) :tail-offset tail-offset :count (1+ count)))))))
 
+(defmethod pop ((pv persistent-vector))
+  (with-slots (root count tail-offset tail) pv
+    (let ((new-tail (n:pop tail)))
+      (if (and (> tail-offset 0) (= (n:count new-tail) 0))
+          (let* ((new-tail-offset (max 0 (- tail-offset 32)))
+                 (leaf-node (n:get-leaf-node root new-tail-offset))
+                 (new-root (n:remove-leaf-node root new-tail-offset)))
+            (make-instance 'persistent-vector
+                           :root (if (= (n:count new-root) 1)
+                                     (elt (slot-value new-root 'data) 0)
+                                     new-root)
+                           :tail leaf-node
+                           :tail-offset new-tail-offset
+                           :count (1- count)))
+          (make-instance 'persistent-vector :root root :tail new-tail :tail-offset tail-offset :count (1- count))))))
+
 (defgeneric vec (object)
   (:method (obj) (into (persistent-vector) (seq obj))))
 

@@ -19,6 +19,9 @@
 (defmethod first ((vector vector))
   (get vector 0))
 
+(defmethod peek ((vector vector))
+  (get vector (1- (:count vector))))
+
 (defmethod seq ((vector vector))
   (labels ((next (i)
              (when (< i (:count vector))

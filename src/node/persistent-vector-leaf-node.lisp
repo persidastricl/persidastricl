@@ -17,3 +17,7 @@
   (with-slots (data) node
     (let ((i (b:bits index 0)))
       (make-instance (type-of node) :level 0 :data (v:update (:data node) i item)))))
+
+(defmethod pop ((node persistent-vector-leaf-node))
+  (with-slots (data) node
+    (make-instance (type-of node) :level 0 :data (v:delete data (1- (length data))))))
