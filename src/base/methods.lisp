@@ -81,3 +81,14 @@
                    ((cl:atom x) (cons x acc))
                    (t (flatten* (first x) (flatten* (rest x) acc))))))
     (flatten* x nil)))
+
+(defun transient! (obj)
+  "create a new transient object copy of the type of persistent object given without modifying the persistent object"
+  (let ((lst (->list obj)))
+    (-> (persistent->transient-name obj)
+      (apply lst))))
+
+;; convert the transient object into a persistent object (destructive conversion, transient object is no longer usable)
+(defmethod persistent! (obj)
+  (let ((new-object-type (transient->persistent-name obj)))
+    (change-class obj new-object-type)))

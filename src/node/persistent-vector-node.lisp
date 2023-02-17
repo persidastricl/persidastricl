@@ -82,3 +82,18 @@
   (with-slots (level data) node
     (let ((i (b:bits index level)))
       (make-instance (type-of node) :level level :data (put (elt data i) item index)))))
+
+(defmethod update-instance-for-different-class :before ((old transient-vector-node)
+                                                        (new persistent-vector-node)
+                                                        &key)
+
+  (slot-makunbound new 'data)
+  (slot-makunbound new 'level)
+
+  (with-slots (data level) old
+    (setf (slot-value new 'data) (map
+                                  'vector
+                                  (lambda (node)
+                                    (change-class node (transient->persistent-name node)))
+                                  (slot-value old 'data)))
+    (setf (slot-value new 'level) level)))

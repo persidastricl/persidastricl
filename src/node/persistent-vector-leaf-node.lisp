@@ -21,3 +21,14 @@
 (defmethod pop ((node persistent-vector-leaf-node))
   (with-slots (data) node
     (make-instance (type-of node) :level 0 :data (v:delete data (1- (length data))))))
+
+(defmethod update-instance-for-different-class :before ((old transient-vector-leaf-node)
+                                                        (new persistent-vector-leaf-node)
+                                                        &key)
+  (slot-makunbound new 'data)
+  (slot-makunbound new 'level)
+
+  (with-slots (data level) old
+    (let ((size (length data)))
+      (setf (slot-value new 'data) (make-array size :initial-contents data))
+      (setf (slot-value new 'level) level))))

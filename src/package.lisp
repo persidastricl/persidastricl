@@ -5,13 +5,15 @@
   (:export #:==))
 
 (defpackage #:util
-  (:use #:cl)
+  (:use #:cl #:arrow-macros)
   (:export #:while
            #:if-not
            #:when-not
            #:if-let
            #:when-let
-           #:empty?))
+           #:empty?
+           #:persistent->transient-name
+           #:transient->persistent-name))
 
 (defpackage #:immutable
   (:use #:cl)

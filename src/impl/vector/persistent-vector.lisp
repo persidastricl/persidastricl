@@ -84,3 +84,17 @@
             (make-instance (type-of pv) :root (n:put root item idx) :count count :tail-offset tail-offset :tail tail))))))
    (->list (partition (list* index item kv-pairs) 2))
    :initial-value pv))
+
+(defmethod update-instance-for-different-class :before ((old transient-vector)
+                                                        (new persistent-vector)
+                                                        &key)
+  (slot-makunbound new 'root)
+  (slot-makunbound new 'tail)
+  (slot-makunbound new 'tail-offset)
+  (slot-makunbound new 'count)
+
+  (with-slots (root tail tail-offset count) old
+    (setf (slot-value new 'root) (change-class root 'n:persistent-vector-node))
+    (setf (slot-value new 'tail) (change-class tail 'n:persistent-vector-leaf-node))
+    (setf (slot-value new 'tail-offset) tail-offset)
+    (setf (slot-value new 'count) count)))

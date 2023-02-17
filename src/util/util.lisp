@@ -46,3 +46,23 @@
     (null t)
     (array (zerop (length sequence)))
     (otherwise nil)))
+
+(defun persistent->transient-name (persistent-object)
+  (let ((object-name (-> (class-of persistent-object)
+                       class-name
+                       s:str)))
+    (when-not (s:includes? object-name "(?i)persistent")
+      (error "object ~a is not a persistent object!" object-name))
+    (-> object-name
+      (s:replace "(?i)persistent" "transient")
+      read-from-string)))
+
+(defun transient->persistent-name (transient-object)
+  (let ((object-name (-> (class-of transient-object)
+                       class-name
+                       s:str)))
+    (when-not (s:includes? object-name "(?i)transient")
+      (error "object ~a is not a transient object!" object-name))
+    (-> object-name
+      (s:replace "(?i)transient" "persistent")
+      read-from-string)))
