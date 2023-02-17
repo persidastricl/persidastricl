@@ -14,7 +14,7 @@
     (typecase (first sequence)
       (e:entry sequence)
       (cl:cons (map 'list (lambda (c) (apply #'e:map-entry c)) sequence))
-      (t (map 'list (lambda (kv) (apply #'e:map-entry kv)) (->list (partition sequence 2)))))))
+      (t (map 'list (lambda (kv) (apply #'e:map-entry kv)) (->list (partition-all sequence 2)))))))
 
 (defclass hash-map (hamt associable)
   ((root :initarg :root :reader :root)))

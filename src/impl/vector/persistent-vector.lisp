@@ -82,7 +82,7 @@
 
            (t
             (make-instance (type-of pv) :root (n:put root item idx) :count count :tail-offset tail-offset :tail tail))))))
-   (->list (partition (list* index item kv-pairs) 2))
+   (->list (partition-all (list* index item kv-pairs) 2))
    :initial-value pv))
 
 (defmethod update-instance-for-different-class :before ((old transient-vector)

@@ -83,5 +83,5 @@
              (setf tail (n:put tail item idx))
              (setf root (n:put root item idx)))
          tv))
-     (->list (partition (list* index item kv-pairs) 2))
+     (->list (partition-all (list* index item kv-pairs) 2))
      :initial-value tv)))

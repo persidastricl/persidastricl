@@ -23,7 +23,7 @@
                      (lambda (node kv-pair)
                        (let ((entry (apply #'e:map-entry kv-pair)))
                          (n:put node entry (list (h:hash (e:key entry)) 0))))
-                     (->list (partition (list* k v kv-pairs) 2))
+                     (->list (partition-all (list* k v kv-pairs) 2))
                      :initial-value root)))
       (if (eq new-root root)
           phm

@@ -28,7 +28,7 @@
     (reduce
      (lambda (l kv-pair)
        (apply #'assoc* l kv-pair))
-     (->list (partition (list* k1 v1 kv-pairs) 2))
+     (->list (partition-all (list* k1 v1 kv-pairs) 2))
      :initial-value lst)))
 
 (defmethod lookup ((lst list) k1 &optional default)
@@ -44,5 +44,5 @@
     (reduce
      (lambda (v kv-pair)
        (apply #'assoc* v kv-pair))
-     (->list (partition (list* k1 v1 kv-pairs) 2))
+     (->list (partition-all (list* k1 v1 kv-pairs) 2))
      :initial-value vec)))

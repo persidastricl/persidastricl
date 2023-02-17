@@ -1,17 +1,8 @@
 Things to do:
 
 *  profile/work-on efficiency
-
-*  reorganize .asd modules and folders
- -- separate hamt (hashed array mapped trie -- maps and sets) from bpvt (bit partitioned vector trie -- vectors)
- -- do we have any 'common' classes that these two share??  where to put them
-
-*  add generics for much of CL's functions with proper default methods (length, cons, first, rest, etc) as needed
-
 *  improve tests
 
-*  --- add ->persistent and ->transient conversions
-*  --- make persistent constructor use transients
 *  --- add subvec to get a slice of the vector
 
 * rethink iterators
@@ -20,11 +11,13 @@ Things to do:
 
 *  make a transient data structure from a persistent one (just add the data to a new transient instance)
 *  make a persistent data strucure out of a transient (use change-class ?? for speed)
-*  default to using transients when constructing persistent ds with &rest args for speed
 
 *  add as many of clojure's core functions to the library as we can (don't get in a hurry ... add things in a way that fit it will with lisp as-is)
 
-*  for vectors, is it possible to change the default 32/5 partition to a 64/6 or 64/8 partition relatively quickly/seamlessly when we hit the limits of 32/5 (like lisp's arithmetic stack) ?????
+* lazy-seq's
+ -- line-seq (with CL streams)
+ -- resultset-seq
+ -- ???
 
 ;; long term things to think about
 
