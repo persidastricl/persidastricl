@@ -10,7 +10,7 @@
 (named-readtables:in-readtable persidastricl:syntax)
 
 (defparameter m1 (with-meta
-                   {:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
+                   @{:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
                    {:a 1 :value "testing"}))
 (get m1 :k1)
 (get m1 :k1 :not-found)
@@ -187,131 +187,14 @@
                                         (string-upcase (s:trim line)))
                                       (line-seq s)))))
 
+(step)
+(count #{1 2 3 4})
 
 
-(defun map? (x)
-  (typep x 'persidastricl::hash-map))
+(has-no-value? #())
 
-(defn mremove
-  "Removes things from a map where `(pred value)` is truthy.
-  returns nil if m is nil"
-  [pred m] {:pre [(or (nil? m) (map? m))]}
-  (letfn [(check [pred m k v]
-                 (let [pred-result (try (pred v) (catch Exception e))]
-                   (if-not pred-result
-                           (assoc m k v)
-                           m)))
-          (collection? [v] (or (set? v) (vector? v)))
-          (collection [pred v]
-                      (into (empty v)
-                            (map
-                             (fn [item]
-                               (cond
-                                 (map? item) (mremove pred item)
-                                 (collection? item) (collection pred item)
-                                 :otherwise item))
-                             v)))]
-         (when m
-           (reduce-kv
-            (fn [m k v]
-              (check pred m k
-                     (cond
-                       (map? v) (mremove pred v)
-                       (collection? v) (collection pred v)
-                       :otherwise v)))
-            {}
-            m))))
 
-(defun mremove (pred m)
-  (labels ((check (m k v)
-             (let ((result (unwind-protect (funcall pred v))))
-               (if-not result
-                       (assoc m k v)
-                       m)))
-           (collection? (x) (typep x 'persidastricl::collection))
-           (collection (v)
-             (into (empty v)
-                   (lmap
-                    #'scrub
-                    v)))
-           (scrub (item)
-             (cond
-               ((map? item) (mremove pred item))
-               ((collection? item) (collection item))
-               (t item))))
-    (when m
-      (reduce-kv
-       (lambda (m k v)
-         (check m k (scrub v)))
-       m
-       :initial-value (persistent-hash-map)))))
+(-> {}
+  (assoc :a nil))
 
-(defun take-while (pred s)
-  (let ((v (head s)))
-    (when (and v (funcall pred v))
-      (lseq v (take-while pred (tail s))))))
-
-(defun drop-while (pred s)
-  (let ((v (head s)))
-    (if (funcall pred v)
-        (drop-while pred (tail s))
-        (lseq v (tail s)))))
-
-(defvar test-values (conj (into [] (take 100 (filter #'oddp (integers)))) 2 4 6))
-
-(filter
- (lambda (i) (= (rem i 19) 0))
- (filter
-  (lambda (i) (= (rem i 17) 0))
-  (filter
-   (lambda (i) (= (rem i 15) 0))
-   (filter
-    (lambda (i) (= (rem i 13) 0))
-    (filter
-     (lambda (i) (= (rem i 11) 0))
-     (filter
-      (lambda (i) (= (rem i 9) 0))
-      (filter
-       (lambda (i) (= (rem i 7) 0))
-       (filter
-        (lambda (i) (= (rem i 5) 0))
-        (filter
-         (lambda (i) (= (rem i 3) 0))
-         (filter
-          #'oddp
-          (range 80000000 :start 620000000)))))))))))
-
-(filter
- (lambda (i) (= (rem i 11) 0))
- (filter
-  (lambda (i) (= (rem i 9) 0))
-  (filter
-   (lambda (i) (= (rem i 7) 0))
-   (filter
-    (lambda (i) (= (rem i 5) 0))
-    (filter
-     (lambda (i) (= (rem i 3) 0))
-     (filter
-      #'oddp
-      (range 10 :start 600000000)))))))
-
-(take 10 (filter #'oddp (filter #'oddp (range 10 :start 600000000))))
-
-(* 19 17 13 11 7 5 3)
-
-(take 10 (take-while #'oddp ))
-
-(take-while #'oddp test-values)
-
-(defun some-fn (&rest fns)
-  (lambda (&rest s)
-
-    ()(lmap)))
-
-(def emptyable? (some-fn string? sequential? coll?))
-(defn has-no-value? [v]
-  (or (nil? v)
-      (and (emptyable? v)
-           (empty? v))))
-
-(def only-valid-values (partial mremove has-no-value?))
+(only-valid-values? (persistent-hash-map :a #{} :b 1))

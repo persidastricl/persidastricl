@@ -14,3 +14,6 @@
 (defgeneric contains? (collection item))
 (defgeneric conj (collection &rest items))
 (defgeneric disj (collection &rest items))
+
+(defun collection? (x)
+  (typep x 'collection))

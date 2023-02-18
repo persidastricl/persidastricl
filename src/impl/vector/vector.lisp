@@ -9,6 +9,9 @@
 
 (defclass vector (bpvt) ())
 
+(defun vector? (x)
+  (typep x 'vector))
+
 (defmethod get ((vector vector) index &optional (default nil))
   (if (< index (:count vector))
       (if (>= index (:tail-offset vector))

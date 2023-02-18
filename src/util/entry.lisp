@@ -17,7 +17,7 @@
   ((key :initarg :key :reader :key)
    (value :initarg :value :reader :value)))
 
-(defun map-entry (k v)
+(defun map-entry (k &optional (v nil))
   (make-instance 'entry :key k :value v))
 
 (defmethod key ((entry entry))

@@ -126,7 +126,7 @@
 (defpackage #:persidastricl
   (:nicknames :pds :p)
   (:use #:cl #:arrow-macros #:equality #:immutable #:util)
-  (:shadow #:cl #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector #:pop)
+  (:shadow #:cl #:some #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector #:pop)
   (:export #:->alist
            #:->array
            #:->list
@@ -138,6 +138,7 @@
            #:assoc-in
            #:atom
            #:butlast
+           #:collection?
            #:conj
            #:conj
            #:cons
@@ -172,8 +173,10 @@
            #:lseq
            #:map-indexed
            #:mapv
+           #:map?
            #:meta
            #:named-fn
+           #:only-valid-values
            #:partition
            #:partition-all
            #:peek
@@ -189,7 +192,12 @@
            #:reset!
            #:rest
            #:seq
+           #:sequential?
            #:set
+           #:set?
+           #:some
+           #:some-fn
+           #:string?
            #:swap!
            #:syntax
            #:t-set
@@ -202,6 +210,7 @@
            #:update
            #:update-in
            #:vec
+           #:vector?
            #:with-meta
            #:zipmap
            ))

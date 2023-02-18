@@ -19,6 +19,9 @@ Things to do:
  -- resultset-seq
  -- ???
 
+* hash maps need to be able to take 'nil as a value;
+ -- right now the partition cons's the k with the nil which creates (k) rather
+
 ;; long term things to think about
 
 *  rewrite the matcher program in lisp using new ds's and see how it feels works

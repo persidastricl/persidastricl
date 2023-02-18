@@ -19,6 +19,9 @@
 (defclass hash-map (hamt associable)
   ((root :initarg :root :reader :root)))
 
+(defun map? (x)
+  (typep x 'hash-map))
+
 (defmethod lookup ((hm hash-map) key &optional (default nil))
   (with-slots (root) hm
     (let ((hash (h:hash key)))

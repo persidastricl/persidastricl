@@ -15,3 +15,7 @@
                                         (it (iterator object)))
                                     (while (has-next? it) (setf seq (cons (next it) seq)))
                                     (nreverse seq)))
+
+(defun sequential? (x)
+  (or (typep x 'sequence)
+      (typep x 'seqable)))

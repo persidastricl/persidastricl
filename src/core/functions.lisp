@@ -191,3 +191,61 @@
     (let ((line (read-line stream nil nil)))
       (when line
         (lseq line (line-seq stream))))))
+
+(defun string? (s)
+  (stringp s))
+
+(defun some (pred &rest seqs)
+  (head (apply #'keep pred seqs)))
+
+(defun some-fn (&rest fns)
+  (lambda (&rest s)
+    (some
+     (lambda (f)
+       (some f s))
+     fns)))
+
+(defvar emptyable? (some-fn #'string? #'sequential? #'collection? #'map?))
+
+(defun mremove (pred m)
+  (labels ((check (m k v)
+             (let ((result (unwind-protect (funcall pred v))))
+               (if-not result
+                       (assoc m k v)
+                       m)))
+           (collection? (x) (typep x 'persidastricl::collection))
+           (collection (v)
+             (into (empty v)
+                   (lmap
+                    #'scrub
+                    v)))
+           (scrub (item)
+             (cond
+               ((map? item) (mremove pred item))
+               ((collection? item) (collection item))
+               (t item))))
+    (when m
+      (reduce-kv
+       (lambda (m k v)
+         (check m k (scrub v)))
+       m
+       :initial-value (persistent-hash-map)))))
+
+(defun take-while (pred s)
+  (let ((v (head s)))
+    (when (and v (funcall pred v))
+      (lseq v (take-while pred (tail s))))))
+
+(defun drop-while (pred s)
+  (let ((v (head s)))
+    (if (funcall pred v)
+        (drop-while pred (tail s))
+        (lseq v (tail s)))))
+
+(defun has-no-value? (x)
+  (or (null x)
+      (and (funcall emptyable? x)
+           (empty? x))))
+
+(defun only-valid-values? (x)
+  (mremove #'has-no-value? x))
