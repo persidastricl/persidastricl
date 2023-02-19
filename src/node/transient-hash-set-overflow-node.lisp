@@ -12,7 +12,7 @@
 ;;
 ;; -----
 
-(defclass transient-hash-set-overflow-node (hash-set-overflow-node) ())
+(defclass transient-hash-set-overflow-node (transient-overflow-node hash-set-overflow-node) ())
 
 (defmethod put ((node transient-hash-set-overflow-node) item context)
   (with-slots (hash data) node

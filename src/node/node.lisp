@@ -33,8 +33,8 @@
 (defun empty-overflow-node (node)
   "create an overflow node for the type of node we are currently using xxxx-node --> xxx-overflow-node"
   (-> (type-of node)
-    symbol-name
-    (s:replace "(?i)node" "overflow-node")
+    s:str
+    (s:replace "(?i)node$" "overflow-node")
     read-from-string
     make-instance))
 

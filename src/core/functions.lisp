@@ -178,7 +178,7 @@
                (if (and k v)
                    (zipmap* (assoc m k v) (tail s1) (tail s2))
                    m))))
-    (zipmap* {}  seq1 seq2)))
+    (zipmap* (persistent-hash-map) seq1 seq2)))
 
 (defun interleave (seq1 seq2)
   (let ((e1 (first seq1))
@@ -247,5 +247,5 @@
       (and (funcall emptyable? x)
            (empty? x))))
 
-(defun only-valid-values? (x)
+(defun only-valid-values (x)
   (mremove #'has-no-value? x))

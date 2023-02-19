@@ -29,7 +29,7 @@
     (setf nmap (bv:insert nmap position new-node)))
   node)
 
-(defmethod insert ((node transient-node) position (new-node overflow-node))
+(defmethod insert ((node transient-node) position (new-node transient-overflow-node))
   (with-slots (nmap) node
     (setf nmap (bv:insert nmap position new-node)))
   node)
@@ -44,7 +44,7 @@
     (setf nmap (bv:update nmap position new-node)))
   node)
 
-(defmethod update ((node transient-node) position (new-node overflow-node))
+(defmethod update ((node transient-node) position (new-node transient-overflow-node))
   (with-slots (nmap) node
     (setf nmap (bv:update nmap position new-node)))
   node)

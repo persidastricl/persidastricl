@@ -107,6 +107,10 @@
            #:count
            #:node
            #:overflow-node
+           #:transient-hash-set-overflow-node
+           #:transient-hash-map-overflow-node
+           #:persistent-hash-set-overflow-node
+           #:persistent-hash-map-overflow-node
            #:transient-hash-set-node
            #:transient-hash-map-node
            #:persistent-hash-set-node

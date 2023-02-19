@@ -12,7 +12,7 @@
 ;;
 ;; -----
 
-(define-immutable-class persistent-hash-map-overflow-node (hash-map-overflow-node) ())
+(define-immutable-class persistent-hash-map-overflow-node (persistent-overflow-node hash-map-overflow-node) ())
 
 (defmethod put ((node persistent-hash-map-overflow-node) entry context)
   (with-slots (hash data) node

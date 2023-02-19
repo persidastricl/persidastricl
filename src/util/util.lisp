@@ -48,9 +48,7 @@
     (otherwise nil)))
 
 (defun persistent->transient-name (persistent-object)
-  (let ((object-name (-> (class-of persistent-object)
-                       class-name
-                       s:str)))
+  (let ((object-name (s:str (type-of persistent-object))))
     (when-not (s:includes? object-name "(?i)persistent")
       (error "object ~a is not a persistent object!" object-name))
     (-> object-name
@@ -58,9 +56,7 @@
       read-from-string)))
 
 (defun transient->persistent-name (transient-object)
-  (let ((object-name (-> (class-of transient-object)
-                       class-name
-                       s:str)))
+  (let ((object-name (s:str (type-of transient-object))))
     (when-not (s:includes? object-name "(?i)transient")
       (error "object ~a is not a transient object!" object-name))
     (-> object-name

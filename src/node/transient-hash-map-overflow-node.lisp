@@ -12,7 +12,7 @@
 ;;
 ;; -----
 
-(defclass transient-hash-map-overflow-node (hash-map-overflow-node) ())
+(defclass transient-hash-map-overflow-node (transient-overflow-node hash-map-overflow-node) ())
 
 (defmethod put ((node transient-hash-map-overflow-node) entry context)
   (with-slots (hash data) node

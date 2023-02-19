@@ -85,6 +85,7 @@
 
                              (:file "overflow-node")
                              (:file "persistent-overflow-node")
+                             (:file "transient-overflow-node")
                              (:file "hash-set-overflow-node")
                              (:file "hash-map-overflow-node")
                              (:file "transient-hash-set-overflow-node")

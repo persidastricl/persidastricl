@@ -198,3 +198,11 @@
   (assoc :a nil))
 
 (only-valid-values? (persistent-hash-map :a #{} :b 1))
+
+
+(defvar test-node (make-instance 'n:persistent-hash-set-node))
+
+(-> test-node
+  type-of
+  s:str)
+(n::empty-overflow-node test-node)
