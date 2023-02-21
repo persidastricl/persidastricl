@@ -17,10 +17,10 @@
 
 (defmethod contains? ((hs hash-set) item)
   (with-slots (root) hs
-    (not (== :not-found (n:get root item (list (h:hash item) 0 :not-found))))))
+    (not (== :not-found (loc root item :hash (h:hash item) :depth 0 :default :not-found)))))
 
 (defmethod ->vector ((hs hash-set))
-  (map 'cl:vector #'identity (seq hs)))
+  (coerce (seq hs) 'cl:vector))
 
 (defmethod ->array ((hs hash-set))
   (->vector hs))
@@ -29,7 +29,7 @@
   (->vector hs))
 
 (defmethod ->list ((hs hash-set))
-  (seq hs))
+  (into '() (seq hs)))
 
 (defmethod count ((obj hash-set))
   (count (->list obj)))

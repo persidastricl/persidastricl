@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:bitmap-vector)
+(in-package #:persidastricl)
 
 ;; -----
 ;; transient-node-bitmap-vector object

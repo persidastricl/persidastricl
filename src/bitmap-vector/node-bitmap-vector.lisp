@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:bitmap-vector)
+(in-package #:persidastricl)
 
 ;; -----
 ;;  mixin/marker class for bitmap-vectors that track sub-nodes

@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:node)
+(in-package #:persidastricl)
 
 ;; -----
 ;;  transient-hash-set-overflow-node
@@ -14,16 +14,14 @@
 
 (defclass transient-hash-set-overflow-node (transient-overflow-node hash-set-overflow-node) ())
 
-(defmethod put ((node transient-hash-set-overflow-node) item context)
-  (with-slots (hash data) node
-    (when hash (assert (eq hash (first context))))
-    (when-not hash (setf hash (first context)))
-    (setf data (adjoin item data :test #'==)))
+(defmethod add ((node transient-hash-set-overflow-node) item &key hash &allow-other-keys)
+  (when (:hash node) (assert (eq (:hash node) hash)))
+  (when-not (:hash node) (setf (:hash node) hash))
+  (setf (:data node) (adjoin item (:data node) :test #'==))
   node)
 
-(defmethod delete ((node transient-hash-set-overflow-node) item context)
-  (with-slots (hash data) node
-    (when hash (assert (eq hash (first context))))
-    (when-not hash (setf hash (first context)))
-    (setf data (remove-if (lambda (e) (== item e)) data)))
+(defmethod remove ((node transient-hash-set-overflow-node) item &key hash &allow-other-keys)
+  (when (:hash node) (assert (eq (:hash node) hash)))
+  (when-not (:hash node) (setf (:hash node) hash))
+  (setf (:data node) (remove-if (lambda (e) (== item e)) (:data node)))
   node)

@@ -26,24 +26,18 @@
                 :serial t
                 :components ((:file "package")))
 
-               (:module "equality"
-                :pathname "src/util"
-                :serial t
-                :components ((:file "equality")))
-
-               (:module "util"
-                :pathname "src/util"
-                :serial t
-                :components ((:file "util")))
-
-               (:module "helpers"
-                :pathname "src/util"
+               (:module "init"
+                :pathname "src/init"
                 :serial t
                 :components ((:file "string")
                              (:file "bits")
                              (:file "hash")
                              (:file "entry")
-                             (:file "vector")))
+                             (:file "vector")
+                             (:file "equality")
+                             (:file "macros")
+                             (:file "functions")
+                             (:file "methods")))
 
                (:module "stm"
                 :pathname "src/stm"
@@ -55,11 +49,6 @@
                 :serial t
                 :components ((:file "thunk")
                              (:file "lazy-sequence")))
-
-               (:module "base"
-                :pathname "src/base"
-                :serial t
-                :components ((:file "methods")))
 
                (:module "metaclass"
                 :pathname "src/metaclass"
@@ -120,36 +109,45 @@
                              (:file "meta")
                              (:file "seqable")))
 
-               (:module "hamt"
+               (:module "structures"
                 :pathname "src/impl"
                 :serial t
-                :components ((:file "hamt")))
+                :components ((:file "hamt")
 
-               (:module "set"
-                :pathname "src/impl/set"
-                :serial t
-                :components ((:file "hash-set")
-                             (:file "transient-hash-set")
-                             (:file "persistent-hash-set")))
+                             (:module "set"
+                              :pathname "set"
+                              :serial t
+                              :components ((:file "hash-set")
+                                           (:file "transient-hash-set")
+                                           (:file "persistent-hash-set")))
 
-               (:module "map"
-                :pathname "src/impl/map"
-                :serial t
-                :components ((:file "hash-map")
-                             (:file "transient-hash-map")
-                             (:file "persistent-hash-map")))
+                             (:module "map"
+                              :pathname "map"
+                              :serial t
+                              :components ((:file "hash-map")
+                                           (:file "transient-hash-map")
+                                           (:file "persistent-hash-map")))
 
-               (:module "bpvt"
-                :pathname "src/impl"
-                :serial t
-                :components ((:file "bpvt")))
+                             (:file "bpvt")
 
-               (:module "vector"
-                :pathname "src/impl/vector"
+                             (:module "vector"
+                              :pathname "vector"
+                              :serial t
+                              :components ((:file "vector")
+                                           (:file "transient-vector")
+                                           (:file "persistent-vector")))
+
+                             (:file "functions")
+                             (:file "methods")
+                             (:file "syntax")))
+
+               (:module "iterator"
+                :pathname "src/iterator"
                 :serial t
-                :components ((:file "vector")
-                             (:file "transient-vector")
-                             (:file "persistent-vector")))
+                :components ((:file "iterator")
+                             (:file "node-iterator")
+                             (:file "hamt-iterator")
+                             (:file "methods")))
 
                (:module "core"
                 :pathname "src/core"
@@ -162,17 +160,7 @@
                 :serial t
                 :components ((:file "sequences")))
 
-               (:module "syntax"
-                :pathname "src/impl"
-                :serial t
-                :components ((:file "syntax")))
-
-               (:module "iterator"
-                :pathname "src/iterator"
-                :serial t
-                :components ((:file "iterator")
-                             (:file "node-iterator")
-                             (:file "hamt-iterator"))))
+               )
 
   :in-order-to ((test-op (test-op #:persidastricl/test))))
 

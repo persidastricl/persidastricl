@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :persidastricl)
+(in-package #:persidastricl)
 
 ;; -----
 ;; transient-hash-map
@@ -14,15 +14,15 @@
 ;; -----
 
 (defclass transient-hash-map (hash-map)
-  ((root :type n:transient-hash-map-node :initarg :root :reader :root :documentation "root node of hash-map"))
-  (:default-initargs :root (make-instance 'n:transient-hash-map-node) :meta nil))
+  ((root :type transient-hash-map-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  (:default-initargs :root (make-instance 'transient-hash-map-node) :meta nil))
 
 (defmethod assoc ((thm transient-hash-map) k v &rest kv-pairs)
   (with-slots (root) thm
     (setf root (reduce
                 (lambda (node kv-pair)
                   (let ((entry (apply #'e:map-entry kv-pair)))
-                    (n:put node entry (list (h:hash (e:key entry)) 0))))
+                    (add node entry :hash (h:hash (e:key entry)) :depth 0)))
                 (->list (partition-all (list* k v  kv-pairs) 2))
                 :initial-value root)))
   thm)
@@ -31,7 +31,7 @@
   (with-slots (root) thm
     (setf root (reduce
                 (lambda (node k)
-                  (n:delete node k (list (h:hash k) 0)))
+                  (remove node k :hash (h:hash k) :depth 0))
                 keys
                 :initial-value root)))
   thm)
@@ -43,11 +43,12 @@
     m))
 
 (defmethod print-object ((object transient-hash-map) stream)
-  (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-      (format stream "@{~{~s~^ ~}}" (->list object))
-      (format stream "(persidastricl:transient-hash-map ~{~s~^ ~})" (->list object))))
+  (let ((items (into '() (->plist object))))
+    (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
+        (format stream "@{~{~s~^ ~}}" items)
+        (format stream "(persidastricl:transient-hash-map ~{~s~^ ~})" items))))
 
-(defmethod make-load-form ((obj transient-hash-map) &optional env)
+(defmethod make-load-form ((object transient-hash-map) &optional env)
   (declare (ignore env))
-  (let ((items (flatten (map 'list #'e:->list (seq obj)))))
+  (let ((items (into '() (->plist object))))
     `(persidastricl:transient-hash-map ,@items)))

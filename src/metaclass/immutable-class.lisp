@@ -7,7 +7,7 @@
 ;;;
 ;;; -----
 
-(in-package #:immutable)
+(in-package #:persidastricl)
 
 (defclass immutable-class (standard-class) ()
   (:documentation "the class of classes that may not be modified after initialization"))

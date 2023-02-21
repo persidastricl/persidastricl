@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :node)
+(in-package #:persidastricl)
 
 (defparameter *items-per-node* 32)
 
@@ -16,10 +16,9 @@
   ;; cannot add more items than we have bits in the hash
   (assert (< (length (:data node)) *items-per-node*)))
 
-;; get value at level 0 index
+;; locate value at level 0 index
 
-(defmethod get ((node vector-leaf-node) index context)
-  (destructuring-bind (default) context
-    (let* ((i (b:bits index 0))
-           (v (elt (:data node) i)))
-      (or v default))))
+(defmethod loc ((node vector-leaf-node) index &key (default nil))
+  (let* ((i (b:bits index 0))
+         (v (elt (:data node) i)))
+    (or v default)))

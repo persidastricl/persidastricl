@@ -9,6 +9,8 @@
 
 (in-package #:entry)
 
+(proclaim '(inline map-entry key value ->vec ->list ->cons))
+
 (defgeneric key (target))
 
 (defgeneric value (target))

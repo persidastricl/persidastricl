@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :node)
+(in-package #:persidastricl)
 
 (defclass transient-vector-node (vector-node) ()
   (:default-initargs :data (make-array 32 :adjustable t :fill-pointer 0 :initial-element nil)))

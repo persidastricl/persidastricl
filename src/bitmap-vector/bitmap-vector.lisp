@@ -7,23 +7,14 @@
 ;;;
 ;;; -----
 
-(in-package #:bitmap-vector)
-
-(defgeneric insert (bv position x))
-(defgeneric update (bv position x))
-(defgeneric remove (bv position))
-
-(defgeneric at-index (target index))
-(defgeneric at-position (target position))
-
-(defgeneric count (bv))
+(in-package #:persidastricl)
 
 ;; -----
 ;; bitmap-vector object
 ;;
-;; models the HAMT idea of a combination of a 32 bit bitmap
-;; representing items in a data vector (where an 'on' bit in the
-;; bitmap means data is present in the vector) and the data vector
+;; models the HAMT idea of a n-bit bitmap (default 32 bits)
+;; representing items in a data vector (where an 'on' or 'set' bit in
+;; the bitmap means data is present in the vector) and the data vector
 ;; containing those items ordered and indexed the same as the order of
 ;; bits in the bitmap
 ;;

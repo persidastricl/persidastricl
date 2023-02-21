@@ -22,12 +22,12 @@
   :description ""
   (let ((my-foo (make-instance 'foo :data 1)))
     (is (= 1 (:data my-foo)))
-    (signals immutable::invalid-access-to-immutable-object (setf (:data my-foo) 2))
+    (signals invalid-access-to-immutable-object (setf (:data my-foo) 2))
     (is (= 1 (:data my-foo)))
-    (signals immutable::invalid-access-to-immutable-object (setf (slot-value my-foo 'data) 3))
+    (signals invalid-access-to-immutable-object (setf (slot-value my-foo 'data) 3))
     (is (= 1 (:data my-foo)))
     (with-slots (data) my-foo
-      (signals immutable::invalid-access-to-immutable-object (setf data 4)))
+      (signals invalid-access-to-immutable-object (setf data 4)))
     (is (= 1 (:data my-foo)))))
 
 
@@ -48,4 +48,4 @@
         (my-baz (make-instance 'baz :other 2)))
     (setf (:other my-baz) 10)
     (is (= 10 (mixin-fn my-baz)))
-    (signals immutable::invalid-access-to-immutable-object (setf (:other my-bar) 10))))
+    (signals invalid-access-to-immutable-object (setf (:other my-bar) 10))))

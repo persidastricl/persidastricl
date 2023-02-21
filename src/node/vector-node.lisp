@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :node)
+(in-package #:persidastricl)
 
 ;; -----
 ;;  vector-node
@@ -17,16 +17,16 @@
    (data :initarg :data :reader :data))
   (:default-initargs :data (make-array 0) :level 1))
 
-(defmethod put ((node vector-node) item index)
+(defmethod add ((node vector-node) item &key index)
   (let ((i (b:bits index (:level node))))
-    (put (elt (:data node) i) item index)))
+    (add (elt (:data node) i) item :index index)))
 
-;; get walks nodes based on level
-;; recursive to level of indexed node node (returns value)
+;; locate walks nodes based on level
+;; recursive to level of leaf-node node (which then returns value)
 
-(defmethod get ((node vector-node) index context)
+(defmethod loc ((node vector-node) index &key default)
   (let ((i (b:bits index (:level node))))
-    (get (elt (:data node) i) index context)))
+    (loc (elt (:data node) i) index :default default)))
 
 (defmethod count ((node vector-node))
   (cl:length (:data node)))

@@ -9,6 +9,8 @@
 
 (in-package #:bits)
 
+(proclaim '(inline set? set clear bits below index))
+
 (defun set? (bit-position bitmap)
   "Is the `bit-position` bit on?"
   (> (logand (ash 1 bit-position) bitmap) 0))

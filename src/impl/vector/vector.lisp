@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :persidastricl)
+(in-package #:persidastricl)
 
 (defclass vector (bpvt) ())
 
@@ -15,8 +15,8 @@
 (defmethod get ((vector vector) index &optional (default nil))
   (if (< index (:count vector))
       (if (>= index (:tail-offset vector))
-          (n:get (:tail vector) index (list default))
-          (n:get (:root vector) index (list default)))
+          (loc (:tail vector) index :default default)
+          (loc (:root vector) index :default default))
       default))
 
 (defmethod first ((vector vector))

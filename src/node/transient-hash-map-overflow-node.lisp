@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:node)
+(in-package #:persidastricl)
 
 ;; -----
 ;;  transient-hash-map-overflow-node
@@ -14,20 +14,18 @@
 
 (defclass transient-hash-map-overflow-node (transient-overflow-node hash-map-overflow-node) ())
 
-(defmethod put ((node transient-hash-map-overflow-node) entry context)
-  (with-slots (hash data) node
-    (when hash (assert (eq hash (first context))))
-    (let ((key (e:key entry))
-          (value (e:value entry)))
-      (when-not hash (setf hash (first context)))
-      (setf data (->> data
-                   (remove-if (lambda (e) (== (car e) key)))
-                   (acons key value)))))
+(defmethod add ((node transient-hash-map-overflow-node) entry &key hash &allow-other-keys)
+  (when (:hash node) (assert (eq (:hash node) hash)))
+  (let ((key (e:key entry))
+        (value (e:value entry)))
+    (when-not hash (setf (:hash node) hash))
+    (setf (:data node) (->> (:data node)
+                            (remove-if (lambda (e) (== (car e) key)))
+                            (acons key value))))
   node)
 
-(defmethod delete ((node transient-hash-map-overflow-node) key context)
-  (with-slots (hash data) node
-    (when hash (assert (eq hash (first context))))
-    (when-not hash (setf hash (first context)))
-    (setf data (remove-if (lambda (e) (== (car e) key)) data)))
+(defmethod remove ((node transient-hash-map-overflow-node) key &key hash &allow-other-keys)
+  (when (:hash node) (assert (eq (:hash node) hash)))
+  (when-not (:hash node) (setf (:hash node) hash))
+  (setf (:data node) (remove-if (lambda (e) (== (car e) key)) (:data data)))
   node)

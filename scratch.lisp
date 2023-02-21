@@ -10,7 +10,7 @@
 (named-readtables:in-readtable persidastricl:syntax)
 
 (defparameter m1 (with-meta
-                   @{:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
+                   {:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
                    {:a 1 :value "testing"}))
 (get m1 :k1)
 (get m1 :k1 :not-found)
@@ -22,7 +22,13 @@
 
 (meta m1)
 
+(->list [1 2 3])
+
 (into [] (take 3 (lazy-seq '(1 2 3 4 5 6 7 8))))
+
+(print-object
+ nil)
+
 (into #{} (take 8 (integers)))
 
 (->vec m1)
@@ -41,6 +47,65 @@
             :d {:e (1 2 3 4)}
             :e {:f #(1 2 3 4)}
             :g {:h #{1 2 3 4}}})
+
+(sort '("b" "z" "a") #'string<)
+
+(defvar lowercase-letters
+  (lmap
+   (lambda (i)
+     (code-char i))
+   (range 26 :start 97)))
+
+
+(defvar uppercase-letters
+  (lmap
+   (lambda (i)
+     (code-char i))
+   (range 26 :start 65)))
+
+(interleave lowercase-letters uppercase-letters)
+
+(sb-ext:gc)
+(room)
+
+(require :sb-sprof)
+
+(sb-sprof:start-profiling )
+
+(take 1 (sb-sys:without-gcing (time (drop 10000000 (integers)))))
+
+(time (take 1 (drop 10000000 (integers))))
+
+(sb-sys:without-gcing (time (take 1 (drop 10000000 (integers)))))
+
+
+(sb-sys:without-gcing
+  (time
+   (let ((r (take 1 (drop 10000000 ints))))
+     r)))
+
+(sb-sprof:with-profiling ()
+
+  (drop 10000000 (integers)))
+
+(defvar ints (integers))
+
+(sb-sprof:report)
+
+(sb-sprof:stop-profiling)
+
+(sort (->keys m) #'char>)
+
+(setf m (into {} (interleave uppercase-letters (integers))))
+(->keys m)
+(->vals m)
+
+(->vals (get-in m2 [:c :c]))
+(into [] (->vals m2))
+
+(setf *print-lazy-items* 3)
+
+(seq m2)
 
 ;; these might be better as a walk
 (->list m2)
@@ -121,20 +186,6 @@
  {:a 1 :b 2 :c 3}
  :initial-value {})
 
-(defvar lowercase-letters
-  (lmap
-   (lambda (i)
-     (code-char i))
-   (range 26 :start 97)))
-
-
-(defvar uppercase-letters
-  (lmap
-   (lambda (i)
-     (code-char i))
-   (range 26 :start 65)))
-
-(interleave lowercase-letters uppercase-letters)
 
 (code-char 97)
 
@@ -154,13 +205,11 @@
 
 (transient! (into [] (range 1000)))
 
-(defvar pvln (make-instance 'n:persistent-vector-leaf-node))
+(defvar pvln (make-instance 'persistent-vector-leaf-node))
 
 (persistent->transient-name pvln)
 
 (class-name (class-of pvln))
-
-( (s:str "N:" (persistent->transient-name pvln)))
 
 (find-class 'node:persistent-vector-leaf-node)
 
@@ -200,9 +249,9 @@
 (only-valid-values? (persistent-hash-map :a #{} :b 1))
 
 
-(defvar test-node (make-instance 'n:persistent-hash-set-node))
+(defvar test-node (make-instance 'persistent-hash-set-node))
 
 (-> test-node
   type-of
   s:str)
-(n::empty-overflow-node test-node)
+(empty-overflow-node test-node)

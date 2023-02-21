@@ -1,11 +1,11 @@
 ;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;;   util.lisp
+;;;   macros.lisp
 ;;;
 ;;; -----
 
-(in-package #:util)
+(in-package #:persidastricl)
 
 (defmacro while (condition &rest body)
   `(loop while ,condition
@@ -41,24 +41,10 @@
            (let ((,var ,temp))
              ,@body))))))
 
-(defun empty? (sequence)
-  (typecase sequence
-    (null t)
-    (array (zerop (length sequence)))
-    (otherwise nil)))
+(defmacro fn (args &body body)
+  `(lambda ,args
+     ,@body))
 
-(defun persistent->transient-name (persistent-object)
-  (let ((object-name (s:str (type-of persistent-object))))
-    (when-not (s:includes? object-name "(?i)persistent")
-      (error "object ~a is not a persistent object!" object-name))
-    (-> object-name
-      (s:replace "(?i)persistent" "transient")
-      read-from-string)))
-
-(defun transient->persistent-name (transient-object)
-  (let ((object-name (s:str (type-of transient-object))))
-    (when-not (s:includes? object-name "(?i)transient")
-      (error "object ~a is not a transient object!" object-name))
-    (-> object-name
-      (s:replace "(?i)transient" "persistent")
-      read-from-string)))
+(defmacro named-fn (name args &body body)
+  `(labels ((,name ,args ,@body))
+     #',name))

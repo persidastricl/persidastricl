@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :persidastricl)
+(in-package #:persidastricl)
 
 ;; -----
 ;; transient-hash-set
@@ -14,14 +14,14 @@
 ;; -----
 
 (defclass transient-hash-set (hash-set)
-  ((root :type n:transient-hash-set-node :initarg :root :reader :root :documentation "root node of hash-map"))
-  (:default-initargs :root (make-instance 'n:transient-hash-set-node)))
+  ((root :type transient-hash-set-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  (:default-initargs :root (make-instance 'transient-hash-set-node)))
 
 (defmethod conj ((ths transient-hash-set) &rest items)
   (with-slots (root) ths
     (setf root (reduce
                 (lambda (node item)
-                  (n:put node item (list (h:hash item) 0)))
+                  (add node item :hash (h:hash item) :depth 0))
                 items
                 :initial-value root)))
   ths)
@@ -30,7 +30,7 @@
   (with-slots (root count) ths
     (setf root (reduce
                 (lambda (node item)
-                  (n:delete node item (list (h:hash item) 0)))
+                  (remove node item :hash (h:hash item) :depth 0))
                 items
                 :initial-value root)))
   ths)
@@ -42,13 +42,14 @@
     s))
 
 (defmethod print-object ((object transient-hash-set) stream)
-  (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-      (format stream "@#{~{~s~^ ~}}" (seq object))
-      (format stream "(persidastricl:transient-hash-set (list ~{~s~^ ~}))" (seq object))))
+  (let ((items (->list object)))
+    (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
+        (format stream "@#{~{~s~^ ~}}" items)
+        (format stream "(persidastricl:transient-hash-set ~{~s~^ ~})" items))))
 
-(defmethod make-load-form ((obj transient-hash-set) &optional env)
+(defmethod make-load-form ((object transient-hash-set) &optional env)
   (declare (ignore env))
-  (let ((items (flatten (seq obj))))
+  (let ((items (->list object)))
     `(persidastricl:transient-hash-set ,@items)))
 
 (defun t-set (object)

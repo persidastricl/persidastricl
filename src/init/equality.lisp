@@ -5,13 +5,16 @@
 ;;;
 ;;; -----
 
-(in-package :equality)
+(in-package #:persidastricl)
 
 ;; -----
 ;;  there is no defined notion of equality for CLOS objects in LISP
-;;  so here, we define what we need ourselves
+;;  so here, we define what we think we need ourselves
 ;;
 
+;;
+;; TODO: move to closer-mop when porting to other lisps
+;;
 (defun slot-values (obj)
   (let ((_class (class-of obj)))
     (map

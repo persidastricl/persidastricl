@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:bitmap-vector)
+(in-package #:persidastricl)
 
 ;; -----
 ;;  mixin class for pulling key-values out of the bitmap vectors

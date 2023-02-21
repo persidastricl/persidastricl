@@ -9,22 +9,17 @@
 
 (in-package #:persidastricl)
 
-;; -----
-;; lazy-ness
-;;
-;; -----
-
 (defun lreduce (f s &key (initial-value nil initial-value-p))
   (when s
     (let ((s (seq s)))
-      (labels ((reduce* (seq current-value)
-                 (if seq
+      (labels ((reduce* (current-value seq)
+                 (if (empty? seq)
+                     current-value
                      (let ((new-value (head seq)))
-                       (reduce* (tail seq) (funcall f current-value new-value)))
-                     current-value)))
+                       (reduce* (funcall f current-value new-value) (tail seq))))))
         (reduce*
-         (if initial-value-p s (tail s))
-         (if initial-value-p initial-value (head s)))))))
+         (if initial-value-p initial-value (head s))
+         (if initial-value-p s (tail s)))))))
 
 (defun reduce-kv (f s &key (initial-value nil initial-value-p))
   (when s
@@ -65,22 +60,6 @@
         (assoc obj k (apply #'update-in (get obj k (empty obj)) more f args))
         (assoc obj k (apply f (get obj k) args)))))
 
-(labels ((take* (n target)
-           (when (and (head target) (> n 0))
-             (lseq (head target) (take* (1- n) (tail target))))))
-  (defgeneric take (n seq)
-    (:method (n (seq list)) (take* n seq))
-    (:method (n (seq sequence)) (take* n (coerce seq 'list)))
-    (:method (n (seq lazy-sequence)) (take* n seq))
-    (:method (n (vector vector)) (take* n vector))))
-
-(defun drop (n seq)
-  (labels ((drop* (n s)
-             (if (and s (> n 0))
-                 (drop* (1- n) (tail s))
-                 s)))
-    (drop* n (seq seq))))
-
 (defun filter (pred seq)
   (when seq
     (labels ((filter* (s)
@@ -106,6 +85,19 @@
 
 (defun mapv (f &rest seqs)
   (into (persistent-vector) (apply #'lmap f seqs)))
+
+(defun concat (&rest seqs)
+  (labels ((concat* (s &rest xs)
+             (if-let ((head (head s)))
+               (lseq head (apply #'concat* (tail s) xs))
+               (when-let ((next-s (head xs)))
+                 (apply #'concat* (seq next-s) (tail xs))))))
+    (when-not (empty? seqs)
+      (apply #'concat* (seq (head seqs)) (tail seqs)))))
+
+(defun mapcat (f s &rest seqs)
+  (let ((xs (apply #'lmap f s seqs)))
+    (apply #'concat (->list xs))))
 
 (defun filterv (pred seq)
   (into (persistent-vector) (filter pred seq)))
@@ -139,6 +131,17 @@
   (when (> n 0)
     (lseq start (range (1- n) :start (+ start step) :step step))))
 
+(defun take-while (pred s)
+  (let ((v (head s)))
+    (when (and v (funcall pred v))
+      (lseq v (take-while pred (tail s))))))
+
+(defun drop-while (pred s)
+  (let ((v (head s)))
+    (if (funcall pred v)
+        (drop-while pred (tail s))
+        (lseq v (tail s)))))
+
 (defgeneric partition (source n)
   (:method ((source list) n) (partition (lazy-seq source) n))
   (:method ((source lazy-sequence) n) (let ((v (->list (take n source)))
@@ -165,11 +168,11 @@
                (lseq v (more tail)))))
     (more coll)))
 
-(defun repeat (x)
-  (repeatedly (constantly x)))
-
 (defun repeatedly (f)
   (lazy-seq f))
+
+(defun repeat (x)
+  (repeatedly (constantly x)))
 
 (defun zipmap (seq1 seq2)
   (labels ((zipmap* (m s1 s2)
@@ -230,17 +233,6 @@
          (check m k (scrub v)))
        m
        :initial-value (persistent-hash-map)))))
-
-(defun take-while (pred s)
-  (let ((v (head s)))
-    (when (and v (funcall pred v))
-      (lseq v (take-while pred (tail s))))))
-
-(defun drop-while (pred s)
-  (let ((v (head s)))
-    (if (funcall pred v)
-        (drop-while pred (tail s))
-        (lseq v (tail s)))))
 
 (defun has-no-value? (x)
   (or (null x)

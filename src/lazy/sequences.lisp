@@ -13,7 +13,7 @@
     ((< i 0) (- (fact (- i))))
     (:otherwise (lreduce #'* (range i :start i :step -1)))))
 
-(defvar fib (list* 0 (lseq 1 (lmap #'+ fib (tail fib)))))
+(defvar fib (lseq 0 (lseq 1 (lmap #'+ fib (tail fib)))))
 
 (defvar trib
   (list* 0 1 1 (lseq 2 (lmap #'+
@@ -21,14 +21,16 @@
                              (tail (tail trib))
                              (tail (tail (tail trib)))))))
 
-(defvar squares (lmap (lambda (i) (* i i)) (drop 1 (integers))))
+(defun squares ()
+  (lmap (lambda (i) (* i i)) (drop 1 (integers))))
 
 (defun n-choose-k (n k)
   (/ (fact n) (fact (- n k)) (fact k)))
 
-(defvar triangulars (lmap (lambda (n) (n-choose-k (1+ n) 2)) (drop 1 (integers))))
+(defun triangulars ()
+  (lmap (lambda (n) (n-choose-k (1+ n) 2)) (drop 1 (integers))))
 
-(defvar hexagonals
+(defun hexagonals ()
   (lmap
    (lambda (n)
      (- (* 2 (* n n)) n))
@@ -41,36 +43,79 @@
   (lmap #'catalan (drop n (integers))))
 
 ;; -----
-;;  primes' sieve of erasthenos (sp)
+;;  primes' sieve of erasthenos (sp) with persistent hash map
 ;;
 ;; -----
 
-(defvar primes-seq
-  (let ((sieve (atom (persistent-hash-map))))
-    (labels ((find-next-empty-multiple (factor multiple)
-               (let ((target (* multiple factor)))
-                 (if (and
-                      (oddp target)
-                      (null (lookup (deref sieve) target)))
-                     multiple
-                     (find-next-empty-multiple factor (+ multiple 2)))))
-             (is-prime-p (n)
-               (if-let ((value (lookup (deref sieve) n)))
-                 (destructuring-bind (factor multiple) value
-                   (let ((next (find-next-empty-multiple factor multiple)))
-                     (swap! sieve (lambda (sieve)
-                                    (-> sieve
-                                      (assoc (* factor next) (list factor (+ next 2)))
-                                      (dissoc n))))
-                     nil))
-                 (let ((next (find-next-empty-multiple n 3)))
-                   (swap! sieve #'assoc (* n next ) (list n (+ next 2)))
-                   t)))
-             (next-prime (p)
-               (if (is-prime-p p)
-                   p
-                   (next-prime (+ p 2))))
-             (lazy-primes (p)
-               (let ((next (next-prime p)))
-                 (lseq next (lazy-primes (+ next 2))))))
-      (cons 2 (lazy-primes 3)))))
+(defun find-next-empty-multiple (factor multiple sieve)
+  (let ((target (* multiple factor)))
+    (if (and
+         (oddp target)
+         (not (get sieve target)))
+        multiple
+        (find-next-empty-multiple factor (+ multiple 2) sieve))))
+
+(defun is-prime-p (n sieve)
+  (if-let ((value (get (deref sieve) n)))
+    (let ((factor (first value))
+          (multiple (second value)))
+      (let ((next (find-next-empty-multiple factor multiple (deref sieve))))
+        (swap! sieve (lambda (sieve)
+                       (-> sieve
+                         (assoc (* factor next) (list factor (+ next 2)))
+                         (dissoc n))))
+        nil))
+    (let ((next (find-next-empty-multiple n 3 (deref sieve))))
+      (swap! sieve #'assoc (* n next ) (list n (+ next 2)))
+      t)))
+
+(defun next-prime (p sieve)
+  (if (is-prime-p p sieve)
+      p
+      (next-prime (+ p 2) sieve)))
+
+(defun lazy-primes (p sieve)
+  (let ((next (next-prime p sieve)))
+    (lseq next (lazy-primes (+ next 2) sieve))))
+
+(defun primes-seq ()
+  (lseq 2 (lazy-primes 3 (atom (persistent-hash-map)))))
+
+
+;; -----
+;;  primes' sieve of erasthenos (sp) with transient hash map
+;;
+;; -----
+
+(defun find-next-empty-multiple (factor multiple sieve)
+  (let ((target (* multiple factor)))
+    (if (and
+         (oddp target)
+         (not (get sieve target)))
+        multiple
+        (find-next-empty-multiple factor (+ multiple 2) sieve))))
+
+(defun is-prime-p (n sieve)
+  (if-let ((value (get sieve n)))
+    (let ((factor (first value))
+          (multiple (second value)))
+      (let ((next (find-next-empty-multiple factor multiple sieve)))
+        (-> sieve
+          (assoc (* factor next) (list factor (+ next 2)))
+          (dissoc n))
+        nil))
+    (let ((next (find-next-empty-multiple n 3 sieve)))
+      (assoc sieve (* n next ) (list n (+ next 2)))
+      t)))
+
+(defun next-prime (p sieve)
+  (if (is-prime-p p sieve)
+      p
+      (next-prime (+ p 2) sieve)))
+
+(defun lazy-primes (p sieve)
+  (let ((next (next-prime p sieve)))
+    (lseq next (lazy-primes (+ next 2) sieve))))
+
+(defun primes-seq ()
+  (lseq 2 (lazy-primes 3 (transient-hash-map))))

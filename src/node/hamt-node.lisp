@@ -5,11 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:node)
-
-(defgeneric insert (node position item))
-(defgeneric update (node position item))
-(defgeneric remove (node position))
+(in-package #:persidastricl)
 
 ;; -----
 ;;  base class for all hamt node objects
@@ -40,14 +36,18 @@
   (:method ((node hamt-node)) (:data (:nmap node))))
 
 (defgeneric single-value-node? (node)
-  (:method  ((node hamt-node)) (and (= (bv:count (:dmap node)) 1)
-                                    (= (bv:count (:nmap node)) 0))))
+  (:method  ((node hamt-node)) (and (= (count (:dmap node)) 1)
+                                    (= (count (:nmap node)) 0))))
 
 (defgeneric single-remaining-data (node)
-  (:method ((node hamt-node)) (bv:at-index (:dmap node) 0)))
+  (:method ((node hamt-node)) (at-index (:dmap node) 0)))
 
 (defmethod at-index ((node hamt-node) index)
-  (bv:at-index (:dmap node) index))
+  (at-index (:dmap node) index))
 
 (defmethod count ((node hamt-node))
-  (bv:count (:dmap node)))
+  (count (:dmap node)))
+
+(defmethod empty? ((node hamt-node))
+  (and (zerop (count (:dmap node)))
+       (zerop (count (:nmap node)))))

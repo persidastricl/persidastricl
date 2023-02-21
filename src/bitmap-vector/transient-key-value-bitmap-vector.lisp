@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :bitmap-vector)
+(in-package #:persidastricl)
 
 ;; -----
 ;; transient-key-value-bitmap-vector object
@@ -19,7 +19,7 @@
 ;;
 ;; -----
 
-(defmethod insert ((bv transient-key-value-bitmap-vector) bit-position entry)
+(defmethod ins ((bv transient-key-value-bitmap-vector) bit-position entry)
   "inserts the key/value from `entry` in the data vector at the 2
 calculated index positions determinded by the bit-count of
 bit-position with respect to all bits currently set below it in the
@@ -30,7 +30,7 @@ for key, and (1+ (* 2 determined-bit-count)) for value"
     (setf data (v:insert data (* (b:index bit-position bitmap) 2) (e:key entry) (e:value entry))))
   bv)
 
-(defmethod update ((bv transient-key-value-bitmap-vector) bit-position entry)
+(defmethod upd ((bv transient-key-value-bitmap-vector) bit-position entry)
   "updates the value from `entry` in the data vector at the calculated
 index position determinded by the bit-count of bit-position with
 respect to all bits currently set below it in the bitmap. The indexes
@@ -39,7 +39,7 @@ in the data vector is: (1+ (* 2 determined-bit-count)) for v"
     (v:modify data (1+ (* (b:index bit-position bitmap) 2)) (e:value entry)))
   bv)
 
-(defmethod remove ((bv transient-key-value-bitmap-vector) bit-position)
+(defmethod del ((bv transient-key-value-bitmap-vector) bit-position)
   "removes the key/value from `entry` in the data vector at the 2
 calculated index positions determinded by the bit-count of
 bit-position with respect to all bits currently set below it in the

@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :persidastricl)
+(in-package #:persidastricl)
 
 ;; -----
 ;; persistent-hash-set
@@ -14,14 +14,14 @@
 ;; -----
 
 (define-immutable-class persistent-hash-set (hash-set)
-  ((root :type n:persistent-hash-set-node :initarg :root :reader :root :documentation "root node of hash-map"))
-  (:default-initargs :root (make-instance 'n:persistent-hash-set-node) :meta nil))
+  ((root :type persistent-hash-set-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  (:default-initargs :root (make-instance 'persistent-hash-set-node) :meta nil))
 
 (defmethod conj ((phs persistent-hash-set) &rest items)
   (with-slots (root meta) phs
     (let ((new-root (reduce
                      (lambda (node item)
-                       (n:put node item (list (h:hash item) 0)))
+                       (add node item :hash (h:hash item) :depth 0))
                      items
                      :initial-value root)))
       (if (== new-root root)
@@ -32,7 +32,7 @@
   (with-slots (root meta) phs
     (let ((new-root  (reduce
                       (lambda (node item)
-                        (n:delete node item (list (h:hash item) 0)))
+                        (remove node item :hash (h:hash item) :depth 0))
                       items
                       :initial-value root)))
       (if (== new-root root)
@@ -46,13 +46,14 @@
             s)))
 
 (defmethod print-object ((object persistent-hash-set) stream)
-  (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-      (format stream "#{~{~s~^ ~}}" (seq object))
-      (format stream "(persidastricl:persistent-hash-set (list ~{~s~^ ~}))" (seq object))))
+  (let ((items (->list object)))
+    (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
+        (format stream "#{~{~s~^ ~}}" items)
+        (format stream "(persidastricl:persistent-hash-set ~{~s~^ ~})" items))))
 
-(defmethod make-load-form ((obj persistent-hash-set) &optional env)
+(defmethod make-load-form ((object persistent-hash-set) &optional env)
   (declare (ignore env))
-  (let ((items (flatten (seq obj))))
+  (let ((items (->list object)))
     `(persidastricl:persistent-hash-set ,@items)))
 
 (defun set (object)

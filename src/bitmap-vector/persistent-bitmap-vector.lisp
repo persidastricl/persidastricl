@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:bitmap-vector)
+(in-package #:persidastricl)
 
 ;; -----
 ;; persistent-bitmap-vector object
@@ -19,7 +19,7 @@
 ;;
 ;; -----
 
-(defmethod insert ((bv persistent-bitmap-vector) bit-position item)
+(defmethod ins ((bv persistent-bitmap-vector) bit-position item)
   "inserts the `item` in the data vector at the calculated index
 position determinded by the bit-count of bit-position with respect to
 all bits currently set below it in the bitmap. "
@@ -28,7 +28,7 @@ all bits currently set below it in the bitmap. "
                    :bitmap bitmap
                    :data (v:insert (:data bv) (b:index bit-position bitmap) item))))
 
-(defmethod update ((bv persistent-bitmap-vector) bit-position item)
+(defmethod upd ((bv persistent-bitmap-vector) bit-position item)
   "updates the `item in the data vector at the calculated index position
 determinded by the bit-count of bit-position with respect to all bits
 currently set below it in the bitmap"
@@ -37,7 +37,7 @@ currently set below it in the bitmap"
                    :bitmap bitmap
                    :data (v:update (:data bv) (b:index bit-position bitmap) item))))
 
-(defmethod remove ((bv persistent-bitmap-vector) bit-position)
+(defmethod del ((bv persistent-bitmap-vector) bit-position)
   "removes the `item` from the data vector at the calculated index
 position determinded by the bit-count of bit-position with respect to
 all bits currently set below it in the bitmap."

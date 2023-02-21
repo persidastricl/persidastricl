@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:node)
+(in-package #:persidastricl)
 
 ;; -----
 ;;  transient-node
@@ -19,39 +19,39 @@
 ;;
 ;; -----
 
-(defmethod insert ((node transient-node) position item)
+(defmethod ins ((node transient-node) position item)
   (with-slots (dmap) node
-    (setf dmap (bv:insert dmap position item)))
+    (setf dmap (ins dmap position item)))
   node)
 
-(defmethod insert ((node transient-node) position (new-node transient-node))
+(defmethod ins ((node transient-node) position (new-node transient-node))
   (with-slots (nmap) node
-    (setf nmap (bv:insert nmap position new-node)))
+    (setf nmap (ins nmap position new-node)))
   node)
 
-(defmethod insert ((node transient-node) position (new-node transient-overflow-node))
+(defmethod ins ((node transient-node) position (new-node transient-overflow-node))
   (with-slots (nmap) node
-    (setf nmap (bv:insert nmap position new-node)))
+    (setf nmap (ins nmap position new-node)))
   node)
 
-(defmethod update ((node transient-node) position item)
+(defmethod upd ((node transient-node) position item)
   (with-slots (dmap) node
-    (setf dmap (bv:update dmap position item)))
+    (setf dmap (upd dmap position item)))
   node)
 
-(defmethod update ((node transient-node) position (new-node transient-node))
+(defmethod upd ((node transient-node) position (new-node transient-node))
   (with-slots (nmap) node
-    (setf nmap (bv:update nmap position new-node)))
+    (setf nmap (upd nmap position new-node)))
   node)
 
-(defmethod update ((node transient-node) position (new-node transient-overflow-node))
+(defmethod upd ((node transient-node) position (new-node transient-overflow-node))
   (with-slots (nmap) node
-    (setf nmap (bv:update nmap position new-node)))
+    (setf nmap (upd nmap position new-node)))
   node)
 
-(defmethod remove ((node transient-node) position)
+(defmethod del ((node transient-node) position)
   (with-slots (dmap nmap) node
-    (if (bv:is-set dmap position)
-        (setf dmap (bv:remove dmap position))
-        (setf nmap (bv:remove nmap position))))
+    (if (is-set dmap position)
+        (setf dmap (del dmap position))
+        (setf nmap (del nmap position))))
   node)

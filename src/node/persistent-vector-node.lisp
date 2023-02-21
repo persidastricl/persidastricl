@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :node)
+(in-package #:persidastricl)
 
 (define-immutable-class persistent-vector-node (vector-node) ())
 
@@ -78,10 +78,10 @@
               (make-instance (type-of node) :level level :data (v:delete data i))))))))
 
 
-(defmethod put ((node persistent-vector-node) item index)
+(defmethod add ((node persistent-vector-node) item &key index)
   (with-slots (level data) node
     (let ((i (b:bits index level)))
-      (make-instance (type-of node) :level level :data (put (elt data i) item index)))))
+      (make-instance (type-of node) :level level :data (add (elt data i) item :index index)))))
 
 (defmethod update-instance-for-different-class :before ((old transient-vector-node)
                                                         (new persistent-vector-node)

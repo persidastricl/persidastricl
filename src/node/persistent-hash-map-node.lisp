@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package :node)
+(in-package #:persidastricl)
 
 ;; -----
 ;; persistent-hash-map-node
@@ -13,4 +13,4 @@
 ;; -----
 
 (define-immutable-class persistent-hash-map-node (persistent-node hash-map-node) ()
-  (:default-initargs :dmap (bv:EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR) :nmap (bv:EMPTY-PERSISTENT-NODE-BITMAP-VECTOR)))
+  (:default-initargs :dmap (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR) :nmap (EMPTY-PERSISTENT-NODE-BITMAP-VECTOR)))

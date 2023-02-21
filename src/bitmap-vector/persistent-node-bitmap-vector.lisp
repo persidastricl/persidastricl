@@ -5,7 +5,7 @@
 ;;;
 ;;; -----
 
-(in-package #:bitmap-vector)
+(in-package #:persidastricl)
 
 ;; -----
 ;; persistent-node-bitmap-vector object

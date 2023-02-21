@@ -22,8 +22,7 @@
 
 (defun swap! (atom fn &rest args)
   (stmx:atomic
-   (let ((new-value (apply fn (:value atom) args)))
-     (setf (slot-value atom 'value) new-value))))
+   (setf (slot-value atom 'value) (apply fn (slot-value atom 'value) args))))
 
 (defun reset! (atom new-value)
   (stmx:atomic
