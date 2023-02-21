@@ -20,16 +20,16 @@
   `(make-instance 'lazy-sequence :head ,head :tail (delay ,tail)))
 
 (defmethod first ((seq lazy-sequence))
-  (:head seq))
+  (slot-value seq 'head))
 
 (defmethod rest ((seq lazy-sequence))
-  (when-let ((tail (:tail seq))) (force tail)))
+  (when-let ((tail (slot-value seq 'tail))) (force tail)))
 
 (defmethod head ((seq lazy-sequence))
-  (:head seq))
+  (slot-value seq 'head))
 
 (defmethod tail ((seq lazy-sequence))
-  (when-let ((tail (:tail seq))) (force tail)))
+  (when-let ((tail (slot-value seq 'tail))) (force tail)))
 
 (defmethod ->list ((obj lazy-sequence))
   (when (head obj) (cons (head obj) (->list (tail obj)))))
