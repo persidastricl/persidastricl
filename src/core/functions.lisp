@@ -88,10 +88,11 @@
 
 (defun concat (&rest seqs)
   (labels ((concat* (s &rest xs)
-             (if-let ((head (head s)))
-               (lseq head (apply #'concat* (tail s) xs))
-               (when-let ((next-s (head xs)))
-                 (apply #'concat* (seq next-s) (tail xs))))))
+             (lseq (head s)
+                   (if (tail s)
+                       (apply #'concat* (tail s) xs)
+                       (when-let ((next-s (head xs)))
+                         (apply #'concat* (seq next-s) (tail xs)))))))
     (when-not (empty? seqs)
       (apply #'concat* (seq (head seqs)) (tail seqs)))))
 

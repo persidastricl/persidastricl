@@ -32,7 +32,7 @@
   (when-let ((tail (slot-value seq 'tail))) (force tail)))
 
 (defmethod ->list ((obj lazy-sequence))
-  (when (head obj) (cons (head obj) (->list (tail obj)))))
+  (cons (head obj) (->list (tail obj))))
 
 (defmethod ->array ((seq lazy-sequence))
   (when seq
@@ -41,8 +41,11 @@
 
 (defgeneric lazy-seq (obj)
   (:method ((obj function)) (let ((head (funcall obj))) (lseq head (lazy-seq obj))))
-  (:method ((obj list)) (lseq (head obj) (lazy-seq (rest obj))))
   (:method ((obj lazy-sequence)) obj))
+
+(defmethod lazy-seq ((obj list))
+  (when-not (empty? obj)
+    (lseq (head obj) (lazy-seq (rest obj)))))
 
 (defgeneric seq (object)
   (:method ((object list)) (lazy-seq object))
@@ -50,8 +53,10 @@
   (:method ((object lazy-sequence)) object))
 
 (defun take* (n target)
-  (when (and (head target) (> n 0))
-    (lseq (head target) (take* (1- n) (tail target)))))
+  (when (> n 0)
+    (if (tail target)
+        (lseq (head target) (take* (1- n) (tail target)))
+        (list (head target)))))
 
 (defgeneric take (n seq)
   (:method (n (seq list)) (take* n seq))
@@ -77,5 +82,4 @@
         (more (first (drop *print-lazy-items* object))))
     (format stream "(~{~s~^ ~}~@[ ...~])" items more)))
 
-(defmethod empty? ((seq lazy-sequence))
-  (nil? (head seq)))
+(defmethod empty? ((seq lazy-sequence)) nil)
