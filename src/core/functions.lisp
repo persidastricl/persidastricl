@@ -49,6 +49,12 @@
         (assoc obj k (assoc-in next more v))
         (assoc obj k v))))
 
+(defun every? (pred coll)
+  (cond
+    ((nil? (seq coll)) t)
+    ((funcall pred (head coll)) (every? f (tail coll)))
+    (:otherwise nil)))
+
 (defun update (m k f &rest args)
   (let ((current (get m k)))
     (assoc m k (apply f current args))))
@@ -77,10 +83,10 @@
       (labels ((apply* (args)
                  (apply f args))
                (map* (ss)
-                 (let ((args (remove-if #'nil? (map 'list #'head ss))))
+                 (let ((args (map 'list #'head ss)))
                    (when (= n (count args))
                      (let ((r (apply* args)))
-                       (lseq r (map* (map 'list #'tail ss))))))))
+                       (lseq r (map* (remove-if #'empty? (map 'list #'tail ss)))))))))
         (map* seqs)))))
 
 (defun mapv (f &rest seqs)
@@ -142,6 +148,30 @@
     (if (funcall pred v)
         (drop-while pred (tail s))
         (lseq v (tail s)))))
+
+(defun drop-last (n seq)
+  (lmap
+   (lambda (x y) (declare (ignore y))
+     x)
+   (seq seq)
+   (drop n seq)))
+
+(defun take-last (n seq)
+  (labels ((take* (s lead)
+             (if lead
+                 (take* (tail s) (tail lead))
+                 s)))
+    (take* (seq seq) (drop n seq))))
+
+(defun split-at (n seq)
+  (list (take n seq) (drop n seq)))
+
+(defun split-with (pred seq)
+  (list (take-while pred seq) (drop-while pred seq)))
+
+(defun iterate (f x)
+  (let ((v (funcall f x)))
+    (lseq v (iterate f v))))
 
 (defgeneric partition (source n)
   (:method ((source list) n) (partition (lazy-seq source) n))
@@ -242,3 +272,11 @@
 
 (defun only-valid-values (x)
   (mremove #'has-no-value? x))
+
+(defun juxt (&rest fns)
+  (lambda (&rest args)
+    (lreduce
+     (lambda (v f)
+       (conj v (apply f args)))
+     fns
+     :initial-value (persistent-vector))))

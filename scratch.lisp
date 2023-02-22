@@ -88,6 +88,8 @@
 
   (drop 10000000 (integers)))
 
+
+
 (defvar ints (integers))
 
 (sb-sprof:report)
@@ -171,10 +173,11 @@
       princ
       (lambda (tv) (princ (count tv))))
 
+(take 10 '(1 2 3 4 5 6 nil nil nil))
 
-(zipmap [:a :b :c] [1 2 3 4])
+(every? #'oddp '(1 3 5 7 9 11 14))
 
-(->list  (take 2 '(1)))
+(into [] (lmap (lambda (i) i) '(1 2 3 4 5 6 nil nil nil)))
 
 (into [] (partition-all '(1 2 3 4 5 6 7 8 9 0 1) 2))
 (into [] (partition '(1 2 3 4 5 6 7) 2))
@@ -195,63 +198,3 @@
      (conj (get vector i) v))
    (range (- end start) :start start)
    :initial-value (empty vector)))
-
-(defvar v (into #{} (take 10000 (integers))))
-
-(time
- (subs v 10))
-
-(function coqns)
-
-(transient! (into [] (range 1000)))
-
-(defvar pvln (make-instance 'persistent-vector-leaf-node))
-
-(persistent->transient-name pvln)
-
-(class-name (class-of pvln))
-
-(find-class 'node:persistent-vector-leaf-node)
-
-(persistent! @[])
-
-(time
- (setf v1  (into @[] (range 1000000))))
-
-(time (persistent! v1))
-
-(time
- (persistent! (into @[] (range 1000000))))
-
-(time
- (into [] (range 1000000)))
-
-(time
- (transient! (into [] (range 1000000))))
-
-
-(with-open-file (s "/home/mdp/Documents/favorites/BitsAndPieces.txt" :external-format :iso-8859-2 )
-  (s:join (s:str #\NEWLINE) (->list  (lmap
-                                      (lambda (line)
-                                        (string-upcase (s:trim line)))
-                                      (line-seq s)))))
-
-(step)
-(count #{1 2 3 4})
-
-
-(has-no-value? #())
-
-
-(-> {}
-  (assoc :a nil))
-
-(only-valid-values? (persistent-hash-map :a #{} :b 1))
-
-
-(defvar test-node (make-instance 'persistent-hash-set-node))
-
-(-> test-node
-  type-of
-  s:str)
-(empty-overflow-node test-node)
