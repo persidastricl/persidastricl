@@ -62,8 +62,10 @@
   (:shadow #:cl #:some #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector #:pop)
   (:export #:->alist
            #:->array
+           #:->keys
            #:->list
            #:->plist
+           #:->vals
            #:->vector
            #:-vec
            #:==
