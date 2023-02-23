@@ -82,4 +82,12 @@
         (more (first (drop *print-lazy-items* object))))
     (format stream "(~{~s~^ ~}~@[ ...~])" items more)))
 
-(defmethod empty? ((seq lazy-sequence)) nil)
+(defmethod bounded-count (n thing)
+  (labels ((bounded-count* (s i)
+             (if (and s (< i n))
+                 (bounded-count* (tail s) (inc i))
+                 i)))
+    (bounded-count* (seq thing) 0)))
+
+(defmethod empty? ((seq lazy-sequence))
+  (= (bounded-count 1 seq) 0))

@@ -161,4 +161,6 @@
 (->keys my-map)
 (->vals my-map)
 
+(bounded-count 100 '(1))
+
 (sb-sys:without-gcing (time (take 1 (drop 10000000 (integers)))))

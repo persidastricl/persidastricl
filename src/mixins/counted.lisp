@@ -19,5 +19,8 @@
 (defmethod length ((thing counted))
   (:count thing))
 
+(defmethod bounded-count (n (thing counted))
+  (:method (n (thing counted)) (:count thing)))
+
 (defmethod empty? ((thing counted))
   (zerop (:count thing)))

@@ -25,6 +25,8 @@
 (defgeneric length (thing)
   (:method (thing) (cl:length thing)))
 
+(defgeneric bounded-count (n thing))
+
 (defgeneric cons (se1 se2)
   (:method (se1 se2) (cl:cons se1 se2)))
 

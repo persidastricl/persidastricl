@@ -152,7 +152,7 @@
                (:module "core"
                 :pathname "src/core"
                 :serial t
-                :components ((:file "generics")
+                :components ((:file "methods")
                              (:file "functions")))
 
                (:module "sample-seqs"
