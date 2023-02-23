@@ -21,15 +21,21 @@
 (get (meta m1) :value)
 
 (meta m1)
+(->vec m1)
+(->alist m1)
+
 
 (->list [1 2 3])
+
+(type-of fib)
+
+(bounded-count 100 fib)
+
+(empty? fib)
 
 (into @{} (take 10 fib))
 
 (into #{} (take 8 (integers)))
-
-(->vec m1)
-(->alist m1)
 
 (defparameter s1 @#{ 1 2 3 4 5 6 })
 (contains? s1 3)
@@ -49,26 +55,30 @@
 (get-in m2 [:c :c])
 (get-in m2 [:d :e 0] :na)
 
-(seq m2)
-
-(->list m2)
-(->alist m2)
-(->vector m2)
-
 (-> m2
   (update-in [:d :e 3] (fnil #'1+ 0))
   (update-in [:g :h] (fnil #'conj #{}) :NEW-VALUE 0 99))
+
+(get m2 :b)
+(-> m2
+  (assoc :b (string-upcase (get m2 :b)))
+  (get :b))
+
+
+
+(defvar m3 {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6})
+
+(seq m3)
+
+(->list m3)
+(->alist m3)
+(->vector m3)
 
 ;;
 ;; common lisp data structure compatibility
 ;;
 (get '(0 1 2 3 4) 3)
 (assoc '(0 1 2 3 4) 3 :three)
-
-(get m2 :b)
-(-> m2
-  (assoc :b (string-upcase (get m2 :b)))
-  (get :b))
 
 (time
  (setf v1 (update-in [:a] [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] (fnil #'conj #{}) "test")))
@@ -82,16 +92,16 @@
 ;; -- output structures to graphiz?? --
 
 (defun bitmap->bits (bitmap)
-  (reduce
+  (lreduce
    (lambda (l pos)
      (acons (s:str "b" pos) (if (b:set? pos bitmap) "1" "0") l))
-   (->list (range 32))
+   (range 32)
    :initial-value '()))
 
 (bitmap->bits (random (expt 2 32)))
 
 (defun bitmap->dot (bitmap)
-  (s:join "|"  (map 'list  (lambda (c) (format nil "~a ~a" (first  c) (rest c))) (bitmap->bits bitmap))))
+  (s:join "|" (->list  (lmap (lambda (c) (format nil "~a ~a" (first  c) (rest c))) (bitmap->bits bitmap)))))
 
 (bitmap->dot 3)
 
@@ -133,12 +143,16 @@
  {:a 1 :b 2 :c 3}
  :initial-value {})
 
-(defun slice (vector start &optional (end (count vector)))
-  (lreduce
-   (lambda (v i)
-     (conj (get vector i) v))
-   (range (- end start) :start start)
-   :initial-value (empty vector)))
+(into [] (take-last 100 (range 1000)))
+
+(into [] (drop-last 100 (range 150 :start 1000)))
+
+;; (defun slice (vector start &optional (end (count vector)))
+;;   (lreduce
+;;    (lambda (v i)
+;;      (conj (get vector i) v))
+;;    (range (- end start) :start start)
+;;    :initial-value (empty vector)))
 
 
 (defvar lowercase-letters

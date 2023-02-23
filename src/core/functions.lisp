@@ -13,10 +13,10 @@
   (when s
     (let ((s (seq s)))
       (labels ((reduce* (current-value seq)
-                 (if (empty? seq)
-                     current-value
+                 (if seq
                      (let ((new-value (head seq)))
-                       (reduce* (funcall f current-value new-value) (tail seq))))))
+                       (reduce* (funcall f current-value new-value) (tail seq)))
+                     current-value)))
         (reduce*
          (if initial-value-p initial-value (head s))
          (if initial-value-p s (tail s)))))))
@@ -77,7 +77,7 @@
       (filter* (seq seq)))))
 
 (defun lmap (f &rest seqs)
-  (when-not (empty? seqs)
+  (when seqs
     (let ((n (count seqs))
           (seqs (map 'list #'seq seqs)))
       (labels ((apply* (args)
@@ -86,7 +86,7 @@
                  (let ((args (map 'list #'head ss)))
                    (when (= n (count args))
                      (let ((r (apply* args)))
-                       (lseq r (map* (remove-if #'empty? (map 'list #'tail ss)))))))))
+                       (lseq r (map* (remove-if #'nil? (map 'list #'tail ss)))))))))
         (map* seqs)))))
 
 (defun mapv (f &rest seqs)
@@ -99,7 +99,7 @@
                        (apply #'concat* (tail s) xs)
                        (when-let ((next-s (head xs)))
                          (apply #'concat* (seq next-s) (tail xs)))))))
-    (when-not (empty? seqs)
+    (when seqs
       (apply #'concat* (seq (head seqs)) (tail seqs)))))
 
 (defun mapcat (f s &rest seqs)
@@ -110,20 +110,19 @@
   (into (persistent-vector) (filter pred seq)))
 
 (defun keep (f &rest seqs)
-  (if (empty? seqs)
-      nil
-      (let ((n (count seqs))
-            (seqs (map 'list #'seq seqs)))
-        (labels ((apply* (args)
-                   (apply f args))
-                 (map* (s)
-                   (let ((args (remove-if #'null (map 'list #'head s))))
-                     (when (= n (count args))
-                       (let ((r (apply* args)))
-                         (if r
-                             (lseq r (map* (map 'list #'tail s)))
-                             (map* (map 'list #'tail s))))))))
-          (map* seqs)))))
+  (when seqs
+    (let ((n (count seqs))
+          (seqs (map 'list #'seq seqs)))
+      (labels ((apply* (args)
+                 (apply f args))
+               (map* (s)
+                 (let ((args (remove-if #'null (map 'list #'head s))))
+                   (when (= n (count args))
+                     (let ((r (apply* args)))
+                       (if r
+                           (lseq r (map* (map 'list #'tail s)))
+                           (map* (map 'list #'tail s))))))))
+        (map* seqs)))))
 
 (defun integers (&key (from 0))
   (lseq from (integers :from (1+ from))))
