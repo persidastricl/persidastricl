@@ -53,7 +53,6 @@
   (:method ((seq sequence)) (rest (coerce seq 'list))))
 
 (defgeneric ->list (object)
-;;  (:method ((lst (eql nil))) nil)
   (:method ((lst list)) lst)
   (:method ((seq sequence)) (coerce seq 'list)))
 

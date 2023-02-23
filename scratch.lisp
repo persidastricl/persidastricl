@@ -24,7 +24,7 @@
 
 (->list [1 2 3])
 
-(into [] (take 3 (lazy-seq '(1 2 3 4 5 6 7 8))))
+(into @{} (take 10 (fib)))
 
 (print-object
  nil)

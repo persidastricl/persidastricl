@@ -10,7 +10,7 @@
 (in-package #:persidastricl)
 
 (time
- (into [] (take 50 fib)))
+ (into [] (take 100 fib)))
 
 (time
  (into [] (take 50 trib)))
@@ -19,13 +19,13 @@
  (first (take 1 (drop 200 trib))))
 
 (time
- (into [] (take 30 squares)))
+ (into [] (take 30 (squares))))
 
 (time
- (into [] (take 30 triangulars)))
+ (into [] (take 30 (triangulars))))
 
 (time
- (into [] (take 30 hexagonals)))
+ (into [] (take 30 (hexagonals))))
 
 (time
  (into [] (take 30 (catalan-seq))))
@@ -34,7 +34,7 @@
  (into [] (take 30 (catalan-seq 10))))
 
 (time
- (into [] (take 30 primes-seq)))
+ (into [] (take 30 (primes-seq))))
 
 (time
- (into [] (take 30 (drop 5000 primes-seq))))
+ (into [] (take 30 (drop 5000 (primes-seq)))))
