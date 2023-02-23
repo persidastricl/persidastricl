@@ -82,14 +82,12 @@
         ((is-set nmap position)
          (let* ((sub-node (at-position nmap position))
                 (new-node (remove sub-node key :hash hash :depth (1+ depth))))
-           (if (eq new-node sub-node)
-               node
-               (if (single-value-node? new-node)
-                   (let ((keep (single-remaining-data new-node)))
-                     (-> node
-                       (del position)
-                       (ins position keep)))
-                   (upd node position new-node)))))
+           (if (single-value-node? new-node)
+               (let ((keep (single-remaining-data new-node)))
+                 (-> node
+                   (del position)
+                   (ins position keep)))
+               (upd node position new-node))))
 
         ;; do we have data for this hash at this level
         ((is-set dmap position)

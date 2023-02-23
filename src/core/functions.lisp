@@ -52,7 +52,7 @@
 (defun every? (pred coll)
   (cond
     ((nil? (seq coll)) t)
-    ((funcall pred (head coll)) (every? f (tail coll)))
+    ((funcall pred (head coll)) (every? pred (tail coll)))
     (:otherwise nil)))
 
 (defun update (m k f &rest args)

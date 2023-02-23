@@ -49,7 +49,7 @@
       (cond
         ;; do we have a node for this hash at this depth
         ((is-set nmap position)
-         (loc (at-position nmap position) item :hash hash :depth (1+ depth) default))
+         (loc (at-position nmap position) item :hash hash :depth (1+ depth) :default default))
 
         ;; do we have data for this hash at this depth
         ((is-set dmap position)
@@ -70,14 +70,12 @@
         ((is-set nmap position)
          (let* ((sub-node (at-position nmap position))
                 (new-node (remove sub-node item :hash hash :depth (1+ depth))))
-           (if (eq new-node sub-node)
-               node
-               (if (single-value-node? new-node)
-                   (let ((keep (single-remaining-data new-node)))
-                     (-> node
-                       (del position)
-                       (ins position keep)))
-                   (upd node position new-node)))))
+           (if (single-value-node? new-node)
+               (let ((keep (single-remaining-data new-node)))
+                 (-> node
+                   (del position)
+                   (ins position keep)))
+               (upd node position new-node))))
 
         ;; do we have data for this hash at this depth
         ((is-set dmap position)

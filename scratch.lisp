@@ -10,12 +10,12 @@
 (named-readtables:in-readtable persidastricl:syntax)
 
 (defparameter m1 (with-meta
-                   {:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
+                   @{:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
                    {:a 1 :value "testing"}))
 (get m1 :k1)
 (get m1 :k1 :not-found)
 (assoc m1 :k1 :derp)
-(dissoc m1 :k1)
+(dissoc m1 :k1 :k2 :k3 :k4 :k5 :k6)
 (get m1 :k7)
 (get (meta m1) :a)
 (get (meta m1) :value)
@@ -24,14 +24,12 @@
 
 (->list [1 2 3])
 
-(into @{} (take 10 (fib)))
-
-(print-object
- nil)
+(into @{} (take 10 fib))
 
 (into #{} (take 8 (integers)))
 
 (->vec m1)
+(->alist m1)
 
 (defparameter s1 @#{ 1 2 3 4 5 6 })
 (contains? s1 3)
@@ -48,74 +46,18 @@
             :e {:f #(1 2 3 4)}
             :g {:h #{1 2 3 4}}})
 
-(sort '("b" "z" "a") #'string<)
-
-(defvar lowercase-letters
-  (lmap
-   (lambda (i)
-     (code-char i))
-   (range 26 :start 97)))
-
-
-(defvar uppercase-letters
-  (lmap
-   (lambda (i)
-     (code-char i))
-   (range 26 :start 65)))
-
-(interleave lowercase-letters uppercase-letters)
-
-(sb-ext:gc)
-(room)
-
-(require :sb-sprof)
-
-(sb-sprof:start-profiling )
-
-(take 1 (sb-sys:without-gcing (time (drop 10000000 (integers)))))
-
-(time (take 1 (drop 10000000 (integers))))
-
-(sb-sys:without-gcing (time (take 1 (drop 10000000 (integers)))))
-
-
-(sb-sys:without-gcing
-  (time
-   (let ((r (take 1 (drop 10000000 ints))))
-     r)))
-
-(sb-sprof:with-profiling ()
-
-  (drop 10000000 (integers)))
-
-
-
-(defvar ints (integers))
-
-(sb-sprof:report)
-
-(sb-sprof:stop-profiling)
-
-(sort (->keys m) #'char>)
-
-(setf m (into {} (interleave uppercase-letters (integers))))
-(->keys m)
-(->vals m)
-
-(->vals (get-in m2 [:c :c]))
-(into [] (->vals m2))
-
-(setf *print-lazy-items* 3)
+(get-in m2 [:c :c])
+(get-in m2 [:d :e 0] :na)
 
 (seq m2)
 
-;; these might be better as a walk
 (->list m2)
 (->alist m2)
 (->vector m2)
 
-(update-in m2 [:d :e 3] (fnil #'1+ 0))
-(update-in m2 [:g :h] (fnil #'conj #{}) :NEW-VALUE 0 99)
+(-> m2
+  (update-in [:d :e 3] (fnil #'1+ 0))
+  (update-in [:g :h] (fnil #'conj #{}) :NEW-VALUE 0 99))
 
 ;;
 ;; common lisp data structure compatibility
@@ -123,17 +65,21 @@
 (get '(0 1 2 3 4) 3)
 (assoc '(0 1 2 3 4) 3 :three)
 
-(get-in m2 [:d :e 0] :na)
-
-(assoc m2 :b (string-upcase (get m2 :b)))
+(get m2 :b)
+(-> m2
+  (assoc :b (string-upcase (get m2 :b)))
+  (get :b))
 
 (time
  (setf v1 (update-in [:a] [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] (fnil #'conj #{}) "test")))
 
-(update [:a] 1 (fnil #'conj #{}) "test")
-
 (time
  (get-in v1 [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] :n))
+
+(update [:a] 1 (fnil #'conj #{}) "test")
+
+
+;; -- output structures to graphiz?? --
 
 (defun bitmap->bits (bitmap)
   (reduce
@@ -168,29 +114,24 @@
 
 
 (doto (into @[] (range 10))
-      (conj 1 2 3)
-      (conj :a :b :c)
-      princ
-      (lambda (tv) (princ (count tv))))
+  (conj 1 2 3)
+  (conj :a :b :c)
+  (lambda (tv) (princ (count tv))))
 
 (take 10 '(1 2 3 4 5 6 nil nil nil))
 
-(every? #'oddp '(1 3 5 7 9 11 14))
+(every? #'oddp '(1 3 5 7 9 11 13))
+(every? #'oddp '(1 3 5 7 9 12 13))
 
 (into [] (lmap (lambda (i) i) '(1 2 3 4 5 6 nil nil nil)))
-
 (into [] (partition-all '(1 2 3 4 5 6 7 8 9 0 1) 2))
 (into [] (partition '(1 2 3 4 5 6 7) 2))
 
-(head (seq {:a 1 :b 2}))
 (reduce-kv
  (lambda (r k v)
    (assoc r v k))
  {:a 1 :b 2 :c 3}
  :initial-value {})
-
-
-(code-char 97)
 
 (defun slice (vector start &optional (end (count vector)))
   (lreduce
@@ -198,3 +139,26 @@
      (conj (get vector i) v))
    (range (- end start) :start start)
    :initial-value (empty vector)))
+
+
+(defvar lowercase-letters
+  (lmap
+   (lambda (i)
+     (code-char i))
+   (range 26 :start 97)))
+
+(defvar uppercase-letters
+  (lmap
+   (lambda (i)
+     (code-char i))
+   (range 26 :start 65)))
+
+(interleave lowercase-letters uppercase-letters)
+
+(defvar my-map
+  (into {} (interleave uppercase-letters (integers))))
+
+(->keys my-map)
+(->vals my-map)
+
+(sb-sys:without-gcing (time (take 1 (drop 10000000 (integers)))))
