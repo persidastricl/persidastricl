@@ -9,7 +9,7 @@
 
 (proclaim '(inline map-entry key value ->vec ->list ->cons))
 
-(defclass entry ()
+(defclass entry (collection)
   ((key :initarg :key :reader :key)
    (value :initarg :value :reader :value)))
 
@@ -33,6 +33,21 @@
 
 (defmethod ->list ((entry entry))
   (list (key entry) (value entry)))
+
+(defmethod first ((entry entry))
+  (key entry))
+
+(defmethod rest ((entry entry))
+  (list (value entry)))
+
+(defmethod head ((entry entry))
+  (key entry))
+
+(defmethod tail ((entry entry))
+  (list (value entry)))
+
+(defmethod next ((entry entry))
+  (list (value entry)))
 
 (defmethod seq ((entry entry))
   (->list entry))

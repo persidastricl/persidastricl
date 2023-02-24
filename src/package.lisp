@@ -62,7 +62,7 @@
    #:atom
    #:butlast
    #:collection?
-   #:conj
+   #:concat
    #:conj
    #:cons
    #:contains?
@@ -88,13 +88,16 @@
    #:get
    #:get-in
    #:inc
+   #:instance?
    #:int?
    #:integers
    #:interleave
+   #:interpose
    #:into
    #:iterate
    #:juxt
    #:keep
+   #:keep-indexed
    #:last
    #:lazy-seq
    #:length
@@ -106,16 +109,20 @@
    #:map-entry
    #:map-indexed
    #:map?
+   #:mapcat
    #:mapv
+   #:memoize
    #:meta
    #:named-fn
    #:nat-int?
    #:neg-int?
    #:neg?
+   #:nil?
    #:odd?
    #:only-valid-values
    #:partition
    #:partition-all
+   #:partition-by
    #:peek
    #:persistent-hash-map
    #:persistent-hash-set
@@ -130,12 +137,14 @@
    #:repeatedly
    #:reset!
    #:rest
+   #:run!
    #:seq
    #:sequential?
    #:set
    #:set?
    #:some
    #:some-fn
+   #:some?
    #:split-at
    #:split-with
    #:string?
@@ -145,11 +154,13 @@
    #:t-vec
    #:take
    #:take-last
+   #:take-nth
    #:take-while
    #:transient!
    #:transient-hash-map
    #:transient-hash-set
    #:transient-vector
+   #:tree-seq
    #:update
    #:update-in
    #:vec

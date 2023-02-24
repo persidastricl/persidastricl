@@ -266,10 +266,8 @@
                    (when (funcall branch? node)
                      (mapcat #'walk (funcall children node))))))
     (walk root)))
-;;
-;; redefine flatten !! needs more work
-;;
-(defun _flatten (x)
+
+(defun flatten (x)
   (filter (complement #'sequential?)
           (tail (tree-seq #'collection? #'seq x))))
 
