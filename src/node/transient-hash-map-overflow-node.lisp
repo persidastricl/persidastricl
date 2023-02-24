@@ -16,8 +16,8 @@
 
 (defmethod add ((node transient-hash-map-overflow-node) entry &key hash &allow-other-keys)
   (when (:hash node) (assert (eq (:hash node) hash)))
-  (let ((key (e:key entry))
-        (value (e:value entry)))
+  (let ((key (key entry))
+        (value (value entry)))
     (when-not hash (setf (:hash node) hash))
     (setf (:data node) (->> (:data node)
                             (remove-if (lambda (e) (== (car e) key)))

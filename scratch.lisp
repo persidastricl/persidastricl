@@ -10,8 +10,9 @@
 (named-readtables:in-readtable persidastricl:syntax)
 
 (defparameter m1 (with-meta
-                   @{:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
+                   {:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
                    {:a 1 :value "testing"}))
+(get m1 :k2)
 (get m1 :k1)
 (get m1 :k1 :not-found)
 (assoc m1 :k1 :derp)
@@ -21,7 +22,7 @@
 (get (meta m1) :value)
 
 (meta m1)
-(->vec m1)
+(_flatten (->vector m1))
 (->alist m1)
 
 
@@ -33,7 +34,7 @@
 
 (empty? fib)
 
-(into @{} (take 10 fib))
+
 
 (into #{} (take 8 (integers)))
 
@@ -88,23 +89,6 @@
 
 (update [:a] 1 (fnil #'conj #{}) "test")
 
-
-;; -- output structures to graphiz?? --
-
-(defun bitmap->bits (bitmap)
-  (lreduce
-   (lambda (l pos)
-     (acons (s:str "b" pos) (if (b:set? pos bitmap) "1" "0") l))
-   (range 32)
-   :initial-value '()))
-
-(bitmap->bits (random (expt 2 32)))
-
-(defun bitmap->dot (bitmap)
-  (s:join "|" (->list  (lmap (lambda (c) (format nil "~a ~a" (first  c) (rest c))) (bitmap->bits bitmap)))))
-
-(bitmap->dot 3)
-
 (defclass derp ()
   ((data :initarg :data :accessor :data)))
 
@@ -143,6 +127,8 @@
  {:a 1 :b 2 :c 3}
  :initial-value {})
 
+(into [] (take 100 (take-nth 10 (integers))))
+
 (into [] (take-last 100 (range 1000)))
 
 (into [] (drop-last 100 (range 150 :start 1000)))
@@ -178,3 +164,58 @@
 (bounded-count 100 '(1))
 
 (sb-sys:without-gcing (time (take 1 (drop 10000000 (integers)))))
+
+
+;; -- output structures to graphiz?? --
+
+(defun bitmap->dot (bitmap marker)
+  (s:join "|" (->list  (mapv (lambda (i) (format nil "~a~a ~:[0~;1~]" marker i (b:set? i bitmap))) (range 32)))))
+
+(bitmap->dot 32 "n")
+
+(defun data-vector->dot (v)
+  (s:join "|" (->list (map-indexed (lambda (i e) (format nil "di~a ~s" i e)) (seq v)))))
+
+(data-vector->dot #(1 2 3 4))
+
+(defun node-vector->dot (v)
+  (s:join "|"
+          (->list
+           (map-indexed
+            (lambda (i e)
+              (format nil "ni~a ~x" i (sb-kernel:get-lisp-obj-address e)))
+            (seq v)))))
+
+
+(defun bitmap-pointers (bitmap stream marker)
+  (lreduce
+   (lambda (n i)
+     (if (b:set? i bitmap)
+         (progn (format stream "\"node0\":~a~s -> \"node1\":~ai~s~%" marker i marker n)
+                (1+ n))
+         n))
+   (range 32)
+   :initial-value 0))
+
+(defmethod bitmap-vector-rec ((bv bitmap-vector) stream)
+  (with-slots (bitmap data) bv
+    (let ((bitmap-boxes (bitmap->dot bitmap "d"))
+          (data-boxes (data-vector->dot data)))
+      (format stream "node0 [label = ~s];~%" bitmap-boxes)
+      (format stream "node1 [label = ~s];~%" data-boxes)
+      (bitmap-pointers bitmap stream "d"))))
+
+(conj [] (with-output-to-string (s)
+           (bitmap-vector-rec bv s)))
+
+(defvar bv (make-instance 'bitmap-vector :data #(1 2 3) :bitmap 16))
+
+(defvar bva (make-array 2 :initial-contents (list (make-instance 'bitmap-vector) (make-instance 'bitmap-vector))))
+
+
+
+(defun bitmap-vector-rec ((bv node-bitmap-vector) sb)
+  (with-slots (bitmap data) bv
+    (let ((bitmap-boxes (bitmap->dot bitmap "n"))
+          (node-boxes (node-vector->dot data))))
+    (format nil )))

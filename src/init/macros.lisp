@@ -48,3 +48,6 @@
 (defmacro named-fn (name args &body body)
   `(labels ((,name ,args ,@body))
      #',name))
+
+(defmacro comment (&body body)
+  (declare (ignore body)))

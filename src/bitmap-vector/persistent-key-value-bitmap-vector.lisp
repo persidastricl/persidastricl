@@ -28,7 +28,7 @@ for key, and (1+ (* 2 determined-bit-count)) for value"
   (let ((bitmap (b:set bit-position (:bitmap bv))))
     (make-instance 'persistent-key-value-bitmap-vector
                    :bitmap bitmap
-                   :data (v:insert (:data bv) (* (b:index bit-position bitmap) 2) (e:key entry) (e:value entry)))))
+                   :data (v:insert (:data bv) (* (b:index bit-position bitmap) 2) (key entry) (value entry)))))
 
 (defmethod upd ((bv persistent-key-value-bitmap-vector) bit-position entry)
   "updates the value from `entry` in the data vector at the calculated
@@ -38,7 +38,7 @@ in the data vector is: (1+ (* 2 determined-bit-count)) for v"
   (let ((bitmap (:bitmap bv)))
     (make-instance 'persistent-key-value-bitmap-vector
                    :bitmap bitmap
-                   :data (v:update (:data bv) (1+ (* (b:index bit-position bitmap) 2)) (e:value entry)))))
+                   :data (v:update (:data bv) (1+ (* (b:index bit-position bitmap) 2)) (value entry)))))
 
 (defmethod del ((bv persistent-key-value-bitmap-vector) bit-position)
   "removes the key/value from `entry` in the data vector at the 2

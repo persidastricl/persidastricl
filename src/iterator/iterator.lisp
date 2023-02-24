@@ -12,4 +12,3 @@
 (defmethod iterator (target))
 (defgeneric current (object))
 (defgeneric has-next? (object))
-(defgeneric next (object))

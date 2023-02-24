@@ -12,9 +12,9 @@
 (defun ->entries (sequence)
   (let ((sequence (->list sequence)))
     (typecase (first sequence)
-      (e:entry sequence)
-      (cl:cons (map 'list (lambda (c) (apply #'e:map-entry c)) sequence))
-      (t (map 'list (lambda (kv) (apply #'e:map-entry kv)) (->list (partition-all sequence 2)))))))
+      (entry sequence)
+      (cl:cons (map 'list (lambda (c) (apply #'map-entry c)) sequence))
+      (t (map 'list (lambda (kv) (apply #'map-entry kv)) (->list (partition-all sequence 2)))))))
 
 (defclass hash-map (hamt associable)
   ((root :initarg :root :reader :root)))
@@ -31,10 +31,10 @@
   (lookup hm key default))
 
 (defmethod ->vector ((hm hash-map))
-  (map 'cl:vector #'e:->vec (->list hm)))
+  (map 'cl:vector #'->vector (->list hm)))
 
 (defmethod ->vec ((hm hash-map))
-  (->vector hm))
+  (into (persistent-vector) (lmap #'->vec (->list hm))))
 
 (defmethod ->array ((hm hash-map))
   (->vector hm))
@@ -43,16 +43,16 @@
   (into '() (seq hm)))
 
 (defmethod ->keys ((hm hash-map))
-  (lmap #'e:key hm))
+  (lmap #'key hm))
 
 (defmethod ->vals ((hm hash-map))
-  (lmap #'e:value hm))
+  (lmap #'value hm))
 
 (defmethod ->plist ((hm hash-map))
-  (mapcat #'e:->list hm))
+  (mapcat #'->list hm))
 
 (defmethod ->alist ((hm hash-map))
-  (lmap #'e:->cons hm))
+  (lmap #'->cons hm))
 
 (defmethod count ((obj hash-map))
   (count (->list obj)))
@@ -60,3 +60,17 @@
 (defmethod with-meta ((object hamt) (meta hash-map))
   (with-slots (root) object
     (make-instance (type-of object) :root root :meta meta)))
+
+(defun select-keys (map keyseq)
+  (labels ((select-keys* (m keys)
+             (if keys
+                 (let ((k (first keys)))
+                   (select-keys*
+                    (if-let ((v (get map k)))
+                      (assoc m k v)
+                      m)
+                    (tail keys)))
+                 (with-meta m (meta map)))))
+    (select-keys* (empty map) keyseq)))
+
+;; TODO: merge and merge-with

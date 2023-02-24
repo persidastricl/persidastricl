@@ -40,6 +40,11 @@
   (:method ((lst list)) (cl:rest lst))
   (:method ((seq sequence)) (rest (coerce seq 'list))))
 
+(defgeneric next (thing)
+  (:method (thing) (cl:rest thing))
+  (:method ((lst list)) (cl:rest lst))
+  (:method ((seq sequence)) (rest (coerce seq 'list))))
+
 (defgeneric last (thing)
   (:method (thing) (cl:last thing)))
 
@@ -62,9 +67,6 @@
   (:method (object) (make-array (length object) :initial-contents object)))
 
 (defgeneric ->vector (object)
-  (:method (object) (->array object)))
-
-(defgeneric ->vec (object)
   (:method (object) (->array object)))
 
 (defgeneric ->plist (object))

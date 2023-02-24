@@ -16,8 +16,8 @@
 
 (defmethod add ((node persistent-hash-map-overflow-node) entry &key hash &allow-other-keys)
   (when (:hash node) (assert (eq (:hash node) hash)))
-  (let ((key (e:key entry))
-        (value (e:value entry)))
+  (let ((key (key entry))
+        (value (value entry)))
     (make-instance 'persistent-hash-map-overflow-node :hash (or (:hash node) hash) :data (->> (:data node)
                                                                                               (remove-if (lambda (e) (== (car e) key)))
                                                                                               (acons key value)))))

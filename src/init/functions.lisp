@@ -64,3 +64,13 @@
                    ((cl:atom x) (cons x acc))
                    (t (flatten* (first x) (flatten* (rest x) acc))))))
     (flatten* x nil)))
+
+(defun instance? (type object)
+  (typep object type))
+
+;; unlock and do this??
+;; (defun keyword (s)
+;;   (intern (string-upcase s) "KEYWORD"))
+
+(defun some? (x)
+  (not (nil? x)))

@@ -27,7 +27,7 @@ bitmap. The indexes in the data vector are: (* 2 determined-bit-count)
 for key, and (1+ (* 2 determined-bit-count)) for value"
   (with-slots (bitmap data) bv
     (setf bitmap (b:set bit-position bitmap))
-    (setf data (v:insert data (* (b:index bit-position bitmap) 2) (e:key entry) (e:value entry))))
+    (setf data (v:insert data (* (b:index bit-position bitmap) 2) (key entry) (value entry))))
   bv)
 
 (defmethod upd ((bv transient-key-value-bitmap-vector) bit-position entry)
@@ -36,7 +36,7 @@ index position determinded by the bit-count of bit-position with
 respect to all bits currently set below it in the bitmap. The indexes
 in the data vector is: (1+ (* 2 determined-bit-count)) for v"
   (with-slots (bitmap data) bv
-    (v:modify data (1+ (* (b:index bit-position bitmap) 2)) (e:value entry)))
+    (v:modify data (1+ (* (b:index bit-position bitmap) 2)) (value entry)))
   bv)
 
 (defmethod del ((bv transient-key-value-bitmap-vector) bit-position)

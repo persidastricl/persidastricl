@@ -18,7 +18,7 @@
   (with-slots (data) bv
     (when (> (length data) index)
       (let ((idx (* 2 index)))
-        (e:map-entry (elt data idx) (elt data (1+ idx)))))))
+        (map-entry (elt data idx) (elt data (1+ idx)))))))
 
 (defmethod at-position ((bv key-value-bitmap-vector) position)
   (when (is-set bv position)

@@ -30,15 +30,15 @@
         (is (bv-equal-p bv (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR)))))
 
 (test simple-insert-key-value-test
-      :description "insert map-entry in key/value bitmap-vector"
-      (let ((bv (ins (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR) 31 (e:map-entry "k1" "v1"))))
-        (is (and (== (:bitmap bv) #b10000000000000000000000000000000)
-                 (== (:data bv) #("k1" "v1"))))))
+  :description "insert map-entry in key/value bitmap-vector"
+  (let ((bv (ins (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR) 31 (map-entry "k1" "v1"))))
+    (is (and (== (:bitmap bv) #b10000000000000000000000000000000)
+             (== (:data bv) #("k1" "v1"))))))
 
 (defparameter *pkvbv* (-> (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR)
-                          (ins 31 (e:map-entry :k1 :v1))
-                          (ins 0  (e:map-entry :k2 :v2))
-                          (ins 15 (e:map-entry :k3 :v3))))
+                        (ins 31 (map-entry :k1 :v1))
+                        (ins 0  (map-entry :k2 :v2))
+                        (ins 15 (map-entry :k3 :v3))))
 
 (test multiple-insert-key-value-test
   :description ""
@@ -47,12 +47,12 @@
              (== (:data bv) #(:k2 :v2 :k3 :v3 :k1 :v1))))))
 
 (test update-key-value-test
-      :description ""
-      (let ((bv *pkvbv*)
-            (expected (make-instance 'persistent-key-value-bitmap-vector
-                                     :bitmap #b10000000000000001000000000000001
-                                     :data #(:k2 :v2 :k3 :v3 :k1 :updated))))
-        (is (bv-equal-p expected (upd bv 31 (e:map-entry :k1  :updated))))))
+  :description ""
+  (let ((bv *pkvbv*)
+        (expected (make-instance 'persistent-key-value-bitmap-vector
+                                 :bitmap #b10000000000000001000000000000001
+                                 :data #(:k2 :v2 :k3 :v3 :k1 :updated))))
+    (is (bv-equal-p expected (upd bv 31 (map-entry :k1  :updated))))))
 
 (test delete-key-value-test
       :description ""
@@ -71,7 +71,7 @@
 (test at-position-key-value-test
   :description ""
   (let ((bv *pkvbv*))
-    (is (== (e:map-entry :k3 :v3) (at-position bv 15)))
+    (is (== (map-entry :k3 :v3) (at-position bv 15)))
     (is (== nil (at-position bv 2)))))
 
 (test count-test

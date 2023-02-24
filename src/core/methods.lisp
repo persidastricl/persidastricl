@@ -9,10 +9,20 @@
 
 (in-package #:persidastricl)
 
+(defmethod conj ((l list) &rest items)
+  (->list (concat (seq l) items)))
+
 (defgeneric into (obj sequence))
 
-(defmethod into ((obj list) seq)
-  (->list seq))
+(defmethod into ((l list) sequence)
+  (apply #'conj l (->list sequence)))
+
+(defmethod into ((a array) sequence)
+  (let ( (size (+ (count (->list a)) (count (->list sequence)))))
+    (make-array size :initial-contents (->list (concat (->list a) sequence)))))
+
+(defmethod into ((s1 string) (s2 string))
+  (concatenate 'string s1 s2))
 
 (defmethod into ((obj array) seq)
   (let* ((lst (->list seq))

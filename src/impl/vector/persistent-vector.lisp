@@ -51,6 +51,9 @@
 (defgeneric vec (object)
   (:method (obj) (into (persistent-vector) (seq obj))))
 
+(defgeneric ->vec (object)
+  (:method (obj) (into (persistent-vector) (seq obj))))
+
 (defun persistent-vector (&rest items)
   (reduce
    (lambda (pv item)

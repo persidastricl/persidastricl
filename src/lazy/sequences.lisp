@@ -17,11 +17,12 @@
   (lseq 0 (lseq 1 (lmap #'+ fib (tail fib)))))
 
 (defvar trib
-  (concat (list 0 1 1) (lseq 2
-                             (lmap #'+
-                                   (drop 1 trib)
-                                   (drop 2 trib)
-                                   (drop 3 trib)))))
+  (lseq 0 (lseq 1 (lseq 1 (lseq 2
+                                (lmap #'+
+                                      (drop 1 trib)
+                                      (drop 2 trib)
+                                      (drop 3 trib)))))))
+
 (defun squares ()
   (lmap (lambda (i) (* i i)) (drop 1 (integers))))
 

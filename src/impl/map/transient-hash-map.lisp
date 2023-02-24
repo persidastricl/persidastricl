@@ -21,8 +21,8 @@
   (with-slots (root) thm
     (setf root (reduce
                 (lambda (node kv-pair)
-                  (let ((entry (apply #'e:map-entry kv-pair)))
-                    (add node entry :hash (h:hash (e:key entry)) :depth 0)))
+                  (let ((entry (apply #'map-entry kv-pair)))
+                    (add node entry :hash (h:hash (key entry)) :depth 0)))
                 (->list (partition-all (list* k v  kv-pairs) 2))
                 :initial-value root)))
   thm)

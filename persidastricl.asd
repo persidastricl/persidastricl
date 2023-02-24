@@ -32,7 +32,6 @@
                 :components ((:file "string")
                              (:file "bits")
                              (:file "hash")
-                             (:file "entry")
                              (:file "vector")
                              (:file "equality")
                              (:file "macros")
@@ -112,7 +111,16 @@
                (:module "structures"
                 :pathname "src/impl"
                 :serial t
-                :components ((:file "hamt")
+                :components ((:file "bpvt")
+
+                             (:module "vector"
+                              :pathname "vector"
+                              :serial t
+                              :components ((:file "vector")
+                                           (:file "transient-vector")
+                                           (:file "persistent-vector")))
+
+                             (:file "hamt")
 
                              (:module "set"
                               :pathname "set"
@@ -124,18 +132,10 @@
                              (:module "map"
                               :pathname "map"
                               :serial t
-                              :components ((:file "hash-map")
+                              :components ((:file "entry")
+                                           (:file "hash-map")
                                            (:file "transient-hash-map")
                                            (:file "persistent-hash-map")))
-
-                             (:file "bpvt")
-
-                             (:module "vector"
-                              :pathname "vector"
-                              :serial t
-                              :components ((:file "vector")
-                                           (:file "transient-vector")
-                                           (:file "persistent-vector")))
 
                              (:file "functions")
                              (:file "methods")

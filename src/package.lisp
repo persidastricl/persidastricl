@@ -32,19 +32,6 @@
   (:export #:hash
            #:size))
 
-(defpackage #:entry
-  (:nicknames #:e)
-  (:use #:cl)
-  (:export #:Entry.
-           #:map-entry
-           #:entry
-           #:key
-           #:value
-           #:->vec
-           #:->list
-           #:->cons
-           #:list->entry))
-
 (defpackage #:vector
   (:nicknames #:v)
   (:use #:cl)
@@ -116,6 +103,7 @@
    #:lookup
    #:lreduce
    #:lseq
+   #:map-entry
    #:map-indexed
    #:map?
    #:mapv
