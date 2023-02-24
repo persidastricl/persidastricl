@@ -125,13 +125,13 @@
           (seqs (map 'list #'seq seqs)))
       (labels ((apply* (args)
                  (apply f args))
-               (map* (s)
-                 (let ((args (remove-if #'null (map 'list #'head s))))
+               (map* (ss)
+                 (let ((args (map 'list #'head ss)))
                    (when (= n (count args))
                      (let ((r (apply* args)))
                        (if r
-                           (lseq r (map* (map 'list #'tail s)))
-                           (map* (map 'list #'tail s))))))))
+                           (lseq r (map* (remove-if #'nil? (map 'list #'tail ss))))
+                           (map* (remove-if #'nil? (map 'list #'tail ss)))))))))
         (map* seqs)))))
 
 (defun integers (&key (from 0))

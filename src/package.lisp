@@ -46,7 +46,7 @@
 (defpackage #:persidastricl
   (:nicknames :pds :p)
   (:use #:cl #:arrow-macros)
-  (:shadow #:cl #:some #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector #:pop)
+  (:shadow #:cl #:some #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector #:merge #:pop)
   (:export
    #:->alist
    #:->array

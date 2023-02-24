@@ -22,7 +22,10 @@
 (get (meta m1) :value)
 
 (meta m1)
-(_flatten (->vector m1))
+(flatten #((1) (2) (3 (4 (5))) (6 (7)) ((((((((((8 9 0 1 2 3))))))))))))
+(flatten m1)
+(flatten (->array m1))
+(flatten (->vector m1))
 (->alist m1)
 
 
@@ -36,7 +39,7 @@
 
 
 
-(into #{} (take 8 (integers)))
+(into [] (take 8 trib))
 
 (defparameter s1 @#{ 1 2 3 4 5 6 })
 (contains? s1 3)
