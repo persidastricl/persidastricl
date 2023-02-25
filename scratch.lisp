@@ -10,11 +10,13 @@
 (named-readtables:in-readtable persidastricl:syntax)
 
 (defparameter m1 (with-meta
-                   {:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
+                   @{:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
                    {:a 1 :value "testing"}))
-(get m1 :k2)
-(get m1 :k1)
-(get m1 :k1 :not-found)
+
+(:jj m1)
+(:k2 m1)
+(:k1 m1)
+(:k1 m1 :not-found)
 (assoc m1 :k1 :derp)
 (dissoc m1 :k1 :k2 :k3 :k4 :k5 :k6)
 (get m1 :k7)
@@ -58,6 +60,8 @@
 
 (get-in m2 [:c :c])
 (get-in m2 [:d :e 0] :na)
+
+(:g m1 nil)
 
 (-> m2
   (update-in [:d :e 3] (fnil #'1+ 0))

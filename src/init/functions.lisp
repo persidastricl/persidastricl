@@ -68,9 +68,19 @@
 (defun instance? (type object)
   (typep object type))
 
-;; unlock and do this??
-;; (defun keyword (s)
-;;   (intern (string-upcase s) "KEYWORD"))
-
 (defun some? (x)
   (not (nil? x)))
+
+(defmacro alias (name fn)
+  `(setf (fdefinition ',name) #',fn))
+
+(defun funcallable-keyword? (k)
+  (handler-case
+      (symbol-function k)
+    (undefined-function ()
+      nil)))
+
+(defun make-funcallable-keyword (k)
+  (assert (keywordp k))
+  (when-not (funcallable-keyword? k)
+    (eval `(defun ,k (hm &optional (default nil)) (lookup hm ,k default)))))

@@ -9,6 +9,15 @@
 
 (in-package #:persidastricl)
 
+(defun memoize (f)
+  (let ((mem (atom (persistent-hash-map))))
+    (lambda (&rest args)
+      (let ((r (get (deref mem) args)))
+        (or r
+            (let ((ret (apply f args)))
+              (swap! mem #'assoc args ret)
+              ret))))))
+
 (defun lreduce (f s &key (initial-value nil initial-value-p))
   (when s
     (let ((s (seq s)))
@@ -21,11 +30,11 @@
          (if initial-value-p initial-value (head s))
          (if initial-value-p s (tail s)))))))
 
-(defun run! (proc coll)
+(defun run! (f coll)
   (lreduce
    (lambda (ign item)
      (declare (ignore ign))
-     (funcall proc item))
+     (funcall f item))
    coll
    :initial-value nil)
   nil)
@@ -76,6 +85,7 @@
         (assoc obj k (apply f (get obj k) args)))))
 
 (defun filter (pred seq)
+  (when (keywordp pred) (make-funcallable-keyword pred))
   (when seq
     (labels ((filter* (s)
                (when s
@@ -86,6 +96,7 @@
       (filter* (seq seq)))))
 
 (defun lmap (f &rest seqs)
+  (when (keywordp f) (make-funcallable-keyword f))
   (when seqs
     (let ((n (count seqs))
           (seqs (map 'list #'seq seqs)))
@@ -120,6 +131,7 @@
   (into (persistent-vector) (filter pred seq)))
 
 (defun keep (f &rest seqs)
+  (when (keywordp f) (make-funcallable-keyword f))
   (when seqs
     (let ((n (count seqs))
           (seqs (map 'list #'seq seqs)))
@@ -213,7 +225,15 @@
            (run (into (list v) (take-while (lambda (v) (== fv (funcall f v))) (tail s)))))
       (cons run (partition-by f (drop (cl:length run) s))))))
 
-;; TODO: group-by
+(defun group-by (f coll)
+  (when (keywordp f) (make-funcallable-keyword f))
+  (lreduce
+   (lambda (ret x)
+     (let ((k (funcall f x)))
+       (assoc ret k (conj (get ret k (persistent-vector)) x))))
+   coll
+   :initial-value (persistent-hash-map)))
+
 ;; TODO: nth & rand-nth ??
 
 (defun cycle (coll)
@@ -319,19 +339,10 @@
   (mremove #'has-no-value? x))
 
 (defun juxt (&rest fns)
+  (run! (lambda (f) (when (keywordp f) (make-funcallable-keyword f))) fns)
   (lambda (&rest args)
     (lreduce
      (lambda (v f)
        (conj v (apply f args)))
      fns
      :initial-value (persistent-vector))))
-
-;; TODO: test
-(defun memoize (f)
-  (let ((mem (atom (persistent-hash-map))))
-    (lambda (&rest args)
-      (if-let ((e (get (deref mem) args)))
-        e
-        (let ((ret (apply f args)))
-          (swap! mem #'assoc args ret)
-          ret)))))

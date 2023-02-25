@@ -21,8 +21,10 @@
   (with-slots (root meta) phm
     (let ((new-root (reduce
                      (lambda (node kv-pair)
-                       (let ((entry (apply #'map-entry kv-pair)))
-                         (add node entry :hash (h:hash (key entry)) :depth 0)))
+                       (let* ((entry (apply #'map-entry kv-pair))
+                              (kk (key entry)))
+                         (when (keywordp kk) (make-funcallable-keyword kk))
+                         (add node entry :hash (h:hash kk) :depth 0)))
                      (->list (partition-all (list* k v kv-pairs) 2))
                      :initial-value root)))
       (if (eq new-root root)

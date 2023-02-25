@@ -158,9 +158,7 @@
                (:module "sample-seqs"
                 :pathname "src/lazy"
                 :serial t
-                :components ((:file "sequences")))
-
-               )
+                :components ((:file "sequences"))))
 
   :in-order-to ((test-op (test-op #:persidastricl/test))))
 

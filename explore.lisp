@@ -1,23 +1,42 @@
 (in-package #:persidastricl)
 
-(defvar my-fact
-  (memoize #'fact))
+(named-readtables:in-readtable persidastricl:syntax)
 
-(defun merge (m &rest ms)
-  (if (some #'identity ms)
-      (lreduce
-       (lambda (m1 m2)
-         (if m2
-             (into m1 (->plist m2))
-             m1))
-       (if (some? m) ms (tail (filter #'some? ms)))
-       :initial-value (if (some? m) m (first (filter #'some? ms))))))
+(group-by :name [{:name "mdp" :data 1} {:name "jbm" :data 1000}])
 
-(when (some identity maps)
-  (reduce1 #(conj (or %1 {}) %2) maps))
+(lmap :id [{:id {:a 1} :d 1} {:id {:a 1} :d 2} {:id 1 :d 3} {:id 2 :d 2} {:id 2 :d 1} {:id 3 :d 2} {:id 4 :d 1} {:id 5 :d 2} ])
 
-(some #'identity '(nil nil nil nil nil nil nil  1))
+(mapv :id [{:a 1 :id {:a 1} :d 1} {:id {:a 1} :d 2} {:id 1 :d 3} {:id 2 :d 2} {:id 2 :d 1} {:id 3 :d 2} {:id 4 :d 1} {:id 5 :d 2} ] )
 
-(keep #'identity '(nil nil nil nil nil nil nil nil nil 1))
+(lmap
+ (juxt :a :d)
+ [{:a 1 :id {:a 1} :d 1} {:id {:a 1} :d 2} {:id 1 :d 3} {:id 2 :d 2} {:id 2 :d 1} {:id 3 :d 2} {:id 4 :d 1} {:id 5 :d 2} ] )
 
-(merge nil nil nil nil nil nil nil {:a 1 :b 2} @{:a 3 :c 4})
+(:id {} :not-found)
+
+
+(defmacro with-funcallable-map ((symbol definition) &body body)
+  `(let ((,symbol ,definition))
+     (labels ((,symbol (k &optional (default nil))
+                (lookup ,symbol k default)))
+       ,@body)))
+
+(defmacro with-funcallable-set ((symbol definition) &body body)
+  `(let ((,symbol ,definition))
+     (labels ((,symbol (k &optional (default nil))
+                (contains? ,symbol k)))
+       ,@body)))
+
+(defvar m1 {:a 5 :b 2})
+
+(with-funcallable-map (m2 m1)
+  (m2 :a))
+
+(m2 :a)
+
+(defvar s1 #{:eagle :falcon :hawk :vulture})
+
+(with-funcallable-set (s2 s1)
+  (s2 :eagle))
+
+(s2 :eagle)

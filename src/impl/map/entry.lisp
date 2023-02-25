@@ -63,3 +63,6 @@
 (defmethod make-load-form ((obj Entry) &optional env)
   (declare (ignore env))
   `(persidastricl:map-entry ,(key Entry) ,(value Entry)))
+
+(defmethod cl-murmurhash:murmurhash ((object entry) &key (seed cl-murmurhash:*default-seed*) mix-only)
+  (cl-murmurhash:murmurhash (->list object) :seed seed :mix-only mix-only))
