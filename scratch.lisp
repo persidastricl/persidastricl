@@ -70,7 +70,7 @@
 (get m2 :b)
 (-> m2
   (assoc :b (string-upcase (get m2 :b)))
-  (get :b))
+  :b)
 
 
 

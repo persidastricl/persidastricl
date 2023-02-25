@@ -12,16 +12,13 @@
 ;;  so here, we define what we think we need ourselves
 ;;
 
-;;
-;; TODO: move to closer-mop when porting to other lisps
-;;
 (defun slot-values (obj)
   (let ((_class (class-of obj)))
     (map
      'list
      (lambda (slot-def)
-       (sb-mop:slot-value-using-class _class obj slot-def))
-     (sb-mop:class-slots _class))))
+       (c2mop:slot-value-using-class _class obj slot-def))
+     (c2mop:class-slots _class))))
 
 (defgeneric == (obj1 obj2)
   (:method (obj1 obj2) (equalp obj1 obj2)))

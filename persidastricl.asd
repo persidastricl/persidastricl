@@ -14,8 +14,10 @@
   :version "0.0.3"
 
   :depends-on (#:arrow-macros
+               #:babel
                #:cl-ppcre
                #:cl-murmurhash
+               #:closer-mop
                #:named-readtables
                #:sip-hash
                #:stmx)
