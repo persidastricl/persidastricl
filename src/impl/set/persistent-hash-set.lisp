@@ -14,7 +14,7 @@
 ;; -----
 
 (define-immutable-class persistent-hash-set (hash-set)
-  ((root :type persistent-hash-set-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  ((root :type persistent-hash-set-node :initarg :root :reader root :documentation "root node of hash-map"))
   (:default-initargs :root (make-instance 'persistent-hash-set-node) :meta nil))
 
 (defmethod conj ((phs persistent-hash-set) &rest items)

@@ -14,7 +14,7 @@
                     (change-class obj new-object-type))))
 
 (defmethod empty? ((obj hamt))
-  (empty? (:root obj)))
+  (empty? (root obj)))
 
 (defmethod empty? ((obj bpvt))
   (zerop (count obj)))

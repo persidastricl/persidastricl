@@ -25,7 +25,7 @@
             (let* ((new-tail (cons value (make-instance 'persistent-vector-leaf-node)))
                    (new-root (if (new-root? root)
                                  (let ((nr (make-instance 'persistent-vector-node :data (make-array 1 :initial-element root)
-                                                                                  :level (1+ (:level root)))))
+                                                                                  :level (1+ (level root)))))
                                    (add-leaf-node nr tail tail-offset))
                                  (add-leaf-node root tail tail-offset))))
               (make-instance 'persistent-vector :root new-root :tail new-tail :tail-offset index :count (1+ count)))

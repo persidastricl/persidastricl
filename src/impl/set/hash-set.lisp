@@ -10,7 +10,7 @@
 (in-package #:persidastricl)
 
 (defclass hash-set (hamt collection)
-  ((root :initarg :root :reader :root)))
+  ((root :initarg :root :reader root)))
 
 (defun set? (x)
   (typep x 'hash-set))
@@ -33,3 +33,9 @@
 
 (defmethod count ((obj hash-set))
   (count (->list obj)))
+
+(defmacro with-funcallable-set ((symbol definition) &body body)
+  `(let ((,symbol ,definition))
+     (labels ((,symbol (k &optional (default nil))
+                (contains? ,symbol k)))
+       ,@body)))

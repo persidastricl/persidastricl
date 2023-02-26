@@ -13,8 +13,8 @@
 ;; -----
 
 (defclass thunk ()
-  ((fn :initarg :fn :accessor :fn)
-   (r  :initarg :r  :accessor :r))
+  ((fn :initarg :fn)
+   (r  :initarg :r))
   (:default-initargs :r nil))
 
 (defmacro delay (&rest body)

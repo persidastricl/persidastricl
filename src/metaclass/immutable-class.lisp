@@ -15,15 +15,15 @@
 (defmethod c2mop:validate-superclass ((class immutable-class) (super standard-class)) t)
 
 (define-condition invalid-access-to-immutable-object (error)
-  ((slot-name :initarg :slot-name :reader :slot-name)
-   (instance  :initarg :instance :reader :instance))
+  ((slot-name :initarg :slot-name :reader slot-name)
+   (instance  :initarg :instance :reader instance))
   (:report (lambda (condition stream)
              (format
               stream
               "attempt to modify slot with name `~A`~%in instance ~S~%an object of type `~S`~%which is a class defined with the metaclass `~S`~%and cannot be changed once bound!"
-              (:slot-name condition)
-              (:instance condition)
-              (type-of (:instance condition))
+              (slot-name condition)
+              (instance condition)
+              (type-of (instance condition))
               (class-name (find-class 'immutable-class))))))
 
 (defmethod (setf c2mop:slot-value-using-class) :before (value (class immutable-class) instance slot-definition)
@@ -37,6 +37,3 @@
   `(defclass ,class ,supers ,slots
      ,@options
      (:metaclass immutable-class)))
-
-
-;; IDEA: add a 'flag' to immutable classes to indicate when the instance is finalized/initialized and prevent changes being set (use :after method on 'initialize-instance' to set the flag)

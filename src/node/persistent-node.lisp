@@ -20,22 +20,22 @@
 ;; -----
 
 (defmethod ins ((node persistent-node) position item)
-  (make-instance (type-of node) :dmap (ins (:dmap node) position item) :nmap (:nmap node)))
+  (make-instance (type-of node) :dmap (ins (dmap node) position item) :nmap (nmap node)))
 
 (defmethod ins ((node persistent-node) position (new-node persistent-node))
-  (make-instance (type-of node) :dmap (:dmap node) :nmap (ins (:nmap node) position new-node)))
+  (make-instance (type-of node) :dmap (dmap node) :nmap (ins (nmap node) position new-node)))
 
 (defmethod ins ((node persistent-node) position (new-node persistent-overflow-node))
-  (make-instance (type-of node) :dmap (:dmap node) :nmap (ins (:nmap node) position new-node)))
+  (make-instance (type-of node) :dmap (dmap node) :nmap (ins (nmap node) position new-node)))
 
 (defmethod upd ((node persistent-node) position item)
-  (make-instance (type-of node) :dmap (upd (:dmap node) position item) :nmap (:nmap node)))
+  (make-instance (type-of node) :dmap (upd (dmap node) position item) :nmap (nmap node)))
 
 (defmethod upd ((node persistent-node) position (new-node persistent-node))
-  (make-instance (type-of node) :dmap (:dmap node) :nmap (upd (:nmap node) position new-node)))
+  (make-instance (type-of node) :dmap (dmap node) :nmap (upd (nmap node) position new-node)))
 
 (defmethod upd ((node persistent-node) position (new-node persistent-overflow-node))
-  (make-instance (type-of node) :dmap (:dmap node) :nmap (upd (:nmap node) position new-node)))
+  (make-instance (type-of node) :dmap (dmap node) :nmap (upd (nmap node) position new-node)))
 
 (defmethod del ((node persistent-node) position)
   (with-slots (dmap nmap) node

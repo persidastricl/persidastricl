@@ -17,7 +17,7 @@
       (t (map 'list (lambda (kv) (apply #'map-entry kv)) (->list (partition-all sequence 2)))))))
 
 (defclass hash-map (hamt associable)
-  ((root :initarg :root :reader :root)))
+  ((root :initarg :root :reader root)))
 
 (defun map? (x)
   (typep x 'hash-map))
@@ -94,3 +94,9 @@
               m2
               :initial-value m1)))
     (lreduce #'merge* (filter #'some? ms))))
+
+(defmacro with-funcallable-map ((symbol definition) &body body)
+  `(let ((,symbol ,definition))
+     (labels ((,symbol (k &optional (default nil))
+                (lookup ,symbol k default)))
+       ,@body)))

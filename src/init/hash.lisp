@@ -8,8 +8,8 @@
 (in-package #:hash)
 
 (defclass hasher ()
-  ((size :reader :size :initarg :size)
-   (fn :reader :fn :initarg :fn)))
+  ((size :initarg :size)
+   (fn :initarg :fn)))
 
 (defgeneric do-hash (fn object &rest args)
   (:method (fn (object t) &rest args) (apply fn object args)))
@@ -45,10 +45,10 @@
 (defparameter *default-hasher* murmur32)
 
 (defun size ()
-  (:size *default-hasher*))
+  (slot-value *default-hasher* 'size))
 
 (defgeneric hash (obj &optional hasher &rest args)
-  (:method ((obj t) &optional (hasher *default-hasher*) &rest args) (apply (:fn hasher) obj args)))
+  (:method ((obj t) &optional (hasher *default-hasher*) &rest args) (apply (slot-value hasher 'fn) obj args)))
 
 ;;
 ;; for testing overflow nodes

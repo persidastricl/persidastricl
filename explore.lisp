@@ -14,19 +14,6 @@
 
 (:id {} :not-found)
 
-
-(defmacro with-funcallable-map ((symbol definition) &body body)
-  `(let ((,symbol ,definition))
-     (labels ((,symbol (k &optional (default nil))
-                (lookup ,symbol k default)))
-       ,@body)))
-
-(defmacro with-funcallable-set ((symbol definition) &body body)
-  `(let ((,symbol ,definition))
-     (labels ((,symbol (k &optional (default nil))
-                (contains? ,symbol k)))
-       ,@body)))
-
 (defvar m1 {:a 5 :b 2})
 
 (with-funcallable-map (m2 m1)

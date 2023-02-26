@@ -13,21 +13,21 @@
   (typep x 'vector))
 
 (defmethod get ((vector vector) index &optional (default nil))
-  (if (< index (:count vector))
-      (if (>= index (:tail-offset vector))
-          (loc (:tail vector) index :default default)
-          (loc (:root vector) index :default default))
+  (if (< index (count vector))
+      (if (>= index (tail-offset vector))
+          (loc (tail vector) index :default default)
+          (loc (root vector) index :default default))
       default))
 
 (defmethod first ((vector vector))
   (get vector 0))
 
 (defmethod peek ((vector vector))
-  (get vector (1- (:count vector))))
+  (get vector (1- (count vector))))
 
 (defmethod seq ((vector vector))
   (labels ((next (i)
-             (when (< i (:count vector))
+             (when (< i (count vector))
                (let ((value (get vector i)))
                  (lseq value (next (1+ i)))))))
     (lseq (first vector) (next 1))))

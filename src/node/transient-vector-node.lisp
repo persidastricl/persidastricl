@@ -66,7 +66,7 @@
               (if sub-node
                   ;; have subnode for this level
                   (let ((new-node  (remove-leaf-node sub-node first-index-of-values)))
-                    (when (empty? (:data new-node))
+                    (when (empty? (data new-node))
                       (vector-pop data)))
                   ;; no sub-node for this level (should have one!)
                   (error "no subnode found when removing previous leaf node")))

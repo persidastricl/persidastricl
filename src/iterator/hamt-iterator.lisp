@@ -8,20 +8,20 @@
 (in-package #:persidastricl)
 
 (defclass hamt-iterator (iterator)
-  ((stack :initarg :stack :accessor :stack)
-   (current :initarg :current :accessor :current)))
+  ((stack :initarg :stack)
+   (current :initarg :current)))
 
 (defmethod iterator ((target hamt))
-  (let ((start (iterator (:root target)))
-        (stack (coerce (sub-nodes (:root target)) 'list)))
+  (let ((start (iterator (root target)))
+        (stack (coerce (sub-nodes (root target)) 'list)))
     (multiple-value-bind (current stack) (if (has-next? start)
                                              (values start stack)
                                              (next-iterator stack))
       (make-instance 'hamt-iterator :stack stack :current current))))
 
 (defmethod has-next? ((iterator hamt-iterator))
-  (when-let ((current (:current iterator)))
-    (has-next? (:current iterator))))
+  (when-let ((current (slot-value iterator 'current)))
+    (has-next? (slot-value iterator 'current))))
 
 (defun next-iterator (stack)
   (if (empty? stack)
@@ -32,8 +32,7 @@
             (next-iterator (concatenate 'list (sub-nodes node) (rest stack)))))))
 
 (defmethod current ((iterator hamt-iterator))
-  (with-slots (current) iterator
-    (current current)))
+  (current (slot-value iterator 'current)))
 
 (defmethod next ((iterator hamt-iterator))
   (with-slots (current stack) iterator

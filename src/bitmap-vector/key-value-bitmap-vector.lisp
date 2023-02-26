@@ -22,5 +22,5 @@
 
 (defmethod at-position ((bv key-value-bitmap-vector) position)
   (when (is-set bv position)
-    (let ((index (b:index position (:bitmap bv))))
+    (let ((index (b:index position (bitmap bv))))
       (at-index bv index))))

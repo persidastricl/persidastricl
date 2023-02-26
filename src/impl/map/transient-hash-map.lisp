@@ -14,7 +14,7 @@
 ;; -----
 
 (defclass transient-hash-map (hash-map)
-  ((root :type transient-hash-map-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  ((root :type transient-hash-map-node :initarg :root :reader root :documentation "root node of hash-map"))
   (:default-initargs :root (make-instance 'transient-hash-map-node) :meta nil))
 
 (defmethod assoc ((thm transient-hash-map) k v &rest kv-pairs)

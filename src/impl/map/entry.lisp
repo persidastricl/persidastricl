@@ -10,17 +10,11 @@
 (proclaim '(inline map-entry key value ->vec ->list ->cons))
 
 (defclass entry (collection)
-  ((key :initarg :key :reader :key)
-   (value :initarg :value :reader :value)))
+  ((key :initarg :key :reader key)
+   (value :initarg :value :reader value)))
 
 (defun map-entry (k &optional (v nil))
   (make-instance 'entry :key k :value v))
-
-(defgeneric key (target)
-  (:method ((entry entry)) (:key entry)))
-
-(defgeneric value (target)
-  (:method ((entry entry)) (:value entry)))
 
 (defmethod ->vec ((entry entry))
   (persistent-vector (key entry) (value entry)))

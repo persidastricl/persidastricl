@@ -10,17 +10,17 @@
 (in-package #:persidastricl)
 
 (defclass counted ()
-  ((count :type integer :initarg :count :reader :count))
+  ((count :type integer :initarg :count))
   (:default-initargs :count 0))
 
 (defmethod count ((thing counted))
-  (:count thing))
+  (slot-value thing 'count))
 
 (defmethod length ((thing counted))
-  (:count thing))
+  (count thing))
 
 (defmethod bounded-count (n (thing counted))
-  (:method (n (thing counted)) (:count thing)))
+  (:method (n (thing counted)) (count thing)))
 
 (defmethod empty? ((thing counted))
-  (zerop (:count thing)))
+  (zerop (count thing)))

@@ -73,14 +73,3 @@
 
 (defmacro alias (name fn)
   `(setf (fdefinition ',name) #',fn))
-
-(defun funcallable-keyword? (k)
-  (handler-case
-      (symbol-function k)
-    (undefined-function ()
-      nil)))
-
-(defun make-funcallable-keyword (k)
-  (assert (keywordp k))
-  (when-not (funcallable-keyword? k)
-    (eval `(defun ,k (hm &optional (default nil)) (lookup hm ,k default)))))

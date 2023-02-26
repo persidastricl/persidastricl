@@ -24,7 +24,7 @@
         (if new-tail?
             (let* ((new-tail (cons value (make-instance 'transient-vector-leaf-node)))
                    (new-root (if (new-root? root)
-                                 (let ((nr (make-instance 'transient-vector-node :level (1+ (:level root)))))
+                                 (let ((nr (make-instance 'transient-vector-node :level (1+ (level root)))))
                                    (with-slots (data) nr
                                      (vector-push root data))
                                    (add-leaf-node nr tail tail-offset))

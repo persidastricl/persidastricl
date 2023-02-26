@@ -23,6 +23,8 @@
 (get (meta m1) :a)
 (get (meta m1) :value)
 
+(count m1)
+
 (meta m1)
 (flatten #((1) (2) (3 (4 (5))) (6 (7)) ((((((((((8 9 0 1 2 3))))))))))))
 (flatten m1)
@@ -60,6 +62,7 @@
 
 (get-in m2 [:c :c])
 (get-in m2 [:d :e 0] :na)
+(:g m2 :not-found)
 
 (:g m1 nil)
 

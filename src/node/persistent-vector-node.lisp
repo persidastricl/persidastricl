@@ -67,7 +67,7 @@
                   (let ((new-node (remove-leaf-node sub-node first-index-of-values)))
                     (make-instance (type-of node)
                                    :level level
-                                   :data (if (empty? (:data new-node))
+                                   :data (if (empty? (data new-node))
                                              (v:delete data i)
                                              (v:update data i))))
                   ;; no sub-node for this level (should have one!)

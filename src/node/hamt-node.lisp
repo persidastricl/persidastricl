@@ -29,25 +29,25 @@
 ;; -----
 
 (defclass hamt-node (node)
-  ((dmap :initarg :dmap :reader :dmap :documentation "bitmap-vector for value data")
-   (nmap :initarg :nmap :reader :nmap :documentation "bitmap-vector for node data")))
+  ((dmap :initarg :dmap :reader dmap :documentation "bitmap-vector for value data")
+   (nmap :initarg :nmap :reader nmap :documentation "bitmap-vector for node data")))
 
 (defgeneric sub-nodes (node)
-  (:method ((node hamt-node)) (:data (:nmap node))))
+  (:method ((node hamt-node)) (data (nmap node))))
 
 (defgeneric single-value-node? (node)
-  (:method  ((node hamt-node)) (and (= (count (:dmap node)) 1)
-                                    (= (count (:nmap node)) 0))))
+  (:method  ((node hamt-node)) (and (= (count (dmap node)) 1)
+                                    (= (count (nmap node)) 0))))
 
 (defgeneric single-remaining-data (node)
-  (:method ((node hamt-node)) (at-index (:dmap node) 0)))
+  (:method ((node hamt-node)) (at-index (dmap node) 0)))
 
 (defmethod at-index ((node hamt-node) index)
-  (at-index (:dmap node) index))
+  (at-index (dmap node) index))
 
 (defmethod count ((node hamt-node))
-  (count (:dmap node)))
+  (count (dmap node)))
 
 (defmethod empty? ((node hamt-node))
-  (and (zerop (count (:dmap node)))
-       (zerop (count (:nmap node)))))
+  (and (zerop (count (dmap node)))
+       (zerop (count (nmap node)))))

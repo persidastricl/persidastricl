@@ -46,3 +46,18 @@
        (apply #'assoc* v iv-pair))
      (->list (partition-all (list* index value iv-pairs) 2))
      :initial-value vec)))
+
+(defun funcallable-keyword? (k)
+  (handler-case
+      (symbol-function k)
+    (undefined-function ()
+      nil)))
+
+(defun make-funcallable-keyword (k)
+  (assert (keywordp k))
+  (when-not (funcallable-keyword? k)
+    (eval `(defun ,k (hm &optional (default nil)) (lookup hm ,k default)))))
+
+
+(defun make-funcallable-keywords (&rest kws)
+  (dolist (k kws) (make-funcallable-keyword k)))

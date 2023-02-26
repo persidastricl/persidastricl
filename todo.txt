@@ -15,7 +15,6 @@ Things to do:
 *  add as many of clojure's core functions to the library as we can (don't get in a hurry ... add things in a way that fit it will with lisp as-is)
 
 * lazy-seq's
- -- line-seq (with CL streams)
  -- resultset-seq
  -- ???
 

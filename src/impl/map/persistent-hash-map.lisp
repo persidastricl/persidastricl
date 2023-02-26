@@ -14,7 +14,7 @@
 ;; -----
 
 (define-immutable-class persistent-hash-map (hash-map)
-  ((root :type persistent-hash-map-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  ((root :type persistent-hash-map-node :initarg :root :reader root :documentation "root node of hash-map"))
   (:default-initargs :root (make-instance 'persistent-hash-map-node) :meta nil))
 
 (defmethod assoc ((phm persistent-hash-map) k v &rest kv-pairs)

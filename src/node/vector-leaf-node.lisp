@@ -14,11 +14,11 @@
 
 (defmethod cons :before (item (node vector-leaf-node))
   ;; cannot add more items than we have bits in the hash
-  (assert (< (length (:data node)) *items-per-node*)))
+  (assert (< (length (data node)) *items-per-node*)))
 
 ;; locate value at level 0 index
 
 (defmethod loc ((node vector-leaf-node) index &key (default nil))
   (let* ((i (b:bits index 0))
-         (v (elt (:data node) i)))
+         (v (elt (data node) i)))
     (or v default)))

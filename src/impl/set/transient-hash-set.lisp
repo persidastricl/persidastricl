@@ -14,7 +14,7 @@
 ;; -----
 
 (defclass transient-hash-set (hash-set)
-  ((root :type transient-hash-set-node :initarg :root :reader :root :documentation "root node of hash-map"))
+  ((root :type transient-hash-set-node :initarg :root :reader root :documentation "root node of hash-map"))
   (:default-initargs :root (make-instance 'transient-hash-set-node)))
 
 (defmethod conj ((ths transient-hash-set) &rest items)

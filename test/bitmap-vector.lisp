@@ -16,8 +16,8 @@
 (in-suite :bitmap-vector-tests)
 
 (defun bv-equal-p (bv1 bv2)
-  (and (== (:bitmap bv1) (:bitmap bv2))
-       (== (:data bv1) (:data bv2))))
+  (and (== (bitmap bv1) (bitmap bv2))
+       (== (data bv1) (data bv2))))
 
 (test create-bitmap-node-vector-test
       :description "creating empty bitmap-vector is as expected (EMPTY)"
@@ -32,8 +32,8 @@
 (test simple-insert-key-value-test
   :description "insert map-entry in key/value bitmap-vector"
   (let ((bv (ins (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR) 31 (map-entry "k1" "v1"))))
-    (is (and (== (:bitmap bv) #b10000000000000000000000000000000)
-             (== (:data bv) #("k1" "v1"))))))
+    (is (and (== (bitmap bv) #b10000000000000000000000000000000)
+             (== (data bv) #("k1" "v1"))))))
 
 (defparameter *pkvbv* (-> (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR)
                         (ins 31 (map-entry :k1 :v1))
@@ -43,8 +43,8 @@
 (test multiple-insert-key-value-test
   :description ""
   (let ((bv *pkvbv*))
-    (is (and (== (:bitmap bv) #b10000000000000001000000000000001)
-             (== (:data bv) #(:k2 :v2 :k3 :v3 :k1 :v1))))))
+    (is (and (== (bitmap bv) #b10000000000000001000000000000001)
+             (== (data bv) #(:k2 :v2 :k3 :v3 :k1 :v1))))))
 
 (test update-key-value-test
   :description ""
@@ -96,8 +96,8 @@
 (test multiple-insert-node-test
   :description ""
   (let ((bv *pnbv*))
-    (is (and (== (:bitmap bv) #b10000000000000001000000000000001)
-             (== (:data bv) (new-array sub-node-2 sub-node-3 sub-node-1))))))
+    (is (and (== (bitmap bv) #b10000000000000001000000000000001)
+             (== (data bv) (new-array sub-node-2 sub-node-3 sub-node-1))))))
 
 (test update-node-test
       :description ""
