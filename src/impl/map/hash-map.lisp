@@ -54,9 +54,6 @@
 (defmethod ->alist ((hm hash-map))
   (lmap #'->cons hm))
 
-(defmethod count ((obj hash-map))
-  (count (->list obj)))
-
 (defmethod with-meta ((object hamt) (meta hash-map))
   (with-slots (root) object
     (make-instance (type-of object) :root root :meta meta)))
@@ -72,28 +69,6 @@
                     (tail keys)))
                  (with-meta m (meta map)))))
     (select-keys* (empty map) keyseq)))
-
-(defun merge (&rest ms)
-  (if (some #'identity ms)
-      (lreduce
-       (lambda (m1 m2)
-         (if m2
-             (into m1 (->plist m2))
-             m1))
-       (filter #'some? ms))))
-
-(defun merge-with (f &rest ms)
-  (labels ((merge-kv (m k v2)
-             (let ((v1 (get m k :not-found)))
-               (if (== v1 :not-found)
-                   (assoc m k v2)
-                   (assoc m k (funcall f v1 v2)))))
-           (merge* (m1 m2)
-             (reduce-kv
-              #'merge-kv
-              m2
-              :initial-value m1)))
-    (lreduce #'merge* (filter #'some? ms))))
 
 (defmacro with-funcallable-map ((symbol definition) &body body)
   `(let ((,symbol ,definition))

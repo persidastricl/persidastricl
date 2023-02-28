@@ -31,9 +31,6 @@
 (defmethod ->list ((hs hash-set))
   (into '() (seq hs)))
 
-(defmethod count ((obj hash-set))
-  (count (->list obj)))
-
 (defmacro with-funcallable-set ((symbol definition) &body body)
   `(let ((,symbol ,definition))
      (labels ((,symbol (k &optional (default nil))

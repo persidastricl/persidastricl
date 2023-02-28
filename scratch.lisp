@@ -34,6 +34,8 @@
 
 (count m1)
 
+(rest m1)
+
 (meta m1)
 (flatten #((1) (2) (3 (4 (5))) (6 (7)) ((((((((((8 9 0 1 2 3))))))))))))
 (flatten m1)
@@ -56,6 +58,16 @@
 
 (defparameter s1 @#{ 1 2 3 4 5 6 })
 (contains? s1 3)
+
+[ 1 2 3 ]
+
+(head s1)
+
+(first s1)
+(rest s1)
+(first (rest s1))
+(rest (rest s1))
+(first (rest (rest s1)))
 
 ;; (setf hash::*default-hasher* hash::murmur128)
 ;; (setf b::*default-hash-slice-bit-size* 8)

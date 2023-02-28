@@ -42,6 +42,9 @@
   (and (int? n)
        (not (neg? n))))
 
+(defun string? (s)
+  (stringp s))
+
 (defun inc (n)
   (1+ n))
 

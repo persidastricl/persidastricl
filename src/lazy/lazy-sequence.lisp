@@ -89,6 +89,15 @@
         (more (first (drop *print-lazy-items* object))))
     (format stream "(~{~s~^ ~}~@[ ...~])" items more)))
 
+
+(defmethod count ((object lazy-sequence))
+  "Danger! Endless loop on infinite lazy sequences! Use bounded-count for those"
+  (labels ((count* (seq n)
+             (if (empty? seq)
+                 n
+                 (count* (tail seq) (inc n)))))
+    (count* object 0)))
+
 (defmethod bounded-count (n thing)
   (labels ((bounded-count* (s i)
              (if (and s (< i n))

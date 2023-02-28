@@ -46,7 +46,8 @@
 (defpackage #:persidastricl
   (:nicknames :pds :p)
   (:use #:cl #:arrow-macros)
-  (:shadow #:cl #:some #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector #:merge #:pop)
+  (:shadow #:cl
+           #:some #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector #:merge #:pop)
   (:export
    #:->alist
    #:->array
@@ -60,6 +61,7 @@
    #:assoc
    #:assoc-in
    #:atom
+   #:bounded-count
    #:butlast
    #:collection?
    #:concat
@@ -106,6 +108,8 @@
    #:lookup
    #:lreduce
    #:lseq
+   #:merge
+   #:merge-with
    #:map-entry
    #:map-indexed
    #:map?
@@ -117,6 +121,7 @@
    #:nat-int?
    #:neg-int?
    #:neg?
+   #:next
    #:nil?
    #:odd?
    #:only-valid-values
