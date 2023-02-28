@@ -35,7 +35,11 @@
   (when-let ((tail (slot-value seq 'tail))) (force tail)))
 
 (defmethod ->list ((obj lazy-sequence))
-  (cons (head obj) (->list (tail obj))))
+  (let ((lst))
+    (do* ((s obj (tail s))
+          (x (head s) (head s)))
+         ((empty? s) lst)
+      (setf lst (append lst (list x))))))
 
 (defmethod ->array ((seq lazy-sequence))
   (when seq

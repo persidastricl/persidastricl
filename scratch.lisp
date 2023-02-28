@@ -33,7 +33,7 @@
 (->alist m1)
 
 
-(->list [1 2 3])
+(->list m1)
 
 (type-of fib)
 
@@ -42,7 +42,7 @@
 (empty? fib)
 
 
-
+(defvar my-m  (into {} (take 100000 (integers))))
 (into [] (take 8 trib))
 
 (defparameter s1 @#{ 1 2 3 4 5 6 })
