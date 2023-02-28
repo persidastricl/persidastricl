@@ -9,6 +9,15 @@
 
 (named-readtables:in-readtable persidastricl:syntax)
 
+
+
+
+(let ((id 5))
+  @[1 2 3 id])
+
+(let ((id 6))
+  [ 1 2 id ])
+
 (defparameter m1 (with-meta
                    @{:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
                    {:a 1 :value "testing"}))
@@ -52,13 +61,18 @@
 ;; (setf b::*default-hash-slice-bit-size* 8)
 
 (defvar m2 {:a 1
+            :m1 m1
             :b "testing"
             :c {:a [1 2 3]
                 :b #{1 2 3}
                 :c {:a {:b {:c "testing"}}}}
-            :d {:e (1 2 3 4)}
+            :d {:e '(1 2 3 4)}
             :e {:f #(1 2 3 4)}
             :g {:h #{1 2 3 4}}})
+
+(let ((m :m1)
+      (k :k3))
+  (get-in m2 [m k]))
 
 (get-in m2 [:c :c])
 (get-in m2 [:d :e 0] :na)
@@ -77,7 +91,7 @@
 
 
 
-(defvar m3 {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6})
+(defvar m3 {:a 1 :b 2 :c 3 :d 4 :e 5 :f id})
 
 (seq m3)
 

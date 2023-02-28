@@ -50,38 +50,29 @@
             (t
              (read input-stream t nil t)))))))
 
-(defun transform-primitive (value)
-  (if (symbolp value)
-      (cond
-        ((string-equal (symbol-name value) "true") t)
-        ((string-equal (symbol-name value) "false") nil)
-        ((string-equal (symbol-name value) "null") nil)
-        (t value))
-      value))
-
 (defun read-persistent-map-literal (stream char)
   (declare (ignore char))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
     while object
-    collect (transform-primitive object) into objects
-    finally (return (apply #'persistent-hash-map objects))))
+    collect object into objects
+    finally (return `(persidastricl::persistent-hash-map ,@objects))))
 
 (defun read-transient-map-literal (stream char n-arg)
   (declare (ignore char n-arg))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
     while object
-    collect (transform-primitive object) into objects
-    finally (return (apply #'transient-hash-map objects))))
+    collect object into objects
+    finally (return `(persidastricl::transient-hash-map ,@objects))))
 
 (defun read-persistent-set-literal (stream char n-arg)
   (declare (ignore char n-arg))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
     while object
-    collect (transform-primitive object) into objects
-    finally (return (apply #'persistent-hash-set objects))))
+    collect object into objects
+    finally (return `(persidastricl::persistent-hash-set ,@objects))))
 
 (defun expect (c stream)
   (let ((input-char (read-char stream)))
@@ -95,24 +86,24 @@
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
     while object
-    collect (transform-primitive object) into objects
-    finally (return (apply #'transient-hash-set objects))))
+    collect object into objects
+    finally (return `(persidastricl::transient-hash-set ,@objects))))
 
 (defun read-persistent-vector-literal (stream char)
   (declare (ignore char))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-bracket+ stream)
     while object
-    collect (transform-primitive object) into objects
-    finally (return (apply #'persistent-vector objects))))
+    collect object into objects
+    finally (return `(persidastricl::persistent-vector ,@objects))))
 
 (defun read-transient-vector-literal (stream char n-arg)
   (declare (ignore char n-arg))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-bracket+ stream)
     while object
-    collect (transform-primitive object) into objects
-    finally (return (apply #'transient-vector objects))))
+    collect object into objects
+    finally (return `(persidastricl::transient-vector ,@objects))))
 
 (named-readtables:defreadtable syntax
   (:merge :standard)
