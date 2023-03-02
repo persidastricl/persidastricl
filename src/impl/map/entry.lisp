@@ -28,6 +28,9 @@
 (defmethod ->list ((entry entry))
   (list (key entry) (value entry)))
 
+(defmethod count ((entry entry))
+  (count (->list entry)))
+
 (defmethod first ((entry entry))
   (key entry))
 

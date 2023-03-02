@@ -57,7 +57,8 @@
 (defgeneric seq (object)
   (:method ((object list)) (lazy-seq object))
   (:method ((object sequence)) (seq (coerce object 'list)))
-  (:method ((object lazy-sequence)) object))
+  (:method ((object lazy-sequence)) object)
+  (:method ((object hash-table)) (seq (->list object))))
 
 (defun take* (n target)
   (when (> n 0)

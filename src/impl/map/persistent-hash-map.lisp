@@ -47,12 +47,15 @@
     (if-not (empty? kvs)
             (apply #'assoc m kvs)
             m)))
-
+;;
+;; for a readable representation use pr (todo)
+;;
 (defmethod print-object ((object persistent-hash-map) stream)
-  (let ((items (into '() (->plist object))))
+  (let ((more? (first (drop *print-hamt-items* (seq object))))
+        (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
     (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-        (format stream "{~{~s~^ ~}}" items)
-        (format stream "(persidastricl:persistent-hash-map ~{~s~^ ~})" items))))
+        (format stream "{~{~s~^ ~}~@[ ...~]}" items more?)
+        (format stream "(persidastricl:persistent-hash-map ~{~s~^ ~}~@[ ...~])" items more?))))
 
 (defmethod make-load-form ((object persistent-hash-map) &optional env)
   (declare (ignore env))

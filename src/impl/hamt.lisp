@@ -9,6 +9,8 @@
 
 (in-package #:persidastricl)
 
+(defvar *print-hamt-items* 10)
+
 (defclass hamt (metadata seqable) ())
 
 (defmethod cl-murmurhash:murmurhash ((object hamt) &key (seed cl-murmurhash:*default-seed*) mix-only)

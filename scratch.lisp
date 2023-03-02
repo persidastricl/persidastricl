@@ -22,9 +22,15 @@
 (let ((id 6))
   [ 1 2 id ])
 
+(setf *print-hamt-items* 30)
+
 (defparameter m1 (with-meta
                    @{:k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 #{1 2 3}}
                    {:a 1 :value "testing"}))
+
+(print-object  m1 nil)
+
+(> (bounded-count (inc *print-hamt-items*) (->list m1)) *print-hamt-items*)
 
 (:jj m1)
 (:k2 m1)
@@ -195,6 +201,8 @@
 
 (interleave lowercase-letters uppercase-letters)
 
+(print-object my-map nil)
+
 (defvar my-map
   (into {} (interleave uppercase-letters (integers))))
 
@@ -268,3 +276,25 @@
     (let ((bitmap-boxes (bitmap->dot bitmap "n"))
           (node-boxes (node-vector->dot data))))
     (format nil )))
+
+
+
+;; ---------
+
+(defvar ht (make-hash-table))
+(loop for (sym num) on
+      '(one 1 two 2 three 3 four 4 five 5 six 6 seven 7 eight 8 nine 9 ten 10)
+        by #'cddr
+      do (setf (gethash sym ht) num))
+
+(->list ht)
+(->plist ht)
+(->alist ht)
+(->array ht)
+
+(count ht)
+
+(setf *print-lazy-items* 3)
+(seq ht)
+
+(lmap (lambda (e) (s:str (first e) "-" (second e))) ht)

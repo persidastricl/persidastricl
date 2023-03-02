@@ -29,20 +29,32 @@
          (size (length lst)))
     (make-array size :fill-pointer size :initial-contents lst)))
 
-(defmethod into ((obj collection) (sequence sequence))
-  (apply #'conj obj (->list sequence)))
+(defmethod into ((obj collection) source)
+  (lreduce #'conj (seq source) :initial-value obj))
 
-(defmethod into ((obj collection) (hs hash-set))
-  (apply #'conj obj (->list hs)))
+(defmethod into ((obj hash-map) source-seq)
+  (let ((seq (seq source-seq)))
+    (labels ((twople? (item)
+               (= (count item) 2))
+             (classify (s)
+               (let ((item (first s)))
+                 (cond
+                   ((and (or (typep item 'entry)
+                             (typep item 'simple-array)
+                             (typep item 'persistent-vector)
+                             (typep item 'list))
+                         (twople? item))  :entries)
+                   (t :non-entries)))))
+      (lreduce
+       (lambda (m kv-pair)
+         (apply #'assoc m kv-pair))
+       (if (== (classify seq) :entries)
+           (lmap #'->list seq)
+           (partition-all seq 2))
+       :initial-value obj))))
 
-(defmethod into ((obj collection) (lazy-seq lazy-sequence))
-  (lreduce #'conj lazy-seq :initial-value obj))
-
-(defmethod into ((obj hash-map) (sequence sequence))
-  (apply #'assoc obj (->list sequence)))
-
-(defmethod into ((obj hash-map) (lazy-seq lazy-sequence))
-  (apply #'assoc obj (->list lazy-seq)))
-
-(defmethod into ((obj hash-map) (hm hash-map))
-  (apply #'assoc obj (->list hm)))
+;; todo : same as for hash-maps above (use labels around both fns?)
+;;
+;; (defmethod into ((obj hash-table) sequence)
+;;   (lreduce
+;;    (lambda (ht entry))))

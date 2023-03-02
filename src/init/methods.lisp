@@ -20,10 +20,12 @@
   (:method ((l list)) (zerop (length l))))
 
 (defgeneric count (thing)
-  (:method (thing) (cl:length thing)))
+  (:method (thing) (cl:length thing))
+  (:method ((ht hash-table)) (hash-table-count ht)))
 
 (defgeneric length (thing)
-  (:method (thing) (cl:length thing)))
+  (:method (thing) (cl:length thing))
+  (:method ((ht hash-table)) (hash-table-count ht)))
 
 (defgeneric bounded-count (n thing))
 
@@ -63,14 +65,23 @@
   (:method ((lst list)) lst)
   (:method ((seq sequence)) (coerce seq 'list)))
 
+(defmethod ->list ((ht hash-table))
+  (loop for v being each hash-values of ht using (hash-key k)
+        collect (list  k v)))
+
 (defgeneric ->array (object)
-  (:method (object) (make-array (length object) :initial-contents object)))
+  (:method (object) (make-array (length object) :initial-contents object))
+  (:method ((ht hash-table)) (make-array (length ht) :initial-contents (map 'list #'cl:vector (->list ht)))))
 
 (defgeneric ->vector (object)
   (:method (object) (->array object)))
 
-(defgeneric ->plist (object))
-(defgeneric ->alist (object))
+(defgeneric ->plist (object)
+  (:method ((ht hash-table)) (apply #'concatenate 'list (->list ht))))
+
+(defgeneric ->alist (object)
+  (:method ((ht hash-table)) (loop for v being each hash-values of ht using (hash-key k)
+                                   collect (cons k v))))
 
 (defgeneric ins (target position item))
 (defgeneric upd (target position item))
