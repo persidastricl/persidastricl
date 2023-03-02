@@ -29,7 +29,7 @@
 (defvar sip-hash64 (make-instance 'hasher
                                   :size 64
                                   :fn (lambda (obj &rest args)
-                                        (apply #'do-hash #'sip-hash:hash-64-4-8 (babel:string-to-octets (s:str obj)) args
+                                        (apply #'do-hash #'sip-hash:hash-64-4-8 (babel:string-to-octets (s:str obj)) 0 0 args
                                                ))))
 
 
@@ -39,7 +39,7 @@
                                          (multiple-value-bind (lo hi) (apply
                                                                        #'do-hash
                                                                        #'sip-hash:hash-128-4-8
-                                                                       (babel:string-to-octets (s:str obj)) args)
+                                                                       (babel:string-to-octets (s:str obj)) 0 0 args)
                                            (+ (ash hi 64) lo)))))
 
 (defparameter *default-hasher* murmur32)

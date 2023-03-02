@@ -27,3 +27,12 @@
   (s2 :eagle))
 
 (s2 :eagle)
+
+
+(n-choose-k 97 3)
+
+(/ (fact 9) (* (fact 1) (fact 4) (fact 2) (fact 2)))
+
+(let ((value (funcall (:fn thunk))))
+  (setf (:r thunk) value)
+  (setf (:fn thunk) nil))

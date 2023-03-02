@@ -7,9 +7,13 @@
 
 (in-package :persidastricl)
 
-(named-readtables:in-readtable persidastricl:syntax)
+(named-readtables:in-readtable syntax)
 
+[ 1 2 3 ]
 
+(make-instance 'persistent-bitmap-vector)
+
+(defvar m1  (persistent-hash-map :k1 :v1 :k2 :v2 :k3 :v3 :k4 :v4 :k5 :v5 :k6 :v6 :k7 :v7 :k1 :smerp))
 
 
 (let ((id 5))
@@ -83,7 +87,7 @@
             :g {:h #{1 2 3 4}}})
 
 (let ((m :m1)
-      (k :k3))
+      (k :k7))
   (get-in m2 [m k]))
 
 (get-in m2 [:c :c])
@@ -102,7 +106,7 @@
   :b)
 
 
-
+(defvar id 109)
 (defvar m3 {:a 1 :b 2 :c 3 :d 4 :e 5 :f id})
 
 (seq m3)
@@ -199,7 +203,16 @@
 
 (bounded-count 100 '(1))
 
-(sb-sys:without-gcing (time (take 1 (drop 10000000 (integers)))))
+(ext:gc :full t)
+
+
+(sys:without-gcing
+  (time (take 1 (drop 10000000 (integers))))  )
+
+(print-object  (seq '(1 2 3)) nil)
+
+(sb-sys:without-gcing
+  (time (take 1 (drop 10000000 (integers)))))
 
 
 ;; -- output structures to graphiz?? --

@@ -52,9 +52,14 @@
 ;;         (setf (:fn thunk) nil)))
 ;;   (:r thunk))
 
+;; (defmethod force ((thunk thunk))
+;;   (or (slot-value thunk 'r)
+;;       (let ((value (funcall (slot-value thunk 'fn))))
+;;         (setf (slot-value thunk 'fn) nil)
+;;         (setf (slot-value thunk 'r) value))))
+
 (defmethod force ((thunk thunk))
-  (if (slot-value thunk 'fn)
-      (let ((value (funcall (slot-value thunk 'fn))))
-        (setf (slot-value thunk 'r) value)
-        (setf (slot-value thunk 'fn) nil)))
+  (when (slot-value thunk 'fn)
+    (setf (slot-value thunk 'r) (funcall (slot-value thunk 'fn)))
+    (setf (slot-value thunk 'fn) nil))
   (slot-value thunk 'r))
