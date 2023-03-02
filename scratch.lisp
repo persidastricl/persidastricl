@@ -9,6 +9,16 @@
 
 (named-readtables:in-readtable syntax)
 
+(into {} {:a 1 :b 2})
+(into [] #(1 2 3 4))
+
+(->alist (into (make-hash-table) #(#(1 2) #(3 4))))
+(->alist (into (make-hash-table) {:a 1 :b 2}))
+(->alist (into (make-hash-table) '(:a 1 :b 2 :c 3 :d 4 :e 5)))
+(->alist  (into (make-hash-table) [:a 1 :b 2]))
+
+
+
 [ 1 2 3 ]
 
 (make-instance 'persistent-bitmap-vector)

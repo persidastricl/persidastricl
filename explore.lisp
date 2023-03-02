@@ -29,7 +29,9 @@
 (s2 :eagle)
 
 
-(n-choose-k 97 3)
+(n-choose-k 8 2)
+
+(expt 3 6)
 
 (/ (fact 9) (* (fact 1) (fact 4) (fact 2) (fact 2)))
 

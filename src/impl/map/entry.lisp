@@ -31,6 +31,9 @@
 (defmethod count ((entry entry))
   (count (->list entry)))
 
+(defmethod lenth ((entry entry))
+  (count (->list entry)))
+
 (defmethod first ((entry entry))
   (key entry))
 
