@@ -47,7 +47,26 @@
   (:nicknames :pds :p)
   (:use #:cl #:arrow-macros)
   (:shadow #:cl
-           #:some #:atom #:cons #:first #:rest #:last #:butlast #:assoc #:dissoc #:get #:delete #:remove #:length #:count #:set #:vector #:merge #:pop)
+           #:some
+           #:atom
+           #:cons
+           #:first
+           #:rest
+           #:last
+           #:butlast
+           #:assoc
+           #:dissoc
+           #:get
+           #:delete
+           #:remove
+           #:length
+           #:count
+           #:set
+           #:vector
+           #:merge
+           #:pop
+           #:reduce
+           #:map)
   (:export
    #:->alist
    #:->array
@@ -104,9 +123,9 @@
    #:lazy-seq
    #:length
    #:line-seq
-   #:lmap
+   #:map
    #:lookup
-   #:lreduce
+   #:reduce
    #:lseq
    #:merge
    #:merge-with

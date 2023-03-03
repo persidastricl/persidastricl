@@ -19,7 +19,7 @@
 
 (defmethod conj ((ths transient-hash-set) &rest items)
   (with-slots (root) ths
-    (setf root (reduce
+    (setf root (cl:reduce
                 (lambda (node item)
                   (add node item :hash (h:hash item) :depth 0))
                 items
@@ -28,7 +28,7 @@
 
 (defmethod disj ((ths transient-hash-set) &rest items)
   (with-slots (root count) ths
-    (setf root (reduce
+    (setf root (cl:reduce
                 (lambda (node item)
                   (remove node item :hash (h:hash item) :depth 0))
                 items
@@ -37,7 +37,7 @@
 
 (defun transient-hash-set (&rest items)
   (let ((s (make-instance 'transient-hash-set)))
-    (when-not (empty? items)
+    (unless (empty? items)
       (apply #'conj s items))
     s))
 

@@ -30,7 +30,7 @@
     (make-array size :fill-pointer size :initial-contents lst)))
 
 (defmethod into ((obj collection) source)
-  (lreduce #'conj (seq source) :initial-value obj))
+  (reduce #'conj (seq source) :initial-value obj))
 
 (labels ((twople? (item)
            (= (count item) 2))
@@ -46,21 +46,21 @@
 
   (defmethod into ((obj hash-map) source-seq)
     (let ((seq (seq source-seq)))
-      (lreduce
+      (reduce
        (lambda (m kv-pair)
          (apply #'assoc m kv-pair))
        (if (== (classify seq) :entries)
-           (lmap #'->list seq)
+           (map #'->list seq)
            (partition-all seq 2))
        :initial-value obj)))
 
   (defmethod into ((obj hash-table) source-seq)
     (let ((seq (seq source-seq)))
-      (lreduce
+      (reduce
        (lambda (m kv-pair)
          (setf (gethash (first kv-pair) m) (second kv-pair))
          m)
        (if (== (classify seq) :entries)
-           (lmap #'->list seq)
+           (map #'->list seq)
            (partition-all seq 2))
        :initial-value obj))))

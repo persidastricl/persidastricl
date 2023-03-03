@@ -15,7 +15,7 @@
 
 (defun str (&rest things)
   "take a list and concatenate the elements into a string"
-  (reduce
+  (cl:reduce
    #'(lambda (r &optional s)
        (concatenate 'string r (to-string s)))
    things

@@ -37,7 +37,7 @@
 (defmethod next ((iterator hamt-iterator))
   (with-slots (current stack) iterator
     (let ((entry (next current)))
-      (when-not (has-next? current)
+      (unless (has-next? current)
         (multiple-value-bind (next-current new-stack) (next-iterator stack)
           (when next-current
             (setf current next-current)

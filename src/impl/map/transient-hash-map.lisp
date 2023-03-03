@@ -19,7 +19,7 @@
 
 (defmethod assoc ((thm transient-hash-map) k v &rest kv-pairs)
   (with-slots (root) thm
-    (setf root (reduce
+    (setf root (cl:reduce
                 (lambda (node kv-pair)
                   (let* ((entry (apply #'map-entry kv-pair))
                          (kk (key entry)))
@@ -31,7 +31,7 @@
 
 (defmethod dissoc ((thm transient-hash-map) &rest keys)
   (with-slots (root) thm
-    (setf root (reduce
+    (setf root (cl:reduce
                 (lambda (node k)
                   (remove node k :hash (h:hash k) :depth 0))
                 keys
@@ -40,7 +40,7 @@
 
 (defun transient-hash-map (&rest kvs)
   (let ((m (make-instance 'transient-hash-map)))
-    (when-not (empty? kvs)
+    (unless (empty? kvs)
       (apply #'assoc m kvs))
     m))
 

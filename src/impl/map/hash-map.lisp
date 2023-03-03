@@ -13,8 +13,8 @@
   (let ((sequence (->list sequence)))
     (typecase (first sequence)
       (entry sequence)
-      (cl:cons (map 'list (lambda (c) (apply #'map-entry c)) sequence))
-      (t (map 'list (lambda (kv) (apply #'map-entry kv)) (->list (partition-all sequence 2)))))))
+      (cl:cons (cl:map 'list (lambda (c) (apply #'map-entry c)) sequence))
+      (t (cl:map 'list (lambda (kv) (apply #'map-entry kv)) (->list (partition-all sequence 2)))))))
 
 (defclass hash-map (hamt associable)
   ((root :initarg :root :reader root)))
@@ -31,10 +31,10 @@
   (lookup hm key default))
 
 (defmethod ->vector ((hm hash-map))
-  (map 'cl:vector #'->vector (->list hm)))
+  (cl:map 'cl:vector #'->vector (->list hm)))
 
 (defmethod ->vec ((hm hash-map))
-  (into (persistent-vector) (lmap #'->vec (->list hm))))
+  (into (persistent-vector) (map #'->vec (->list hm))))
 
 (defmethod ->array ((hm hash-map))
   (->vector hm))
@@ -43,16 +43,16 @@
   (into '() (seq hm)))
 
 (defmethod ->keys ((hm hash-map))
-  (lmap #'key hm))
+  (map #'key hm))
 
 (defmethod ->vals ((hm hash-map))
-  (lmap #'value hm))
+  (map #'value hm))
 
 (defmethod ->plist ((hm hash-map))
   (mapcat #'->list hm))
 
 (defmethod ->alist ((hm hash-map))
-  (lmap #'->cons hm))
+  (map #'->cons hm))
 
 (defmethod with-meta ((object hamt) (meta hash-map))
   (with-slots (root) object

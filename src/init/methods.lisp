@@ -71,7 +71,7 @@
 
 (defgeneric ->array (object)
   (:method (object) (make-array (length object) :initial-contents object))
-  (:method ((ht hash-table)) (make-array (length ht) :initial-contents (map 'list #'cl:vector (->list ht)))))
+  (:method ((ht hash-table)) (make-array (length ht) :initial-contents (cl:map 'list #'cl:vector (->list ht)))))
 
 (defgeneric ->vector (object)
   (:method (object) (->array object)))

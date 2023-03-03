@@ -36,10 +36,10 @@
   (drop 1 (seq vector)))
 
 (defmethod ->list ((v vector))
-  (map 'list (lambda (i) (get v i)) (loop for i from 0 below (count v) collect i)))
+  (cl:map 'list (lambda (i) (get v i)) (loop for i from 0 below (count v) collect i)))
 
 (defmethod conj ((vector vector) &rest values)
-  (reduce
+  (cl:reduce
    #'(lambda (v value)
        (cons value v))
    values

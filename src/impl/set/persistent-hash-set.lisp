@@ -19,7 +19,7 @@
 
 (defmethod conj ((phs persistent-hash-set) &rest items)
   (with-slots (root meta) phs
-    (let ((new-root (reduce
+    (let ((new-root (cl:reduce
                      (lambda (node item)
                        (add node item :hash (h:hash item) :depth 0))
                      items
@@ -30,7 +30,7 @@
 
 (defmethod disj ((phs persistent-hash-set) &rest items)
   (with-slots (root meta) phs
-    (let ((new-root  (reduce
+    (let ((new-root  (cl:reduce
                       (lambda (node item)
                         (remove node item :hash (h:hash item) :depth 0))
                       items

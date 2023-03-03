@@ -14,7 +14,7 @@
 
 (defun slot-values (obj)
   (let ((_class (class-of obj)))
-    (map
+    (cl:map
      'list
      (lambda (slot-def)
        (c2mop:slot-value-using-class _class obj slot-def))

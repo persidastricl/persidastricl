@@ -9,7 +9,7 @@
 
 (defun persistent->transient-name (persistent-object)
   (let ((object-name (s:str (type-of persistent-object))))
-    (when-not (s:includes? object-name "(?i)persistent")
+    (unless (s:includes? object-name "(?i)persistent")
       (error "object ~a is not a persistent object!" object-name))
     (-> object-name
       (s:replace "(?i)persistent" "transient")
@@ -17,7 +17,7 @@
 
 (defun transient->persistent-name (transient-object)
   (let ((object-name (s:str (type-of transient-object))))
-    (when-not (s:includes? object-name "(?i)transient")
+    (unless (s:includes? object-name "(?i)transient")
       (error "object ~a is not a transient object!" object-name))
     (-> object-name
       (s:replace "(?i)transient" "persistent")

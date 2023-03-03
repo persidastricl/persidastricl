@@ -25,7 +25,7 @@
              (check-type k integer)
              (let ((start (->list (take k l))))
                (concatenate 'list start (list* v (->list (drop (1+ k) l)))))))
-    (lreduce
+    (reduce
      (lambda (l kv-pair)
        (apply #'assoc* l kv-pair))
      (->list (partition-all (list* k1 v1 kv-pairs) 2))
@@ -36,7 +36,7 @@
              (check-type k integer)
              (let ((start (->list (take k l))))
                (concatenate 'list start (->list (drop (1+ k) l))))))
-    (lreduce
+    (reduce
      (lambda (l k)
        (dissoc* l k))
      keys
@@ -61,7 +61,7 @@
   (labels ((dissoc* (m k)
              (remhash k m)
              m))
-    (reduce
+    (cl:reduce
      #'dissoc*
      keys
      :initial-value ht)))
@@ -78,7 +78,7 @@
              (if (= i (length v))
                  (v:append v val)
                  (v:update v i val))))
-    (lreduce
+    (reduce
      (lambda (v iv-pair)
        (apply #'assoc* v iv-pair))
      (->list (partition-all (list* index value iv-pairs) 2))
@@ -88,7 +88,7 @@
   (labels ((dissoc* (v i)
              (check-type i integer)
              (v:delete v i)))
-    (lreduce
+    (reduce
      (lambda (v i)
        (apply #'dissoc* v i))
      indexes
@@ -108,7 +108,7 @@
 
 (defun make-funcallable-keyword (k)
   (assert (keywordp k))
-  (when-not (funcallable-keyword? k)
+  (unless (funcallable-keyword? k)
     (eval `(defun ,k (hm &optional (default nil)) (lookup hm ,k default)))))
 
 (defun make-funcallable-keywords (&rest kws)

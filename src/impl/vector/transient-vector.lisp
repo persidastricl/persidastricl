@@ -58,7 +58,7 @@
   (:method (obj) (into (transient-vector) (seq obj))))
 
 (defun transient-vector (&rest items)
-  (reduce
+  (cl:reduce
    (lambda (tv item)
      (cons item tv))
    items
@@ -76,7 +76,7 @@
 
 (defmethod assoc ((tv transient-vector) index item &rest kv-pairs)
   (with-slots (root tail tail-offset) tv
-    (reduce
+    (cl:reduce
      (lambda (tv kv-pair)
        (destructuring-bind (idx item) kv-pair
          (if (>= idx tail-offset)

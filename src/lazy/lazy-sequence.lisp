@@ -51,7 +51,7 @@
   (:method ((obj lazy-sequence)) obj))
 
 (defmethod lazy-seq ((obj list))
-  (when-not (empty? obj)
+  (unless (empty? obj)
     (lseq (head obj) (lazy-seq (tail obj)))))
 
 (defgeneric seq (object)

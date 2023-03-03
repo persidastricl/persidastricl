@@ -19,7 +19,7 @@
 
 (defmethod assoc ((phm persistent-hash-map) k v &rest kv-pairs)
   (with-slots (root meta) phm
-    (let ((new-root (reduce
+    (let ((new-root (cl:reduce
                      (lambda (node kv-pair)
                        (let* ((entry (apply #'map-entry kv-pair))
                               (kk (key entry)))
@@ -33,7 +33,7 @@
 
 (defmethod dissoc ((phm persistent-hash-map) &rest keys)
   (with-slots (root meta) phm
-    (let ((new-root (reduce
+    (let ((new-root (cl:reduce
                      (lambda (node k)
                        (remove node k :hash (h:hash k) :depth 0))
                      keys

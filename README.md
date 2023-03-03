@@ -134,12 +134,16 @@ Using common lisp data structures in a similar way to the new persistent data st
 (into #() [:a :b :c :d])
 (into ht {:a 5 :b 7})
 
+;; TODO: more examples
+```
+
+Functions for creating various types of common lisp data structures for ease of interop
+
+```common-lisp
 (->list [1 2 3 4])
 (->plist {:a 1 :b 2}) ;; lazy
 (->alist {:a 1 :b 2})
 (->array {:a 1 :b 2})
-
-;; TODO: more examples
 ```
 
 Using a bit of a hack (which I am still trying to decide if I should leave in the code or not), you can use keywords as functions with maps
@@ -156,15 +160,73 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 (let ((m1 {:a 1 :b 2}))
   (with-funcallable-map (m m1)
     (m :a))) ;; => 1
+
+(let ((s1 #{:a :b :c}))
+  (with-funcallable-map (m m1)
+    (m :a))) ;; => T
+```
+## Other Examples
+
+#### reduce
+   `reduce` has been shadowed to also take any sequential and/or lazy sequence. It maintains the flavor of common lisp's native reduce addint an optional keyword `:initial-value` for setting the initial argument of the reduce.
+
+```common-lisp
+(reduce #'+ (range 10))
+;; => 45
+
+(reduce #'+ (range 10) :initial-value 2)
+;; => 47
 ```
 
-This allows some familiar use of maps as functions within the context of the macro for concenience only.
+#### reduce-kv
 
-### TODO go over the core functions showing any differences when applicable between these and clojure's
+### run!
 
-## Examples
+#### map and mapv
+    `map` has been re-defined to take any sequential data structure and lazily 'map' over it applying a fn. `mapv` eagerly does the same returning a persistent vector.
 
-### TODO lots more examples
+```common-lisp
+(map #'identity "test")
+;; => (#\t #\e #\s #\t)
+
+(map #'char-code "testing 1 2 3 4")
+;; => (116 101 115 116 105 110 103 32 49 32 ...)
+
+(mapv #'inc (range 20)
+;; => [1 2 3 4 5 6 7 8 9 0 10]
+```
+
+#### map-indexed
+
+#### keep
+
+#### filter and filterv
+
+#### concat
+
+#### take take-while take-nth take-last
+
+#### drop drop-while drop-last
+
+#### split-at split-with
+
+#### iterate 
+
+#### partition partition-all partition-by
+
+#### group-by
+
+#### cycle repeatedly
+
+#### zipmap interleave interpose
+
+#### line-seq tree-seq
+
+#### flatten some some-fn
+
+#### juxt
+
+#### merge merge-with
 
 ## License
 

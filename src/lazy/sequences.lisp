@@ -11,26 +11,26 @@
   (cond
     ((= i 0) 1)
     ((< i 0) (- (fact (- i))))
-    (:otherwise (lreduce #'* (range i :start i :step -1)))))
+    (:otherwise (reduce #'* (range i :start i :step -1)))))
 
 (defvar fib
-  (lseq 0 (lseq 1 (lmap #'+ fib (tail fib)))))
+  (lseq 0 (lseq 1 (map #'+ fib (tail fib)))))
 
 (defvar trib
   (lseq 0 (lseq 1 (lseq 1 (lseq 2
-                                (lmap #'+
-                                      (drop 1 trib)
-                                      (drop 2 trib)
-                                      (drop 3 trib)))))))
+                                (map #'+
+                                     (drop 1 trib)
+                                     (drop 2 trib)
+                                     (drop 3 trib)))))))
 
 (defun squares ()
-  (lmap (lambda (i) (* i i)) (drop 1 (integers))))
+  (map (lambda (i) (* i i)) (drop 1 (integers))))
 
 (defun n-choose-k (n k)
   (/ (fact n) (fact (- n k)) (fact k)))
 
 (defun triangulars ()
-  (lmap (lambda (n) (n-choose-k (1+ n) 2)) (drop 1 (integers))))
+  (map (lambda (n) (n-choose-k (1+ n) 2)) (drop 1 (integers))))
 
 (defun binomial-coefficients (&optional (n 0))
   (lseq (mapv
@@ -40,7 +40,7 @@
         (binomial-coefficients (inc n))))
 
 (defun hexagonals ()
-  (lmap
+  (map
    (lambda (n)
      (- (* 2 (* n n)) n))
    (drop 1 (integers))))
@@ -49,7 +49,7 @@
   (/ (fact (* 2 n)) (* (fact (1+ n)) (fact n))))
 
 (defun catalan-seq (&optional (n 0))
-  (lmap #'catalan (drop n (integers))))
+  (map #'catalan (drop n (integers))))
 
 ;; -----
 ;;  primes' sieve of erasthenos (sp) with persistent hash map

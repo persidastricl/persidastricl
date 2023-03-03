@@ -55,7 +55,7 @@
   (:method (obj) (into (persistent-vector) (seq obj))))
 
 (defun persistent-vector (&rest items)
-  (reduce
+  (cl:reduce
    (lambda (pv item)
      (cons item pv))
    items
@@ -73,7 +73,7 @@
     `(persidastricl::persistent-vector ,@items)))
 
 (defmethod assoc ((pv persistent-vector) index item &rest kv-pairs)
-  (reduce
+  (cl:reduce
    (lambda (pv kv-pair)
      (with-slots (root tail count tail-offset) pv
        (destructuring-bind (idx item) kv-pair

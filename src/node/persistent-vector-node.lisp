@@ -91,7 +91,7 @@
   (slot-makunbound new 'level)
 
   (with-slots (data level) old
-    (setf (slot-value new 'data) (map
+    (setf (slot-value new 'data) (cl:map
                                   'vector
                                   (lambda (node)
                                     (change-class node (transient->persistent-name node)))

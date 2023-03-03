@@ -18,7 +18,7 @@
               (swap! mem #'assoc args ret)
               ret))))))
 
-(defun lreduce (f s &key (initial-value nil initial-value-p))
+(defun reduce (f s &key (initial-value nil initial-value-p))
   (when s
     (let ((s (seq s)))
       (labels ((reduce* (current-value seq)
@@ -31,7 +31,7 @@
          (if initial-value-p s (tail s)))))))
 
 (defun run! (f coll)
-  (lreduce
+  (reduce
    (lambda (ign item)
      (declare (ignore ign))
      (funcall f item))
@@ -52,7 +52,7 @@
          (if initial-value-p initial-value (head s)))))))
 
 (defun get-in (obj path &optional (default nil))
-  (or (lreduce
+  (or (reduce
        (lambda (obj k)
          (get obj k))
        path
@@ -95,22 +95,22 @@
                        (filter* (tail s)))))))
       (filter* (seq seq)))))
 
-(defun lmap (f &rest seqs)
+(defun map (f &rest seqs)
   (when (keywordp f) (make-funcallable-keyword f))
   (when seqs
     (let ((n (count seqs))
-          (seqs (map 'list #'seq seqs)))
+          (seqs (cl:map 'list #'seq seqs)))
       (labels ((apply* (args)
                  (apply f args))
                (map* (ss)
-                 (let ((args (map 'list #'head ss)))
+                 (let ((args (cl:map 'list #'head ss)))
                    (when (= n (count args))
                      (let ((r (apply* args)))
-                       (lseq r (map* (remove-if #'nil? (map 'list #'tail ss)))))))))
+                       (lseq r (map* (remove-if #'nil? (cl:map 'list #'tail ss)))))))))
         (map* seqs)))))
 
 (defun mapv (f &rest seqs)
-  (into (persistent-vector) (apply #'lmap f seqs)))
+  (into (persistent-vector) (apply #'map f seqs)))
 
 (defun concat (&rest seqs)
   (labels ((concat* (s &rest xs)
@@ -124,7 +124,7 @@
         (apply #'concat* (seq (head seqs)) (tail seqs))))))
 
 (defun mapcat (f s &rest seqs)
-  (let ((xs (apply #'lmap f s seqs)))
+  (let ((xs (apply #'map f s seqs)))
     (apply #'concat (->list xs))))
 
 (defun filterv (pred seq)
@@ -134,23 +134,23 @@
   (when (keywordp f) (make-funcallable-keyword f))
   (when seqs
     (let ((n (count seqs))
-          (seqs (map 'list #'seq seqs)))
+          (seqs (cl:map 'list #'seq seqs)))
       (labels ((apply* (args)
                  (apply f args))
                (map* (ss)
-                 (let ((args (map 'list #'head ss)))
+                 (let ((args (cl:map 'list #'head ss)))
                    (when (= n (count args))
                      (let ((r (apply* args)))
                        (if r
-                           (lseq r (map* (remove-if #'nil? (map 'list #'tail ss))))
-                           (map* (remove-if #'nil? (map 'list #'tail ss)))))))))
+                           (lseq r (map* (remove-if #'nil? (cl:map 'list #'tail ss))))
+                           (map* (remove-if #'nil? (cl:map 'list #'tail ss)))))))))
         (map* seqs)))))
 
 (defun integers (&key (from 0))
   (lseq from (integers :from (1+ from))))
 
 (defun map-indexed (f &rest seqs)
-  (apply #'lmap f (integers) seqs))
+  (apply #'map f (integers) seqs))
 
 (defun keep-indexed (f &rest seqs)
   (apply #'keep f (integers) seqs))
@@ -177,7 +177,7 @@
           (lseq v (tail s))))))
 
 (defun drop-last (n seq)
-  (lmap
+  (map
    (lambda (x y) (declare (ignore y))
      x)
    (seq seq)
@@ -204,7 +204,7 @@
   (when-let ((s (seq source)))
     (let ((v (->list (take n s)))
           (rest (drop n s)))
-      (if (tail rest)
+      (if rest
           (lseq v (partition rest n))
           (if (= n (length v))
               (list v)
@@ -214,7 +214,7 @@
   (when-let ((s (seq source)))
     (let ((v (->list (take n s)))
           (rest (drop n s)))
-      (if (tail rest)
+      (if rest
           (lseq v (partition-all rest n))
           (list v)))))
 
@@ -223,11 +223,11 @@
     (let* ((v (head s))
            (fv (funcall f v))
            (run (into (list v) (take-while (lambda (v) (== fv (funcall f v))) (tail s)))))
-      (cons run (partition-by f (drop (cl:length run) s))))))
+      (lseq run (partition-by f (drop (cl:length run) s))))))
 
 (defun group-by (f coll)
   (when (keywordp f) (make-funcallable-keyword f))
-  (lreduce
+  (reduce
    (lambda (ret x)
      (let ((k (funcall f x)))
        (assoc ret k (conj (get ret k (persistent-vector)) x))))
@@ -312,7 +312,7 @@
            (collection? (x) (typep x 'persidastricl::collection))
            (collection (v)
              (into (empty v)
-                   (lmap
+                   (map
                     #'scrub
                     v)))
            (scrub (item)
@@ -338,7 +338,7 @@
 (defun juxt (&rest fns)
   (run! (lambda (f) (when (keywordp f) (make-funcallable-keyword f))) fns)
   (lambda (&rest args)
-    (lreduce
+    (reduce
      (lambda (v f)
        (conj v (apply f args)))
      fns
@@ -346,7 +346,7 @@
 
 (defun merge (&rest ms)
   (if (some #'identity ms)
-      (lreduce
+      (reduce
        (lambda (m1 m2)
          (if m2
              (into m1 (->plist m2))
@@ -364,4 +364,4 @@
               #'merge-kv
               m2
               :initial-value m1)))
-    (lreduce #'merge* (filter #'some? ms))))
+    (reduce #'merge* (filter #'some? ms))))
