@@ -12,12 +12,23 @@
 (into {} {:a 1 :b 2})
 (into [] #(1 2 3 4))
 
+(make-hash-table :test 'equal)
+
+(defvar ht (dictionary))
+
+(assoc #() 0 :a 1 :b 2 :c)
+
+(->)
+
+(dissoc '(1 2 3 4 5 6) 3)
+
 (->alist (into (make-hash-table) #(#(1 2) #(3 4))))
 (->alist (into (make-hash-table) {:a 1 :b 2}))
 (->alist (into (make-hash-table) '(:a 1 :b 2 :c 3 :d 4 :e 5)))
 (->alist  (into (make-hash-table) [:a 1 :b 2]))
 
-
+(assoc ht :a 1 :b 2 :c 3 :d 4 :e 5 :g 7 :f 6 :h 8 :i 9 :j 10 :k 11 :l 12 :m 13 :n 14 :o 15 :p 16 :q 17)
+(dissoc ht :b)
 
 [ 1 2 3 ]
 
