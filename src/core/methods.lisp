@@ -21,7 +21,7 @@
 
 (defmethod into ((a array) sequence)
   (if sequence
-      (let ((size (+ (count (->list a)) (count (->list sequence)))))
+      (let ((size (+ (length (->list a)) (length (->list sequence)))))
         (make-array size :initial-contents (->list (concat (->list a) sequence))))
       a))
 

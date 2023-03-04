@@ -19,9 +19,15 @@
   (:method ((a array)) (zerop (length a)))
   (:method ((l list)) (zerop (length l))))
 
-(defgeneric count (thing)
-  (:method (thing) (cl:length thing))
-  (:method ((ht hash-table)) (hash-table-count ht)))
+(labels
+    ((count* (thing &optional (n 0))
+       (cond
+         ((null thing) n)
+         ((dotted-pair? thing) (+ n 2))
+         (:otherwise (count* (rest thing) (1+ n))))))
+  (defgeneric count (thing)
+    (:method (thing) (count* thing))
+    (:method ((ht hash-table)) (hash-table-count ht))))
 
 (defgeneric length (thing)
   (:method (thing) (cl:length thing))

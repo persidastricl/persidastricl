@@ -50,7 +50,7 @@
 
 (defmethod == ((v1 simple-vector) (v2 simple-vector))
   (or (eq v1 v2)
-      (and (== (length v1) (length v2))
+      (and (== (cl:length v1) (cl:length v2))
            (every
             (lambda (e1 e2)
               (== e1 e2))

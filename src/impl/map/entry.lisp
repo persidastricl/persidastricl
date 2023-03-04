@@ -29,10 +29,10 @@
   (list (key entry) (value entry)))
 
 (defmethod count ((entry entry))
-  (count (->list entry)))
+  (length (->list entry)))
 
-(defmethod lenth ((entry entry))
-  (count (->list entry)))
+(defmethod length ((entry entry))
+  (length (->list entry)))
 
 (defmethod first ((entry entry))
   (key entry))

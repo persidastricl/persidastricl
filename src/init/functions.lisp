@@ -51,6 +51,10 @@
 (defun string? (s)
   (stringp s))
 
+(defun dotted-pair? (x)
+  (and (consp x)
+       (not (listp (cdr x)))))
+
 (defun inc (n)
   (1+ n))
 
@@ -63,7 +67,7 @@
 
 (defun ->fillable (array)
   "non-destructively retuan a copy of a non-fillable array as a fillable array "
-  (let ((n (length array)))
+  (let ((n (cl:length array)))
     (make-array n :fill-pointer n :initial-contents array)))
 
 (defun flatten (x)
