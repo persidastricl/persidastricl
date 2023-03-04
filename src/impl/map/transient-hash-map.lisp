@@ -45,11 +45,13 @@
     m))
 
 (defmethod print-object ((object transient-hash-map) stream)
-  (let ((more? (first (drop *print-hamt-items* (seq object))))
-        (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
-    (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-        (format stream "@{~{~s~^ ~}~@[ ...~]}" items more?)
-        (format stream "(persidastricl:transient-hash-map ~{~s~^ ~}~@[ ...~])" items more?))))
+  (if-let ((seq (seq object)))
+    (let ((more? (first (drop *print-hamt-items* seq)))
+          (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
+      (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
+          (format stream "@{~{~s~^ ~}~@[ ...~]}" items more?)
+          (format stream "(persidastricl:transient-hash-map ~{~s~^ ~}~@[ ...~])" items more?)))
+    (format stream "@{}")))
 
 (defmethod make-load-form ((object transient-hash-map) &optional env)
   (declare (ignore env))

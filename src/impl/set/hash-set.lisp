@@ -35,6 +35,6 @@
 
 (defmacro with-funcallable-set ((symbol definition) &body body)
   `(let ((,symbol ,definition))
-     (labels ((,symbol (k &optional (default nil))
+     (labels ((,symbol (k)
                 (contains? ,symbol k)))
        ,@body)))

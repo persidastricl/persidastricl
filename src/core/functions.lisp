@@ -19,16 +19,17 @@
               ret))))))
 
 (defun reduce (f s &key (initial-value nil initial-value-p))
-  (when s
-    (let ((s (seq s)))
-      (labels ((reduce* (current-value seq)
-                 (if seq
-                     (let ((new-value (head seq)))
-                       (reduce* (funcall f current-value new-value) (tail seq)))
-                     current-value)))
-        (reduce*
-         (if initial-value-p initial-value (head s))
-         (if initial-value-p s (tail s)))))))
+  (if s
+      (let ((s (seq s)))
+        (labels ((reduce* (current-value seq)
+                   (if seq
+                       (let ((new-value (head seq)))
+                         (reduce* (funcall f current-value new-value) (tail seq)))
+                       current-value)))
+          (reduce*
+           (if initial-value-p initial-value (head s))
+           (if initial-value-p s (tail s)))))
+      initial-value))
 
 (defun run! (f coll)
   (reduce
@@ -40,16 +41,17 @@
   nil)
 
 (defun reduce-kv (f s &key (initial-value nil initial-value-p))
-  (when s
-    (let ((s (seq s)))
-      (labels ((reduce* (seq current-value)
-                 (if seq
-                     (let ((new-value (head seq)))
-                       (reduce* (tail seq) (apply f current-value (->list new-value))))
-                     current-value)))
-        (reduce*
-         (if initial-value-p s (tail s))
-         (if initial-value-p initial-value (head s)))))))
+  (if s
+      (let ((s (seq s)))
+        (labels ((reduce* (seq current-value)
+                   (if seq
+                       (let ((new-value (head seq)))
+                         (reduce* (tail seq) (apply f current-value (->list new-value))))
+                       current-value)))
+          (reduce*
+           (if initial-value-p s (tail s))
+           (if initial-value-p initial-value (head s)))))
+      initial-value))
 
 (defun get-in (obj path &optional (default nil))
   (or (reduce
@@ -67,12 +69,6 @@
         (assoc obj k (assoc-in next more v))
         (assoc obj k v))))
 
-(defun every? (pred coll)
-  (cond
-    ((nil? (seq coll)) t)
-    ((funcall pred (head coll)) (every? pred (tail coll)))
-    (:otherwise nil)))
-
 (defun update (m k f &rest args)
   (let ((current (get m k)))
     (assoc m k (apply f current args))))
@@ -84,16 +80,16 @@
         (assoc obj k (apply #'update-in (get obj k (empty obj)) more f args))
         (assoc obj k (apply f (get obj k) args)))))
 
-(defun filter (pred seq)
+(defun filter (pred sequence)
   (when (keywordp pred) (make-funcallable-keyword pred))
-  (when seq
+  (when-let ((seq (seq sequence)))
     (labels ((filter* (s)
                (when s
                  (let ((v (head s)))
                    (if (funcall pred v)
                        (lseq v (filter* (tail s) ))
                        (filter* (tail s)))))))
-      (filter* (seq seq)))))
+      (filter* seq))))
 
 (defun map (f &rest seqs)
   (when (keywordp f) (make-funcallable-keyword f))
@@ -108,6 +104,11 @@
                      (let ((r (apply* args)))
                        (lseq r (map* (remove-if #'nil? (cl:map 'list #'tail ss)))))))))
         (map* seqs)))))
+
+(defun every? (pred &rest seqs)
+  (let ((same-size? (= 1 (count (set (map #'count seqs))))))
+    (when same-size?
+      (every #'true? (->list (apply #'map pred seqs))))))
 
 (defun mapv (f &rest seqs)
   (into (persistent-vector) (apply #'map f seqs)))
@@ -275,12 +276,6 @@
 
 
 (defun tree-seq (branch? children root)
-  "Returns a lazy sequence of the nodes in a tree, via a depth-first walk.
-   branch? must be a fn of one arg that returns true if passed a node
-   that can have children (but may not).  children must be a fn of one
-   arg that returns a sequence of the children. Will only be called on
-   nodes for which branch? returns true. Root is the root node of the
-  tree."
   (labels ((walk (node)
              (lseq node
                    (when (funcall branch? node)

@@ -12,6 +12,12 @@
 (defun nil? (x)
   (null x))
 
+(defun false? (x)
+  (null x))
+
+(defun true? (x)
+  (not (false? x)))
+
 (defun pos? (n)
   (> n 0))
 

@@ -26,11 +26,12 @@
   (get vector (1- (count vector))))
 
 (defmethod seq ((vector vector))
-  (labels ((next (i)
-             (when (< i (count vector))
-               (let ((value (get vector i)))
-                 (lseq value (next (1+ i)))))))
-    (lseq (first vector) (next 1))))
+  (when (pos? (count vector))
+    (labels ((next (i)
+               (when (< i (count vector))
+                 (let ((value (get vector i)))
+                   (lseq value (next (1+ i)))))))
+      (lseq (first vector) (next 1)))))
 
 (defmethod rest ((vector vector))
   (drop 1 (seq vector)))

@@ -16,6 +16,7 @@
 
 (defconstant +hash+ #\#)
 (defconstant +at+ #\@)
+(defconstant +percent+ #\%)
 (defconstant +left-brace+ #\{)
 (defconstant +right-brace+ #\})
 (defconstant +left-bracket+ #\[)
@@ -49,6 +50,16 @@
 
             (t
              (read input-stream t nil t)))))))
+
+(defun read-hash-table-literal (stream char n-arg)
+  (declare (ignore char n-arg))
+  (loop
+    for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
+    while object
+    collect object into objects
+    finally (return (if (not (empty? objects))
+                        `(assoc (make-hash-table :test #'equalp) ,@objects)
+                        `(make-hash-table :test #'equalp)))))
 
 (defun read-persistent-map-literal (stream char)
   (declare (ignore char))
@@ -108,6 +119,8 @@
 (named-readtables:defreadtable syntax
   (:merge :standard)
   (:macro-char +at+ :dispatch)
+  (:macro-char +percent+ :dispatch)
+  (:dispatch-macro-char +percent+ +left-brace+ #'read-hash-table-literal)
   (:macro-char +right-brace+ #'read-delimiter nil)
   (:macro-char +left-brace+ #'read-persistent-map-literal nil)
   (:dispatch-macro-char +at+ +left-brace+ #'read-transient-map-literal)

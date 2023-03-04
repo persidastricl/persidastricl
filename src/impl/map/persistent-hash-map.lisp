@@ -48,14 +48,16 @@
             (apply #'assoc m kvs)
             m)))
 ;;
-;; for a readable representation use pr (todo)
+;; for a re-readable representation use pr (todo)
 ;;
 (defmethod print-object ((object persistent-hash-map) stream)
-  (let ((more? (first (drop *print-hamt-items* (seq object))))
-        (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
-    (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-        (format stream "{~{~s~^ ~}~@[ ...~]}" items more?)
-        (format stream "(persidastricl:persistent-hash-map ~{~s~^ ~}~@[ ...~])" items more?))))
+  (if-let ((seq (seq object)))
+    (let ((more? (first (drop *print-hamt-items* seq)))
+          (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
+      (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
+          (format stream "{~{~s~^ ~}~@[ ...~]}" items more?)
+          (format stream "(persidastricl:persistent-hash-map ~{~s~^ ~}~@[ ...~])" items more?)))
+    (format stream "{}")))
 
 (defmethod make-load-form ((object persistent-hash-map) &optional env)
   (declare (ignore env))

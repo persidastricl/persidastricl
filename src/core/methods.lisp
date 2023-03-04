@@ -14,23 +14,22 @@
 
 (defgeneric into (obj sequence))
 
-(defmethod into ((l list) sequence)
-  (apply #'conj l (->list sequence)))
+(defmethod into ((lst list) sequence)
+  (if sequence
+      (apply #'conj lst (->list sequence))
+      lst))
 
 (defmethod into ((a array) sequence)
-  (let ( (size (+ (count (->list a)) (count (->list sequence)))))
-    (make-array size :initial-contents (->list (concat (->list a) sequence)))))
+  (if sequence
+      (let ((size (+ (count (->list a)) (count (->list sequence)))))
+        (make-array size :initial-contents (->list (concat (->list a) sequence))))
+      a))
 
 (defmethod into ((s1 string) (s2 string))
   (concatenate 'string s1 s2))
 
-(defmethod into ((obj array) seq)
-  (let* ((lst (->list seq))
-         (size (length lst)))
-    (make-array size :fill-pointer size :initial-contents lst)))
-
-(defmethod into ((obj collection) source)
-  (reduce #'conj (seq source) :initial-value obj))
+(defmethod into ((col collection) sequence)
+  (reduce #'conj (seq sequence) :initial-value col))
 
 (labels ((twople? (item)
            (= (count item) 2))
@@ -44,8 +43,8 @@
                      (twople? item))  :entries)
                (t :non-entries)))))
 
-  (defmethod into ((obj hash-map) source-seq)
-    (let ((seq (seq source-seq)))
+  (defmethod into ((obj hash-map) sequence)
+    (let ((seq (seq sequence)))
       (reduce
        (lambda (m kv-pair)
          (apply #'assoc m kv-pair))
@@ -54,8 +53,8 @@
            (partition-all seq 2))
        :initial-value obj)))
 
-  (defmethod into ((obj hash-table) source-seq)
-    (let ((seq (seq source-seq)))
+  (defmethod into ((obj hash-table) sequence)
+    (let ((seq (seq sequence)))
       (reduce
        (lambda (m kv-pair)
          (setf (gethash (first kv-pair) m) (second kv-pair))
@@ -64,3 +63,21 @@
            (map #'->list seq)
            (partition-all seq 2))
        :initial-value obj))))
+
+
+;; -----
+;;  more equality
+;;
+;; -----
+
+(defmethod == ((s1 lazy-sequence) s2)
+  (or (eq s1 s2)
+      (and (= (count s1) (count s2))
+           (every?
+            (lambda (e1 e2)
+              (== e1 e2))
+            s1
+            (seq s2)))))
+
+(defmethod == (s1 (s2 lazy-sequence))
+  (== s2 s1))

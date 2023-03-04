@@ -67,10 +67,10 @@
      :initial-value ht)))
 
 (defmethod lookup ((ht hash-table) k &optional default)
-  (gethash k m default))
+  (gethash k ht default))
 
 (defmethod get ((ht hash-table) k &optional default)
-  (gethash k m default))
+  (gethash k ht default))
 
 (defmethod assoc ((vec array) index value &rest iv-pairs)
   (labels ((assoc* (v i val)
@@ -115,6 +115,8 @@
   (dolist (k kws) (make-funcallable-keyword k)))
 
 (defmethod print-object ((object hash-table) stream)
-  (let ((more? (first (drop *print-hamt-items* (seq object))))
-        (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
-    (format stream "%{~{~s~^ ~}~@[ ...~]}" items more?)))
+  (if-let ((seq (seq object)))
+    (let ((more? (first (drop *print-hamt-items* seq)))
+          (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
+      (format stream "%{~{~s~^ ~}~@[ ...~]}" items more?))
+    (format Stream "%{}")))

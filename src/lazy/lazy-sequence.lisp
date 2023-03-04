@@ -47,6 +47,8 @@
       (make-array (cl:length lst) :initial-contents lst))))
 
 (defgeneric lazy-seq (obj)
+  (:method (obj) (lazy-seq (list obj)))
+  (:method ((s sequence)) (lazy-seq (coerce s 'list)))
   (:method ((obj function)) (let ((head (funcall obj))) (lseq head (lazy-seq obj))))
   (:method ((obj lazy-sequence)) obj))
 
@@ -108,3 +110,4 @@
 
 (defmethod empty? ((seq lazy-sequence))
   (= (bounded-count 1 seq) 0))
+
