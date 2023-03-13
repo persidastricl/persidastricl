@@ -16,11 +16,13 @@
 
 (defun empty-overflow-node (node)
   "create an overflow node for the type of node we are currently using xxxx-node --> xxx-overflow-node"
-  (-> (type-of node)
-      s:str
-      (s:replace "(?i)node$" "overflow-node")
+  (labels ((replace* (s pattern replacement)
+             (cl-ppcre:regex-replace pattern s replacement :preserve-case t :simple-calls t)))
+    (-> (type-of node)
+      str
+      (replace* "(?i)node$" "overflow-node")
       read-from-string
-      make-instance))
+      make-instance)))
 
 (defun empty-node (node &key hash depth)
   "given the current node and the context of the caller, determine if we

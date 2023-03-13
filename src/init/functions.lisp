@@ -86,3 +86,24 @@
 
 (defmacro alias (name fn)
   `(setf (fdefinition ',name) #',fn))
+
+(defgeneric to-string (obj)
+  (:method (obj) (format nil "~s" (or obj "")))
+  (:method ((obj (eql nil))) "")
+  (:method ((obj character)) (format nil "~a" (or obj "")))
+  (:method ((s string)) s))
+
+(defun str (&rest things)
+  "take a list and concatenate the elements into a string"
+  (cl:reduce
+   #'(lambda (r &optional s)
+       (concatenate 'string r (to-string s)))
+   things
+   :initial-value ""))
+
+(defun ->keyword (s)
+  (intern (string-upcase s) "KEYWORD"))
+
+(defun partial (f &rest initial-args)
+  (lambda (&rest more-args)
+    (apply f (append initial-args more-args))))

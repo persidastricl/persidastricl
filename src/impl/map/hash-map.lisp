@@ -54,6 +54,8 @@
 (defmethod ->alist ((hm hash-map))
   (map #'->cons hm))
 
+(defmethod with-meta ((object hamt) (meta (eql nil))) object)
+
 (defmethod with-meta ((object hamt) (meta hash-map))
   (with-slots (root) object
     (make-instance (type-of object) :root root :meta meta)))
@@ -61,14 +63,14 @@
 (defun select-keys (map keyseq)
   (labels ((select-keys* (m keys)
              (if keys
-                 (let ((k (first keys)))
+                 (let ((k (head keys)))
                    (select-keys*
                     (if-let ((v (get map k)))
                       (assoc m k v)
                       m)
                     (tail keys)))
-                 (with-meta m (meta map)))))
-    (select-keys* (empty map) keyseq)))
+                 m)))
+    (with-meta (select-keys* (empty map) (seq keyseq)) (meta map))))
 
 (defmacro with-funcallable-map ((symbol definition) &body body)
   `(let ((,symbol ,definition))

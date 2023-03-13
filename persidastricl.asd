@@ -31,8 +31,7 @@
                (:module "init"
                 :pathname "src/init"
                 :serial t
-                :components ((:file "string")
-                             (:file "bits")
+                :components ((:file "bits")
                              (:file "hash")
                              (:file "vector")
                              (:file "equality")
@@ -155,7 +154,10 @@
                 :pathname "src/core"
                 :serial t
                 :components ((:file "methods")
-                             (:file "functions")))
+                             (:file "functions")
+                             (:file "string")
+                             (:file "set")
+                             (:file "walk")))
 
                (:module "sample-seqs"
                 :pathname "src/lazy"

@@ -1,20 +1,5 @@
 ;;;; package.lisp
 
-(defpackage #:string
-  (:nicknames #:s #:str)
-  (:use #:cl)
-  (:shadow #:cl #:replace)
-  (:export #:to-string
-           #:str
-           #:join
-           #:condense
-           #:trim
-           #:blank?
-           #:replace
-           #:replace-all
-           #:->keyword
-           #:includes?))
-
 (defpackage #:bits
   (:nicknames #:bit #:b)
   (:use #:cl)
@@ -75,6 +60,7 @@
    #:->plist
    #:->vals
    #:->vector
+   #:->keyword
    #:-vec
    #:==
    #:assoc
@@ -83,6 +69,7 @@
    #:bounded-count
    #:butlast
    #:collection?
+   #:comment
    #:concat
    #:conj
    #:cons
@@ -100,6 +87,7 @@
    #:empty?
    #:even?
    #:every?
+   #:false?
    #:filter
    #:filterv
    #:first
@@ -129,7 +117,6 @@
    #:lseq
    #:merge
    #:merge-with
-   #:map-entry
    #:map-indexed
    #:map?
    #:mapcat
@@ -144,6 +131,7 @@
    #:nil?
    #:odd?
    #:only-valid-values
+   #:partial
    #:partition
    #:partition-all
    #:partition-by
@@ -166,11 +154,13 @@
    #:sequential?
    #:set
    #:set?
+   #:select-keys
    #:some
    #:some-fn
    #:some?
    #:split-at
    #:split-with
+   #:str
    #:string?
    #:swap!
    #:syntax
@@ -185,6 +175,7 @@
    #:transient-hash-set
    #:transient-vector
    #:tree-seq
+   #:true?
    #:update
    #:update-in
    #:vec
@@ -192,4 +183,127 @@
    #:with-meta
    #:zero?
    #:zipmap
+   ))
+
+
+(defpackage #:string
+  (:nicknames #:s #:str)
+  (:use #:cl #:persidastricl)
+  (:shadow #:cl #:replace #:reverse)
+  (:shadowing-import-from #:persidastricl
+                          #:assoc
+                          #:atom
+                          #:butlast
+                          #:cons
+                          #:count
+                          #:delete
+                          #:filter
+                          #:first
+                          #:get
+                          #:last
+                          #:length
+                          #:map
+                          #:merge
+                          #:pop
+                          #:reduce
+                          #:remove
+                          #:rest
+                          #:set
+                          #:some
+                          #:vector)
+  (:export #:blank?
+           #:capitalize
+           #:condense
+           #:ends-with?
+           #:escape
+           #:includes?
+           #:index-of
+           #:join
+           #:last-index-of
+           #:lower-case
+           #:re-quote-replacement
+           #:replace
+           #:replace-first
+           #:reverse
+           #:split
+           #:split-lines
+           #:starts-with?
+           #:trim
+           #:trim-newline
+           #:triml
+           #:trimr
+           #:upper-case))
+
+(defpackage #:set
+  (:use #:cl #:persidastricl)
+  (:shadow #:cl #:union #:intersection)
+  (:shadowing-import-from #:persidastricl
+                          #:assoc
+                          #:atom
+                          #:butlast
+                          #:cons
+                          #:count
+                          #:delete
+                          #:filter
+                          #:first
+                          #:get
+                          #:last
+                          #:length
+                          #:map
+                          #:merge
+                          #:pop
+                          #:reduce
+                          #:remove
+                          #:rest
+                          #:set
+                          #:some
+                          #:vector)
+  (:export #:difference
+           #:index
+           #:intersection
+           #:join
+           #:map-invert
+           #:project
+           #:rename
+           #:rename-keys
+           #:select
+           #:subset?
+           #:superset?
+           #:union
+           ))
+
+(defpackage #:walk
+  (:use #:cl #:persidastricl)
+  (:shadowing-import-from #:persidastricl
+                          #:assoc
+                          #:atom
+                          #:butlast
+                          #:cons
+                          #:count
+                          #:delete
+                          #:filter
+                          #:first
+                          #:get
+                          #:last
+                          #:length
+                          #:map
+                          #:merge
+                          #:pop
+                          #:reduce
+                          #:remove
+                          #:rest
+                          #:set
+                          #:some
+                          #:vector)
+  (:export
+   #:keywordize-keys
+   #:macroexpand-all
+   #:postwalk
+   #:postwalk-demo
+   #:postwalk-replace
+   #:prewalk
+   #:prewalk-demo
+   #:prewalk-replace
+   #:stringify-keys
+   #:walk
    ))
