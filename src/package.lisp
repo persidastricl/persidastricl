@@ -36,7 +36,10 @@
            #:atom
            #:cons
            #:first
+           #:second
+           #:third
            #:rest
+           #:nth
            #:last
            #:butlast
            #:assoc
@@ -91,6 +94,9 @@
    #:filter
    #:filterv
    #:first
+   #:second
+   #:third
+   #:nth
    #:flatten
    #:fn
    #:fnil
@@ -200,6 +206,9 @@
                           #:delete
                           #:filter
                           #:first
+                          #:second
+                          #:third
+                          #:nth
                           #:get
                           #:last
                           #:length
@@ -247,6 +256,9 @@
                           #:delete
                           #:filter
                           #:first
+                          #:second
+                          #:third
+                          #:nth
                           #:get
                           #:last
                           #:length
@@ -284,6 +296,9 @@
                           #:delete
                           #:filter
                           #:first
+                          #:second
+                          #:third
+                          #:nth
                           #:get
                           #:last
                           #:length

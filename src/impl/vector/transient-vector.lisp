@@ -8,7 +8,7 @@
 (in-package #:persidastricl)
 
 (defclass transient-vector (vector) ()
-  (:default-initargs :root (make-instance 'transient-vector-node) :tail (make-instance 'transient-vector-leaf-node) :tail-offset 0))
+  (:default-initargs :root (make-instance 'transient-vector-node) :tail-end (make-instance 'transient-vector-leaf-node) :tail-offset 0))
 
 (defmethod cons (value (tv transient-vector))
   (labels ((new-root? (node)
@@ -17,9 +17,9 @@
                     (if (> level 1)
                         (new-root? (elt data 31))
                         t)))))
-    (with-slots (root count tail-offset tail) tv
+    (with-slots (root count tail-offset tail-end) tv
       (let ((index count)
-            (new-tail? (= (count tail) 32)))
+            (new-tail? (= (count tail-end) 32)))
 
         (if new-tail?
             (let* ((new-tail (cons value (make-instance 'transient-vector-leaf-node)))
@@ -27,20 +27,20 @@
                                  (let ((nr (make-instance 'transient-vector-node :level (1+ (level root)))))
                                    (with-slots (data) nr
                                      (vector-push root data))
-                                   (add-leaf-node nr tail tail-offset))
-                                 (add-leaf-node root tail tail-offset))))
+                                   (add-leaf-node nr tail-end tail-offset))
+                                 (add-leaf-node root tail-end tail-offset))))
               (setf root new-root
-                    tail new-tail
+                    tail-end new-tail
                     tail-offset index))
-            ;; no need for a new tail
-            (cons value tail))
+            ;; no need for a new tail-end
+            (cons value tail-end))
 
         (setf count (1+ count)))))
   tv)
 
 (defmethod pop ((tv transient-vector))
-  (with-slots (root count tail-offset tail) tv
-    (let ((new-tail (pop tail)))
+  (with-slots (root count tail-offset tail-end) tv
+    (let ((new-tail (pop tail-end)))
       (if (and (> tail-offset 0) (= (count new-tail) 0))
           (let* ((new-tail-offset (max 0 (- tail-offset 32)))
                  (leaf-node (get-leaf-node root new-tail-offset))
@@ -48,9 +48,9 @@
             (setf root (if (= (count new-root) 1)
                            (elt (slot-value new-root 'data) 0)
                            new-root)
-                  tail leaf-node
+                  tail-end leaf-node
                   tail-offset new-tail-offset))
-          (setf tail new-tail)))
+          (setf tail-end new-tail)))
     (setf count (1- count)))
   tv)
 
@@ -75,12 +75,12 @@
     `(persidastricl::transient-vector ,@items)))
 
 (defmethod assoc ((tv transient-vector) index item &rest kv-pairs)
-  (with-slots (root tail tail-offset) tv
+  (with-slots (root tail-end tail-offset) tv
     (cl:reduce
      (lambda (tv kv-pair)
        (destructuring-bind (idx item) kv-pair
          (if (>= idx tail-offset)
-             (setf tail (add tail item :index idx))
+             (setf tail-end (add tail-end item :index idx))
              (setf root (add root item :index idx)))
          tv))
      (->list (partition-all (list* index item kv-pairs) 2))

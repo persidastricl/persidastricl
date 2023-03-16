@@ -48,6 +48,17 @@
   (:method ((lst list)) (cl:rest lst))
   (:method ((seq sequence)) (rest (coerce seq 'list))))
 
+(defgeneric second (thing)
+  (:method (thing) (first (rest thing))))
+
+(defgeneric third (thing)
+  (:method (thing) (first (rest (rest thing)))))
+
+(defgeneric nth (thing n &optional default)
+  (:method (thing n &optional (default nil)) (or (cl:nth n thing) default))
+  (:method ((l list) n &optional (default nil)) (or (cl:nth n l) default))
+  (:method ((s sequence) n &optional (default nil)) (nth (coerce s 'list) n default)))
+
 (defgeneric next (thing)
   (:method (thing) (cl:rest thing))
   (:method ((lst list)) (cl:rest lst))

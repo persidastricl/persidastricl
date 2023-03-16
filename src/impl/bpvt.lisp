@@ -9,7 +9,7 @@
 
 (defclass bpvt (counted collection seqable)
   ((root :initarg :root :reader root)
-   (tail :initarg :tail :reader tail)
+   (tail-end :initarg :tail-end :reader tail-end)
    (tail-offset :initarg :tail-offset :reader tail-offset)))
 
 (defmethod cl-murmurhash:murmurhash ((object bpvt) &key (seed cl-murmurhash:*default-seed*) mix-only)

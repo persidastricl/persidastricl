@@ -9,22 +9,8 @@ Things to do:
    -- need to iterate on the values in a collection
    -- need to iterate on the ds structure itself (the nodes) (for class changes)
 
-*  make a transient data structure from a persistent one (just add the data to a new transient instance)
-*  make a persistent data strucure out of a transient (use change-class ?? for speed)
-
-*  add as many of clojure's core functions to the library as we can (don't get in a hurry ... add things in a way that fit it will with lisp as-is)
-
-* lazy-seq's
- -- resultset-seq
- -- ???
+*  add clojure's destructuring if possible, then add `for` and `letd` (a destructuring version of let??) (or 'dlet' ??), and 'defund' (a destructuring version of defun?? (or defn?? ddefun??))
+*
 
 * hash maps need to be able to take 'nil as a value;
- -- right now the partition cons's the k with the nil which creates (k) rather
-
-;; long term things to think about
-
-*  rewrite the matcher program in lisp using new ds's and see how it feels works
-*  at some point do we want to rewrite the backend of clockpartners in persidastricl/common-lisp and have a re-frame or reagent front end???
-
-*  at this point (if all this is implemented) open-source it (BSD license) ??????
-
+ -- right now the partition cons's the k with the nil which creates (k) rather than (k nil) :-(

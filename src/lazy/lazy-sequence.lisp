@@ -25,6 +25,9 @@
 (defmethod rest ((seq lazy-sequence))
   (when-let ((tail (slot-value seq 'tail))) (force tail)))
 
+(defmethod nth ((seq lazy-sequence) n &optional (default nil))
+  (or (first (drop n seq)) default))
+
 (defmethod next ((seq lazy-sequence))
   (when-let ((tail (slot-value seq 'tail))) (force tail)))
 

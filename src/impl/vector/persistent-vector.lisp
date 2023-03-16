@@ -8,7 +8,7 @@
 (in-package #:persidastricl)
 
 (define-immutable-class persistent-vector (vector) ()
-  (:default-initargs :root (make-instance 'persistent-vector-node) :tail (make-instance 'persistent-vector-leaf-node) :tail-offset 0))
+  (:default-initargs :root (make-instance 'persistent-vector-node) :tail-end (make-instance 'persistent-vector-leaf-node) :tail-offset 0))
 
 (defmethod cons (value (pv persistent-vector))
   (labels ((new-root? (node)
@@ -17,24 +17,24 @@
                     (if (> level 1)
                         (new-root? (elt data 31))
                         t)))))
-    (with-slots (root count tail-offset tail) pv
+    (with-slots (root count tail-offset tail-end) pv
       (let ((index count)
-            (new-tail? (= (count tail) 32)))
+            (new-tail? (= (count tail-end) 32)))
 
         (if new-tail?
             (let* ((new-tail (cons value (make-instance 'persistent-vector-leaf-node)))
                    (new-root (if (new-root? root)
                                  (let ((nr (make-instance 'persistent-vector-node :data (make-array 1 :initial-element root)
                                                                                   :level (1+ (level root)))))
-                                   (add-leaf-node nr tail tail-offset))
-                                 (add-leaf-node root tail tail-offset))))
-              (make-instance 'persistent-vector :root new-root :tail new-tail :tail-offset index :count (1+ count)))
+                                   (add-leaf-node nr tail-end tail-offset))
+                                 (add-leaf-node root tail-end tail-offset))))
+              (make-instance 'persistent-vector :root new-root :tail-end new-tail :tail-offset index :count (1+ count)))
 
-            (make-instance 'persistent-vector :root root :tail (cons value tail) :tail-offset tail-offset :count (1+ count)))))))
+            (make-instance 'persistent-vector :root root :tail-end (cons value tail-end) :tail-offset tail-offset :count (1+ count)))))))
 
 (defmethod pop ((pv persistent-vector))
-  (with-slots (root count tail-offset tail) pv
-    (let ((new-tail (pop tail)))
+  (with-slots (root count tail-offset tail-end) pv
+    (let ((new-tail (pop tail-end)))
       (if (and (> tail-offset 0) (= (count new-tail) 0))
           (let* ((new-tail-offset (max 0 (- tail-offset 32)))
                  (leaf-node (get-leaf-node root new-tail-offset))
@@ -43,10 +43,10 @@
                            :root (if (= (count new-root) 1)
                                      (elt (slot-value new-root 'data) 0)
                                      new-root)
-                           :tail leaf-node
+                           :tail-end leaf-node
                            :tail-offset new-tail-offset
                            :count (1- count)))
-          (make-instance 'persistent-vector :root root :tail new-tail :tail-offset tail-offset :count (1- count))))))
+          (make-instance 'persistent-vector :root root :tail-end new-tail :tail-offset tail-offset :count (1- count))))))
 
 (defgeneric vec (object)
   (:method (obj) (into (persistent-vector) (seq obj))))
@@ -75,17 +75,17 @@
 (defmethod assoc ((pv persistent-vector) index item &rest kv-pairs)
   (cl:reduce
    (lambda (pv kv-pair)
-     (with-slots (root tail count tail-offset) pv
+     (with-slots (root tail-end count tail-offset) pv
        (destructuring-bind (idx item) kv-pair
          (cond
            ((= idx (count pv))
             (cons item pv))
 
            ((>= idx tail-offset)
-            (make-instance (type-of pv) :root root :count count :tail-offset tail-offset :tail (add tail item :index idx)))
+            (make-instance (type-of pv) :root root :count count :tail-offset tail-offset :tail-end (add tail-end item :index idx)))
 
            (t
-            (make-instance (type-of pv) :root (add root item :index idx) :count count :tail-offset tail-offset :tail tail))))))
+            (make-instance (type-of pv) :root (add root item :index idx) :count count :tail-offset tail-offset :tail-end tail-end))))))
    (->list (partition-all (list* index item kv-pairs) 2))
    :initial-value pv))
 
@@ -93,12 +93,12 @@
                                                         (new persistent-vector)
                                                         &key)
   (slot-makunbound new 'root)
-  (slot-makunbound new 'tail)
+  (slot-makunbound new 'tail-end)
   (slot-makunbound new 'tail-offset)
   (slot-makunbound new 'count)
 
-  (with-slots (root tail tail-offset count) old
+  (with-slots (root tail-end tail-offset count) old
     (setf (slot-value new 'root) (change-class root 'persistent-vector-node))
-    (setf (slot-value new 'tail) (change-class tail 'persistent-vector-leaf-node))
+    (setf (slot-value new 'tail-end) (change-class tail-end 'persistent-vector-leaf-node))
     (setf (slot-value new 'tail-offset) tail-offset)
     (setf (slot-value new 'count) count)))
