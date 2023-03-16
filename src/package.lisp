@@ -96,6 +96,7 @@
    #:fnil
    #:get
    #:get-in
+   #:group-by
    #:inc
    #:instance?
    #:int?
