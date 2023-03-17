@@ -83,6 +83,7 @@
    #:deref
    #:disj
    #:dissoc
+   #:dlet
    #:drop
    #:drop-last
    #:drop-while
@@ -323,3 +324,32 @@
    #:stringify-keys
    #:walk
    ))
+
+
+
+(defpackage #:user
+  (:use #:cl #:persidastricl #:arrow-macros)
+  (:shadowing-import-from #:persidastricl
+                          #:assoc
+                          #:atom
+                          #:butlast
+                          #:cons
+                          #:count
+                          #:delete
+                          #:filter
+                          #:first
+                          #:second
+                          #:third
+                          #:nth
+                          #:get
+                          #:last
+                          #:length
+                          #:map
+                          #:merge
+                          #:pop
+                          #:reduce
+                          #:remove
+                          #:rest
+                          #:set
+                          #:some
+                          #:vector))

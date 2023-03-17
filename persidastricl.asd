@@ -155,6 +155,7 @@
                 :serial t
                 :components ((:file "methods")
                              (:file "functions")
+                             (:file "destructure")
                              (:file "string")
                              (:file "set")
                              (:file "walk")))
@@ -162,7 +163,12 @@
                (:module "sample-seqs"
                 :pathname "src/lazy"
                 :serial t
-                :components ((:file "sequences"))))
+                :components ((:file "sequences")))
+
+               (:module "user"
+                :pathname "src/user"
+                :serial t
+                :components ((:file "user"))))
 
   :in-order-to ((test-op (test-op #:persidastricl/test))))
 
