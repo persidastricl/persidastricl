@@ -9,6 +9,8 @@
 
 (in-package #:persidastricl)
 
+(named-readtables:in-readtable persidastricl:syntax)
+
 (defun memoize (f)
   (let ((mem (atom (persistent-hash-map))))
     (lambda (&rest args)
@@ -360,3 +362,7 @@
               m2
               :initial-value m1)))
     (reduce #'merge* (filter #'some? ms))))
+
+(defun slurp (f)
+  (with-open-file (is f :if-does-not-exist nil)
+    (str:join #\NEWLINE (->list (line-seq is)))))

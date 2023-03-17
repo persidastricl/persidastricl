@@ -163,6 +163,7 @@
    #:set
    #:set?
    #:select-keys
+   #:slurp
    #:some
    #:some-fn
    #:some?
