@@ -42,17 +42,19 @@
                          (typep item 'persistent-vector)
                          (typep item 'list))
                      (twople? item))  :entries)
-               (t :non-entries)))))
+               (t :non-entries))))
+         (prepare-sequence (seq)
+           (case (classify seq)
+             (:alist  (map (lambda (dp) (list (car dp) (cdr dp))) seq))
+             (:entries (map #'->list seq))
+             (:non-entries (partition-all seq 2)))))
 
   (defmethod into ((obj hash-map) sequence)
     (let ((seq (seq sequence)))
       (reduce
        (lambda (m kv-pair)
          (apply #'assoc m kv-pair))
-       (case (classify seq)
-         (:alist  (map (lambda (dp) (list (car dp) (cdr dp))) seq))
-         (:entries (map #'->list seq))
-         (partition-all seq 2))
+       (prepare-sequence seq)
        :initial-value obj)))
 
   (defmethod into ((obj hash-table) sequence)
@@ -61,12 +63,8 @@
        (lambda (m kv-pair)
          (setf (gethash (first kv-pair) m) (second kv-pair))
          m)
-       (case (classify seq)
-         (:alist  (map (lambda (dp) (list (car dp) (cdr dp))) seq))
-         (:entries (map #'->list seq))
-         (partition-all seq 2))
+       (prepare-sequence seq)
        :initial-value obj))))
-
 
 ;; -----
 ;;  more equality
