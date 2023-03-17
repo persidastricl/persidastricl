@@ -36,6 +36,7 @@
          (classify (s)
            (let ((item (first s)))
              (cond
+               ((dotted-pair? item) :alist)
                ((and (or (typep item 'entry)
                          (typep item 'simple-array)
                          (typep item 'persistent-vector)
@@ -48,9 +49,10 @@
       (reduce
        (lambda (m kv-pair)
          (apply #'assoc m kv-pair))
-       (if (== (classify seq) :entries)
-           (map #'->list seq)
-           (partition-all seq 2))
+       (case (classify seq)
+         (:alist  (map (lambda (dp) (list (car dp) (cdr dp))) seq))
+         (:entries (map #'->list seq))
+         (partition-all seq 2))
        :initial-value obj)))
 
   (defmethod into ((obj hash-table) sequence)
@@ -59,9 +61,10 @@
        (lambda (m kv-pair)
          (setf (gethash (first kv-pair) m) (second kv-pair))
          m)
-       (if (== (classify seq) :entries)
-           (map #'->list seq)
-           (partition-all seq 2))
+       (case (classify seq)
+         (:alist  (map (lambda (dp) (list (car dp) (cdr dp))) seq))
+         (:entries (map #'->list seq))
+         (partition-all seq 2))
        :initial-value obj))))
 
 
