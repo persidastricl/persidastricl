@@ -50,14 +50,22 @@
 ;;
 ;; for a re-readable representation use pr (todo)
 ;;
-(defmethod print-object ((object persistent-hash-map) stream)
-  (if-let ((seq (seq object)))
-    (let ((more? (first (drop *print-hamt-items* seq)))
-          (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
-      (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-          (format stream "{~{~s~^ ~}~@[ ...~]}" items more?)
-          (format stream "(persidastricl:persistent-hash-map ~{~s~^ ~}~@[ ...~])" items more?)))
-    (format stream "{}")))
+(defun pprint-persistent-hash-map (stream phm &rest other-args)
+  (declare (ignore other-args))
+  (pprint-logical-block (stream (->list phm) :prefix "{" :suffix "}")
+    (pprint-exit-if-list-exhausted)
+    (loop
+      (write (pprint-pop) :stream stream)
+      (pprint-exit-if-list-exhausted)
+      (write-char #\space stream)
+      (pprint-newline :fill stream))))
+
+(defmethod print-object ((phm persistent-hash-map) stream)
+  (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
+      (format stream "~/persidastricl::pprint-persistent-hash-map/" phm)
+      (format stream "(persidastricl:persistent-hash-map ~{~s~^ ~})" (->list (->plist phm)))))
+
+(set-pprint-dispatch 'persistent-hash-map 'pprint-persistent-hash-map)
 
 (defmethod make-load-form ((object persistent-hash-map) &optional env)
   (declare (ignore env))

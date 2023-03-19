@@ -80,6 +80,7 @@
    #:count
    #:cycle
    #:dec
+   #:def
    #:deref
    #:disj
    #:dissoc
@@ -115,6 +116,7 @@
    #:juxt
    #:keep
    #:keep-indexed
+   #:key
    #:last
    #:lazy-seq
    #:length
@@ -187,6 +189,7 @@
    #:true?
    #:update
    #:update-in
+   #:value
    #:vec
    #:vector?
    #:with-meta
@@ -326,7 +329,33 @@
    #:walk
    ))
 
-
+(defpackage #:json
+  (:use #:cl #:persidastricl #:json-streams)
+  (:shadowing-import-from #:persidastricl
+                          #:assoc
+                          #:atom
+                          #:butlast
+                          #:cons
+                          #:count
+                          #:delete
+                          #:filter
+                          #:first
+                          #:second
+                          #:third
+                          #:nth
+                          #:get
+                          #:last
+                          #:length
+                          #:map
+                          #:merge
+                          #:pop
+                          #:reduce
+                          #:remove
+                          #:rest
+                          #:set
+                          #:some
+                          #:vector)
+  (:export #:decode-file #:decode-string))
 
 (defpackage #:user
   (:use #:cl #:persidastricl #:arrow-macros)

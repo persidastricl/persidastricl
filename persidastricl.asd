@@ -18,6 +18,7 @@
                #:cl-ppcre
                #:cl-murmurhash
                #:closer-mop
+               #:json-streams
                #:named-readtables
                #:sip-hash
                #:stmx)
@@ -158,7 +159,8 @@
                              (:file "destructure")
                              (:file "string")
                              (:file "set")
-                             (:file "walk")))
+                             (:file "walk")
+                             (:file "json")))
 
                (:module "sample-seqs"
                 :pathname "src/lazy"
@@ -186,10 +188,8 @@
                              (:file "entry")
                              (:file "vector")
                              (:file "bitmap-vector")
-                             (:file "transient-hash-map")
-                             (:file "persistent-hash-map")
-                             (:file "transient-hash-set")
-                             (:file "persistent-hash-set"))))
+                             (:file "hash-map")
+                             (:file "hash-set"))))
 
   :perform (test-op (o s)
                     (uiop:symbol-call :fiveam :run! (uiop:find-symbol* :master-suite :persidastricl))))

@@ -66,7 +66,7 @@
 (defun assoc-in (obj path v)
   (let* ((k (first path))
          (more (rest path))
-         (next (get obj k (empty obj))))
+         (next (or (get obj k) (empty obj))))
     (if more
         (assoc obj k (assoc-in next more v))
         (assoc obj k v))))
@@ -79,7 +79,7 @@
   (let* ((k (first path))
          (more (rest path)))
     (if (first more)
-        (assoc obj k (apply #'update-in (get obj k (empty obj)) more f args))
+        (assoc obj k (apply #'update-in (or (get obj k) (empty obj)) more f args))
         (assoc obj k (apply f (get obj k) args)))))
 
 (defun filter (pred sequence)

@@ -41,11 +41,22 @@
       (apply #'conj s items))
     s))
 
+(defun pprint-transient-hash-set (stream ths &rest other-args)
+  (declare (ignore other-args))
+  (pprint-logical-block (stream (->list ths) :prefix "@#{" :suffix "}")
+    (pprint-exit-if-list-exhausted)
+    (loop
+      (write (pprint-pop) :stream stream)
+      (pprint-exit-if-list-exhausted)
+      (write-char #\space stream)
+      (pprint-newline :fill stream))))
+
 (defmethod print-object ((object transient-hash-set) stream)
-  (let ((items (->list object)))
-    (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-        (format stream "@#{~{~s~^ ~}}" items)
-        (format stream "(persidastricl:transient-hash-set ~{~s~^ ~})" items))))
+  (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
+      (format stream "~/persidastricl::pprint-transient-hash-set/" object)
+      (format stream "(persidastricl:transient-hash-set ~{~s~^ ~})" (->list object))))
+
+(set-pprint-dispatch 'transient-hash-set 'pprint-transient-hash-set)
 
 (defmethod make-load-form ((object transient-hash-set) &optional env)
   (declare (ignore env))

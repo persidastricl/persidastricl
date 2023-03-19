@@ -64,10 +64,22 @@
    items
    :initial-value (make-instance 'transient-vector)))
 
+(defun pprint-transient-vector (stream pv &rest other-args)
+  (declare (ignore other-args))
+  (pprint-logical-block (stream (->list pv) :prefix "@[" :suffix "]")
+    (pprint-exit-if-list-exhausted)
+    (loop
+      (write (pprint-pop) :stream stream)
+      (pprint-exit-if-list-exhausted)
+      (write-char #\space stream)
+      (pprint-newline :fill stream))))
+
 (defmethod print-object ((obj transient-vector) stream)
   (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-      (format stream "@[~{~s~^ ~}]" (->list obj))
+      (format stream "~/persidastricl::pprint-transient-vector/" obj)
       (format stream "(persidastricl:transient-vector  ~{~s~^ ~})" (->list obj))))
+
+(set-pprint-dispatch 'transient-vector 'pprint-transient-vector)
 
 (defmethod make-load-form ((obj transient-vector) &optional env)
   (declare (ignore env))

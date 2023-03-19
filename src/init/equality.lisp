@@ -48,11 +48,18 @@
 (defmethod == ((s1 string) (s2 string))
   (string= s1 s2))
 
-(defmethod == ((v1 simple-vector) (v2 simple-vector))
-  (or (eq v1 v2)
-      (and (== (cl:length v1) (cl:length v2))
-           (every
-            (lambda (e1 e2)
-              (== e1 e2))
-            v1
-            v2))))
+(defmethod == ((v1 sequence) (v2 sequence))
+  (cond
+    ((and (dotted-pair? v1)
+          (dotted-pair? v2)) (and (== (car v1) (car v2))
+                                  (== (cdr v1) (cdr v2))))
+    ((dotted-pair? v2) nil)
+    ((dotted-pair? v1) nil)
+
+    (t (or (eq v1 v2)
+           (and (== (cl:length v1) (cl:length v2))
+                (every
+                 (lambda (e1 e2)
+                   (== e1 e2))
+                 v1
+                 v2))))))

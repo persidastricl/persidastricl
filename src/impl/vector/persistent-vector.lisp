@@ -61,11 +61,22 @@
    items
    :initial-value (make-instance 'persistent-vector)))
 
+(defun pprint-persistent-vector (stream pv &rest other-args)
+  (declare (ignore other-args))
+  (pprint-logical-block (stream (->list pv) :prefix "[" :suffix "]")
+    (pprint-exit-if-list-exhausted)
+    (loop
+      (write (pprint-pop) :stream stream)
+      (pprint-exit-if-list-exhausted)
+      (write-char #\space stream)
+      (pprint-newline :fill stream))))
+
 (defmethod print-object ((object persistent-vector) stream)
-  (let ((items (->list object)))
-    (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-        (format stream "[~{~s~^ ~}]" items)
-        (format stream "(persidastricl:persistent-vector ~{~s~^ ~})" items))))
+  (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
+      (format stream "~/persidastricl::pprint-persistent-vector/" object)
+      (format stream "(persidastricl:persistent-vector ~{~s~^ ~})" (->list object))))
+
+(set-pprint-dispatch 'persistent-vector 'pprint-persistent-vector)
 
 (defmethod make-load-form ((object persistent-vector) &optional env)
   (declare (ignore env))

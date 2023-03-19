@@ -51,3 +51,6 @@
 
 (defmacro comment (&body body)
   (declare (ignore body)))
+
+(defmacro def (name value &optional doc-string)
+  `(defparameter ,name ,value ,doc-string))

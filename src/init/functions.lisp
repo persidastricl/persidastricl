@@ -102,7 +102,13 @@
    :initial-value ""))
 
 (defun ->keyword (s)
-  (intern (string-upcase s) "KEYWORD"))
+  (if (keywordp s) s
+      (let* ((s (str s))
+             (s (cond
+                  ((every #'lower-case-p s) (string-upcase s))
+                  ((every #'upper-case-p s) (string-downcase s))
+                  (t s))))
+        (intern s "KEYWORD"))))
 
 (defun partial (f &rest initial-args)
   (lambda (&rest more-args)

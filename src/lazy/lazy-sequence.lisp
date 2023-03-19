@@ -90,11 +90,21 @@
 
 (defvar *print-lazy-items* 10)
 
-(defmethod print-object ((object lazy-sequence) stream)
-  (let ((items (->list (take *print-lazy-items* object)))
-        (more (first (drop *print-lazy-items* object))))
-    (format stream "(~{~s~^ ~}~@[ ...~])" items more)))
+(defun pprint-lazy-sequence (stream ls &rest other-args)
+  (declare (ignore other-args))
+  (let ((*print-length* (min *print-lazy-items* (or *print-lines* *print-lazy-items*))))
+    (pprint-logical-block (stream (->list (take (inc  *print-length*) ls)) :prefix "(" :suffix ")")
+      (pprint-exit-if-list-exhausted)
+      (loop
+        (write (pprint-pop) :stream stream)
+        (pprint-exit-if-list-exhausted)
+        (write-char #\space stream)
+        (pprint-newline :fill stream)))))
 
+(defmethod print-object ((object lazy-sequence) stream)
+  (format stream "~/persidastricl::pprint-lazy-sequence/" object))
+
+(set-pprint-dispatch 'lazy-sequence 'pprint-lazy-sequence)
 
 (defmethod count ((object lazy-sequence))
   "Danger! Endless loop on infinite lazy sequences! Use bounded-count for those"

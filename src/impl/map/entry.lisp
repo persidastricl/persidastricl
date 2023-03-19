@@ -55,10 +55,19 @@
 (defmethod ->cons ((entry entry))
   (cons (key entry) (value entry)))
 
-(defmethod print-object ((obj Entry) stream)
+(defun pprint-map-entry (stream entry &rest other-args)
+  (declare (ignore other-args))
+  (pprint-logical-block (stream (->list entry))
+    (write (pprint-pop) :stream stream)
+    (write-char #\space stream)
+    (write (pprint-pop) :stream stream)))
+
+(defmethod print-object ((obj entry) stream)
   (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-      (format stream "[~s ~s]" (key obj) (value obj))
+      (format stream "~/persidastricl::pprint-map-entry/" obj)
       (format stream "(persidastricl::map-entry ~s ~s)" (key obj) (value obj))))
+
+(set-pprint-dispatch 'entry 'pprint-map-entry)
 
 (defmethod make-load-form ((obj Entry) &optional env)
   (declare (ignore env))

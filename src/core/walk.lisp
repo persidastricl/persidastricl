@@ -43,7 +43,7 @@
                (if (string? k)
                    (p::map-entry (->keyword k) v)
                    e))))
-    (postwalk (Lambda (x) (if (map? x) (into {} (map #'keywordize-entry x)) x)) m)))
+    (postwalk (lambda (x) (if (map? x) (into {} (map #'keywordize-entry x)) x)) m)))
 
 (defun stringify-keys (m)
   (labels ((stringify-entry (e)
@@ -52,7 +52,7 @@
                (if (keywordp k)
                    (p::map-entry (str:lower-case (symbol-name k)) v)
                    e))))
-    (postwalk (Lambda (x) (if (map? x) (into {} (map #'stringify-entry x)) x)) m)))
+    (postwalk (lambda (x) (if (map? x) (into {} (map #'stringify-entry x)) x)) m)))
 
 (defun prewalk-demo (form)
   (prewalk (lambda (x) (princ "Walked: ") (princ (format nil "~s~%" x)) x) form))

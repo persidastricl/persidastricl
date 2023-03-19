@@ -48,6 +48,9 @@
 (defmethod get ((lst list) position &optional default)
   (lookup lst position default))
 
+(defmethod empty ((ht hash-table))
+  (make-hash-table :test #'equalp))
+
 (defmethod assoc ((ht hash-table) k1 v1 &rest kv-pairs)
   (labels ((assoc* (m k v)
              (setf (gethash k m) v)
@@ -114,9 +117,20 @@
 (defun make-funcallable-keywords (&rest kws)
   (dolist (k kws) (make-funcallable-keyword k)))
 
-(defmethod print-object ((object hash-table) stream)
-  (if-let ((seq (seq object)))
-    (let ((more? (first (drop *print-hamt-items* seq)))
-          (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
-      (format stream "%{~{~s~^ ~}~@[ ...~]}" items more?))
-    (format Stream "%{}")))
+(defun pprint-hash-table (stream ht &rest other-args)
+  (declare (ignore other-args))
+  (pprint-logical-block (stream (->list ht) :prefix "%{" :suffix "}")
+    (pprint-exit-if-list-exhausted)
+    (loop
+      (pprint-logical-block (stream (pprint-pop))
+        (write (pprint-pop) :stream stream)
+        (write-char #\space stream)
+        (write (pprint-pop) :stream stream))
+      (pprint-exit-if-list-exhausted)
+      (write-char #\space stream)
+      (pprint-newline :fill stream))))
+
+(defmethod print-object ((ht hash-table) stream)
+  (format stream "~/persidastricl::pprint-hash-table/" ht))
+
+(set-pprint-dispatch 'hash-table 'pprint-hash-table)

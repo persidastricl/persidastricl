@@ -45,14 +45,59 @@
     (is (== {:b 2} (dissoc m1 :a)))
     (is (== @{:b 2} (dissoc m2 :a)))))
 
-(test hash-map-lisp-interop
-  (let ((m1 {:a 1 :b 2}))
-    (is (== '(:a 1 :b 2) (into '() (->plist m1)))) ;; ->plist is lazy
-    (let ((a-list (->alist m1)))
-      (is (every? #'consp a-list))
-      (is (== (set '((:a . 1) (:b . 2))) (set a-list))))
-    (is (== (list (map-entry :a 1) (map-entry :b 2)) (->list m1)))))
+(test hash-map-as-plist
+  (is (== '(:a 1 :b 2) (into '() (->plist {:a 1 :b 2})))))
 
-(== (->alist {:a 1 :b 2}) (->alist {:a 1 :b 2}))
+(test hash-map-as-alist
+  (let ((a-list (->alist {:a 1 :b 2})))
+    (is (every? #'consp a-list))
+    (is (== (set '((:a . 1) (:b . 2))) (set a-list)))))
 
-(5am:run! :hash-map-tests)
+(test hash-map-as-list
+  (is (== (list (map-entry :a 1) (map-entry :b 2))
+          (->list {:a 1 :b 2}))))
+
+(test using-into-with-hash-maps-and-tables
+  (is  (true?
+        (reduce
+         (fn (m1 m2)
+           (when (== m1 m2) m1))
+         [(into %{} '((:a . 1) (:b . 2) (:c . 3)))
+          (into %{} '((:a  1) (:b  2) (:c  3)))
+          (into %{} {:a 1 :b 2 :c 3})
+          (into %{} @{:a 1 :b 2 :c 3})
+          (into %{} %{:a 1 :b 2 :c 3})
+          (into %{} [[:a 1] [:b 2] [:c 3]])
+          (into %{} [(p::map-entry :a 1) (p::map-entry :b 2) (p::map-entry :c 3)])
+          (into %{} #{'(:a 1) '(:b 2) '(:c 3)})
+          (into %{} #{'(:a . 1) '(:b . 2) '(:c . 3)})])))
+
+  (is  (true?
+        (reduce
+         (fn (m1 m2)
+           (when (== m1 m2) m1))
+         [(into @{} '((:a . 1) (:b . 2) (:c . 3)))
+          (into @{} '((:a  1) (:b  2) (:c  3)))
+          (into @{} {:a 1 :b 2 :c 3})
+          (into @{} @{:a 1 :b 2 :c 3})
+          (into @{} %{:a 1 :b 2 :c 3})
+          (into @{} [[:a 1] [:b 2] [:c 3]])
+          (into @{} [(p::map-entry :a 1) (p::map-entry :b 2) (p::map-entry :c 3)])
+          (into @{} #{'(:a 1) '(:b 2) '(:c 3)})
+          (into @{} #{'(:a . 1) '(:b . 2) '(:c . 3)})])))
+
+  (is  (true?
+        (reduce
+         (fn (m1 m2)
+           (when (== m1 m2) m1))
+         [(into {} '((:a . 1) (:b . 2) (:c . 3)))
+          (into {} '((:a  1) (:b  2) (:c  3)))
+          (into {} {:a 1 :b 2 :c 3})
+          (into {} @{:a 1 :b 2 :c 3})
+          (into {} %{:a 1 :b 2 :c 3})
+          (into {} [[:a 1] [:b 2] [:c 3]])
+          (into {} [(p::map-entry :a 1) (p::map-entry :b 2) (p::map-entry :c 3)])
+          (into {} #{'(:a 1) '(:b 2) '(:c 3)})
+          (into {} #{'(:a . 1) '(:b . 2) '(:c . 3)})]))))
+
+;;(5am:run! :hash-map-tests)

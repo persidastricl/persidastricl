@@ -44,14 +44,22 @@
       (apply #'assoc m kvs))
     m))
 
-(defmethod print-object ((object transient-hash-map) stream)
-  (if-let ((seq (seq object)))
-    (let ((more? (first (drop *print-hamt-items* seq)))
-          (items (into '() (take (* 2 *print-hamt-items*) (->plist object)))))
-      (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
-          (format stream "@{~{~s~^ ~}~@[ ...~]}" items more?)
-          (format stream "(persidastricl:transient-hash-map ~{~s~^ ~}~@[ ...~])" items more?)))
-    (format stream "@{}")))
+(defun pprint-transient-hash-map (stream thm &rest other-args)
+  (declare (ignore other-args))
+  (pprint-logical-block (stream (->list thm) :prefix "@{" :suffix "}")
+    (pprint-exit-if-list-exhausted)
+    (loop
+      (write (pprint-pop) :stream stream)
+      (pprint-exit-if-list-exhausted)
+      (write-char #\space stream)
+      (pprint-newline :fill stream))))
+
+(defmethod print-object ((thm transient-hash-map) stream)
+  (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
+      (format stream "~/persidastricl::pprint-transient-hash-map/" thm)
+      (format stream "(persidastricl:transient-hash-map ~{~s~^ ~})" (into '() (->plist thm)))))
+
+(set-pprint-dispatch 'transient-hash-map 'pprint-transient-hash-map)
 
 (defmethod make-load-form ((object transient-hash-map) &optional env)
   (declare (ignore env))

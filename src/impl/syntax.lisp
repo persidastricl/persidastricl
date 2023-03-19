@@ -128,4 +128,5 @@
   (:dispatch-macro-char +at+ +hash+ #'read-transient-set-literal)
   (:macro-char +right-bracket+ #'read-delimiter nil)
   (:macro-char +left-bracket+ #'read-persistent-vector-literal nil)
-  (:dispatch-macro-char +at+ +left-bracket+ #'read-transient-vector-literal))
+  (:dispatch-macro-char +at+ +left-bracket+ #'read-transient-vector-literal)
+  (:case :invert))

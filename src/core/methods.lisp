@@ -47,7 +47,7 @@
            (case (classify seq)
              (:alist  (map (lambda (dp) (list (car dp) (cdr dp))) seq))
              (:entries (map #'->list seq))
-             (:non-entries (partition-all seq 2)))))
+             (otherwise (partition-all seq 2)))))
 
   (defmethod into ((obj hash-map) sequence)
     (let ((seq (seq sequence)))
