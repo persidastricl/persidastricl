@@ -366,3 +366,12 @@
 (defun slurp (f)
   (with-open-file (is f :if-does-not-exist nil)
     (str:join #\NEWLINE (->list (line-seq is)))))
+
+(defun ->keyword (s)
+  (if (keywordp s) s
+      (let* ((s (str s))
+             (s (cond
+                  ((every (complement #'upper-case-p) s) (string-upcase s))
+                  ((every (complement #'lower-case-p) s) (string-downcase s))
+                  (t s))))
+        (intern s "KEYWORD"))))
