@@ -45,12 +45,19 @@
                    e))))
     (postwalk (lambda (x) (if (map? x) (into {} (map #'keywordize-entry x)) x)) m)))
 
+;; TODO: fix case here
 (defun stringify-keys (m)
-  (labels ((stringify-entry (e)
+  (labels ((symbol-name* (k)
+             (let ((s (symbol-name k)))
+               (cond
+                 ((every (complement #'upper-case-p) s) (string-upcase s))
+                 ((every (complement #'lower-case-p) s) (string-downcase s))
+                 (t s))))
+           (stringify-entry (e)
              (let ((k (p::key e))
                    (v (p::value e)))
                (if (keywordp k)
-                   (p::map-entry (str:lower-case (symbol-name k)) v)
+                   (p::map-entry (symbol-name* k) v)
                    e))))
     (postwalk (lambda (x) (if (map? x) (into {} (map #'stringify-entry x)) x)) m)))
 
@@ -88,7 +95,9 @@
 ;; (keywordize-keys {"a" 1 "b" 2 "c" {"d" [1 2 3 3] "e" 4 "f" #{1 2 3}}})
 
 ;; (stringify-keys {:a 1})
-;; (stringify-keys {:A 1 :C {:D [1 2 3 3] :E 4 :F #{1 2 3}} :B 2})
+;;(stringify-keys {:A 1 :C {:D [1 2 3 3] :E 4 :Eagle 5 :abCD 6 :F #{1 2 3}} :B 2 :a 7 :b 3})
+
+
 
 ;; (prewalk-demo {"a" 1 "b" 2 "c" {"d" [1 2 3 3] "e" 4 "f" #{1 2 3}}})
 ;; (postwalk-demo {"a" 1 "b" 2 "c" {"d" [1 2 3 3] "e" 4 "f" #{1 2 3}}})

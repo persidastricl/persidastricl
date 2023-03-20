@@ -126,13 +126,6 @@
         (key-join xrel yrel km)
         (natural-join xrel yrel))))
 
-(defvar animals #{{:name "betsy" :owner "brian" :kind "cow"}
-                  {:name "jake"  :owner "brian" :kind "horse"}
-                  {:name "josie" :owner "dawn"  :kind "cow"}})
-
-(defvar personalities #{{:species "cow" :personality "stoic"}
-                        {:species "horse" :personality "skittish"}})
-
 (defun subset? (set1 set2)
   (and (<= (count set1) (count set2))
        (every?

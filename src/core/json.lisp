@@ -48,11 +48,20 @@
     (let ((js (json-stream (slurp filename) :close t)))
       (dispatch js (json-streams:json-read js)))))
 
-(json-seq "{\"a\" : 1} \"test\" 1 2 3 {\"b\" : 5} ")
-(map #'walk:keywordize-keys (json-seq "[ {\"a\" : 1 } {\"b\" : 2 } \"test\" 1 2 3 {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } ]"))
 
 
-(let* ((json "[ {\"a\" : 1 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } ]")
-       (js  (subseq json (inc (str:index-of json "\\\[")) (str:last-index-of json "]")))
-       )
-  js)
+
+
+;; (json-seq "{\"a\" : 1} \"test\" 1 2 3 {\"b\" : 5} ")
+
+;; (map #'walk:keywordize-keys (json-seq "[ {\"a\" : 1 } {\"b\" : 2 } \"test\" 1 2 3 {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } ]"))
+
+;; {:b 1}
+;; (json-seq "[ {\"a\" : 1 } {\"b\" : 2 } \"test\" 1 2 3 {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } ]")
+
+;; (let* ((json "[ {\"a\" : 1 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } ]")
+;;        (js  (subseq json (inc (str:index-of json "\\\[")) (str:last-index-of json "]")))
+;;        )
+;;   js)
+
+;; (walk:keywordize-keys (decode-file "scratch/colors.json"))

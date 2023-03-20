@@ -237,7 +237,7 @@
    coll
    :initial-value (persistent-hash-map)))
 
-;; TODO: nth & rand-nth ??
+;; TODO: rand-nth ??
 
 (defun cycle (coll)
   (labels ((more (c)
