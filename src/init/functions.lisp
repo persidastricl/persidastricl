@@ -101,6 +101,15 @@
    things
    :initial-value ""))
 
+(defun comp (&rest functions)
+  (let ((fns (reverse functions)))
+    (lambda (&rest args)
+      (reduce
+       (lambda (current f)
+         (funcall f current))
+       (rest fns)
+       :initial-value (apply (first fns) args)))))
+
 (defun partial (f &rest initial-args)
   (lambda (&rest more-args)
     (apply f (append initial-args more-args))))

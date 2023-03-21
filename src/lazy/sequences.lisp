@@ -10,8 +10,9 @@
 (defun fact (i)
   (cond
     ((= i 0) 1)
+    ((= i 1) 1)
     ((< i 0) (- (fact (- i))))
-    (:otherwise (reduce #'* (range i :start i :step -1)))))
+    (:otherwise (reduce #'* (nrange i :start i :step -1)))))
 
 (defvar fib
   (lseq 0 (lseq 1 (map #'+ fib (tail fib)))))
@@ -27,7 +28,9 @@
   (map (lambda (i) (* i i)) (drop 1 (integers))))
 
 (defun n-choose-k (n k)
-  (/ (fact n) (fact (- n k)) (fact k)))
+  (if (> k n)
+      1
+      (/ (fact n) (fact (- n k)) (fact k))))
 
 (defun triangulars ()
   (map (lambda (n) (n-choose-k (1+ n) 2)) (drop 1 (integers))))
@@ -36,8 +39,11 @@
   (lseq (mapv
          (lambda (k)
            (n-choose-k n k))
-         (range (inc n)))
+         (nrange (inc n)))
         (binomial-coefficients (inc n))))
+
+(range 1)
+(take 10 (binomial-coefficients))
 
 (defun hexagonals ()
   (map

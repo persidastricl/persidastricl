@@ -20,6 +20,9 @@
               (swap! mem #'assoc args ret)
               ret))))))
 
+(defmacro defmemoized (sym f)
+  `(setf (fdefinition ',sym) ,(memoize f)))
+
 (defun reduce (f s &key (initial-value nil initial-value-p))
   (if s
       (let ((s (seq s)))
@@ -149,8 +152,8 @@
                            (map* (remove-if #'nil? (cl:map 'list #'tail ss)))))))))
         (map* seqs)))))
 
-(defun integers (&key (from 0))
-  (lseq from (integers :from (1+ from))))
+(defun integers (&key (from 0) (step 1))
+  (lseq from (integers :from (+ from step) :step step)))
 
 (defun map-indexed (f &rest seqs)
   (apply #'map f (integers) seqs))
@@ -158,9 +161,53 @@
 (defun keep-indexed (f &rest seqs)
   (apply #'keep f (integers) seqs))
 
-(defun range (n &key (start 0) (step 1))
+(defun range (&optional n1 n2 n3)
+  "returns a lazy sequence of numbers based on the following:
+
+   (range) infinite sequence (0 1 2 ...)
+   (range end) finite sequence (0 1 ... end)
+   (range start end) and (< start end) finite sequence (start start+1 start+2 ... end)
+   (range start end) and (> start end) finite sequence (start start-1 start-2 ... end)
+   (range start end step) and (< start end) (pos? step) finite sequence (start start+step ... end)
+   (range start end step) and (> start end) (neg? step) finite sequence (start start-step ... end)
+   (range start nil step) infinite sequence (start start+step ...)
+
+   returns nil    when  1. (zero? step)
+                    or  2. (= start end)
+                    or  3. (< start stop) but (neg? step)
+                    or  4. (> start stop) but (pos? step)"
+
+  (let* ((args (cond
+                 ((and n1 n2 n3) (list n1 n2 n3))
+                 ((and n1 n2) (list n1 n2 (if (<= n1 n2) 1 -1)))
+                 ((and n1 n3) (list n1 nil n3))
+                 ((and n1) (list 0 n1 (if (neg? n1) -1 1)))
+                 (t (list 0 nil 1))))
+         (start (nth args 0))
+         (end   (nth args 1))
+         (step  (nth args 2)))
+
+    (if (or (zerop step) (and end start (= start end))) nil
+
+        (labels ((finite-up* (end &key (start 0) (step 1))
+                   (when (< start end)
+                     (lseq start (finite-up* end :start (+ start step) :step step))))
+
+                 (finite-down* (end &key (start 0) (step 1))
+                   (when (> start end)
+                     (lseq start (finite-down* end :start (+ start step) :step step))))
+
+                 (infinite* (&key (start 0) (step 1))
+                   (lseq start (infinite* :start (+ start step) :step step))))
+          (if end
+              (cond
+                ((and (> start end) (neg? step)) (finite-down* end :start start :step step))
+                ((and (< start end) (pos? step)) (finite-up* end :start start :step step)))
+              (infinite* :start start :step step))))))
+
+(defun nrange (n &key (start 0) (step 1))
   (when (> n 0)
-    (lseq start (range (1- n) :start (+ start step) :step step))))
+    (lseq start (nrange (1- n) :start (+ start step) :step step))))
 
 (defun take-while (pred s)
   (when-let ((s (seq s)))

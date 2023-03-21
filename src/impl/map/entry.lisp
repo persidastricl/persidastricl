@@ -69,9 +69,9 @@
 
 (set-pprint-dispatch 'entry 'pprint-map-entry)
 
-(defmethod make-load-form ((obj Entry) &optional env)
+(defmethod make-load-form ((obj entry) &optional env)
   (declare (ignore env))
-  `(persidastricl::map-entry ,(key Entry) ,(value Entry)))
+  `(persidastricl::map-entry ,(key obj) ,(value obj)))
 
 (defmethod cl-murmurhash:murmurhash ((object entry) &key (seed cl-murmurhash:*default-seed*) mix-only)
   (cl-murmurhash:murmurhash (->list object) :seed seed :mix-only mix-only))

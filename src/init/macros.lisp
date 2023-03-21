@@ -41,13 +41,20 @@
            (let ((,var ,temp))
              ,@body))))))
 
-(defmacro fn (args &body body)
-  `(lambda ,args
-     ,@body))
+;; (defmacro fn (args &body body)
+;;   `(lambda ,args
+;;      ,@body))
 
-(defmacro named-fn (name args &body body)
-  `(labels ((,name ,args ,@body))
-     #',name))
+;; (defmacro named-fn (name args &body body)
+;;   `(labels ((,name ,args ,@body))
+;;      #',name))
+
+(defmacro fn (name-or-args &rest args-and-or-body)
+  (if (not (listp name-or-args))
+      `(labels ((,name-or-args ,(first args-and-or-body) ,@(rest args-and-or-body)))
+         #',name-or-args)
+      `(lambda ,name-or-args
+         ,@args-and-or-body)))
 
 (defmacro comment (&body body)
   (declare (ignore body)))
