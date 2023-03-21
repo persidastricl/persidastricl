@@ -157,6 +157,7 @@
                 :components ((:file "methods")
                              (:file "functions")
                              (:file "destructure")
+                             (:file "when-let")
                              (:file "string")
                              (:file "set")
                              (:file "walk")

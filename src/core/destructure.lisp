@@ -109,7 +109,7 @@
              (pb bvec (first b) (second b))))
     (if (every? #'symbolp (map #'first bindings))
         bindings
-        (->list  (partition (reduce #'process-entry bindings :initial-value []) 2)))))
+        (->list (partition (reduce #'process-entry bindings :initial-value []) 2)))))
 
 
 

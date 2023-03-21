@@ -11,7 +11,7 @@
 
 (defclass entry (collection)
   ((key :initarg :key :reader key)
-   (value :initarg :value :reader value)))
+   (value :initarg :value :reader value :reader val)))
 
 (defun map-entry (k &optional (v nil))
   (make-instance 'entry :key k :value v))

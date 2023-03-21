@@ -16,47 +16,15 @@ Things to do:
  -- right now the partition cons's the k with the nil which creates (k) rather than (k nil) :-(
 
 -- redefine = as a defmacro????
--- identical?
--- max-key min-key
--- quot (quotient)
--- reductions
--- spit
--- subs
--- every-pred
-
--- ->
--- ->>
--- as->
--- cond->
--- cond->>
--- some->
--- some->>
-
--- fdef -- defines a new function definition based on a returned function/lambda/memoize etc
-
--- not-every?
--- not-any?
 
 -- conj for all the different data types
 -- contains? for all the things
 -- find (maps) returns entire entry for k
--- shuffle
--- frequencies
--- replace
 
 -- rseq ??
-
--- re-seq
 
 -- distinct
 -- distinct?
 -- dedupe
-
--- split-at
--- split-with
-
--- when-first
-
--- rename value (entry) to val
 
 -- loop/recur (no need for recur on fns)

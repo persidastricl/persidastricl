@@ -23,18 +23,43 @@
 (defmacro defmemoized (sym f)
   `(setf (fdefinition ',sym) ,(memoize f)))
 
+(defmacro fdef (sym f)
+  `(setf (fdefinition ',sym) ,f))
+
 (defun reduce (f s &key (initial-value nil initial-value-p))
   (if s
       (let ((s (seq s)))
         (labels ((reduce* (current-value seq)
                    (if seq
-                       (let ((new-value (head seq)))
-                         (reduce* (funcall f current-value new-value) (tail seq)))
+                       (let* ((new-value (head seq))
+                              (result (funcall f current-value new-value)))
+                         (reduce* result (tail seq)))
                        current-value)))
           (reduce*
            (if initial-value-p initial-value (head s))
            (if initial-value-p s (tail s)))))
       initial-value))
+
+(defun reductions (f s &key (initial-value nil initial-value-p))
+  (if s
+      (let ((s (seq s)))
+        (labels ((reduce* (current-value seq accum)
+                   (if seq
+                       (let* ((new-value (head seq))
+                              (result (funcall f current-value new-value)))
+                         (reduce* result (tail seq) (conj accum result)))
+                       accum)))
+          (let ((init (if initial-value-p initial-value (head s)))
+                (seq (if initial-value-p s (tail s))))
+            (reduce* init seq []))))
+      [initial-value]))
+
+(defun frequencies (coll)
+  (reduce
+   (lambda (m target)
+     (assoc m x (inc (get m x 0))))
+   coll
+   :initial-value {}))
 
 (defun run! (f coll)
   (reduce
@@ -110,10 +135,33 @@
                        (lseq r (map* (remove-if #'nil? (cl:map 'list #'tail ss)))))))))
         (map* seqs)))))
 
-(defun every? (pred &rest seqs)
-  (let ((same-size? (= 1 (count (set (map #'count seqs))))))
-    (when same-size?
-      (every #'true? (->list (apply #'map pred seqs))))))
+
+(defun every? (f &rest seqs)
+  (when (keywordp f) (make-funcallable-keyword f))
+  (when seqs
+    (let ((n (count seqs))
+          (seqs (cl:map 'list #'seq seqs)))
+      (labels ((apply* (args)
+                 (apply f args))
+               (every?* (ss)
+                 (let ((args (cl:map 'list #'head ss))
+                       (rest-seqs (remove-if #'nil? (cl:map 'list #'tail ss))))
+                   (when (= n (count args))
+                     (let ((r (apply* args)))
+                       (when (true? r)
+                         (if (empty? rest-seqs)
+                             t
+                             (every?* rest-seqs))))))))
+        (every?* seqs)))))
+
+(fdef not-every? (comp #'not #'every?))
+
+(defun every-pred (&rest preds)
+  (lambda (&rest args)
+    (every?
+     (lambda (pred)
+       (every? pred args))
+     preds)))
 
 (defun mapv (f &rest seqs)
   (into (persistent-vector) (apply #'map f seqs)))
@@ -284,7 +332,9 @@
    coll
    :initial-value (persistent-hash-map)))
 
-;; TODO: rand-nth ??
+(defun rand-nth (coll)
+  (assert (collection? coll))
+  (nth (seq coll) (random (count coll))))
 
 (defun cycle (coll)
   (labels ((more (c)
@@ -298,6 +348,16 @@
 
 (defun repeat (x)
   (repeatedly (constantly x)))
+
+(defun shuffle (coll)
+  (assert (collection? coll))
+  (let* ((l (->list coll))
+         (n (count l)))
+    (do ((tail (nthcdr 0 l) (cdr tail)))
+        ((zerop n))
+      (rotatef (car tail) (car (nthcdr (random n) tail)))
+      (decf n))
+    (vec l)))
 
 (defun zipmap (seq1 seq2)
   (labels ((zipmap* (m s1 s2)
@@ -331,12 +391,62 @@
                      (mapcat #'walk (funcall children node))))))
     (walk root)))
 
+(defun re-seq (re s)
+  (let ((scanner (cl-ppcre:create-scanner re)))
+    (labels ((scan* (pos)
+               (let* ((match (multiple-value-list (cl-ppcre:scan scanner s :start pos)))
+                      (start (get match 0))
+                      (end   (get match 1)))
+                 (when start
+                   (let ((v (subs s start end)))
+                     (lseq v (scan* end)))))))
+      (scan* 0))))
+
+(labels ((best (pred k c1 c2 &rest contestants)
+           (labels ((best* (the-one the-value challengers)
+                      (let ((challenger (first challengers)))
+                        (if challenger
+                            (let ((challenger-value (get challenger k)))
+                              (if (funcall pred the-value challenger-value)
+                                  (best* the-one the-value (rest challengers))
+                                  (best* challenger challenger-value (rest challengers))))
+                            the-one))))
+             (let* ((v1 (get c1 k))
+                    (v2 (get c2 k))
+                    (c1? (funcall pred v1 v2))
+                    (w (if c1? c1 c2))
+                    (v (if c1? v1 v2)))
+               (best* w v contestants)))))
+
+  (defun min-key (k &rest challengers)
+    (apply #'best #'< k challengers))
+
+  (defun max-key (k &rest challengers)
+    (apply #'best #'> k challengers)))
+
+(defun replace (smap coll)
+  (if (vector? coll)
+      (reduce
+       (lambda (v i)
+         (let ((rep (get smap (nth v i))))
+           (if rep
+               (assoc v i rep)
+               v)))
+       (range (count coll))
+       :initial-value coll)
+      (map
+       (lambda (x)
+         (get smap x x))
+       coll)))
+
 (defun flatten (x)
   (filter (complement #'sequential?)
           (tail (tree-seq #'collection? #'seq x))))
 
 (defun some (pred &rest seqs)
   (head (apply #'keep pred seqs)))
+
+(fdef not-any? (comp #'not #'some))
 
 (defun some-fn (&rest fns)
   (lambda (&rest s)
@@ -413,6 +523,11 @@
 (defun slurp (f)
   (with-open-file (is f :if-does-not-exist nil)
     (str:join #\NEWLINE (->list (line-seq is)))))
+
+(defun spit (f contents &key (if-exists :overwrite) (if-does-not-exist :create))
+  (with-open-file (os f :if-exists if-exists :if-does-not-exist if-does-not-exist :direction :output)
+    (write-string contents os))
+  f)
 
 (defun ->keyword (s)
   (if (keywordp s) s

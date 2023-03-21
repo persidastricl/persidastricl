@@ -54,18 +54,26 @@
            #:merge
            #:pop
            #:reduce
+           #:replace
            #:map)
   (:export
+   #:-<>
+   #:-<>>
+   #:->
+   #:->>
    #:->alist
    #:->array
    #:->keys
+   #:->keyword
    #:->list
    #:->plist
    #:->vals
    #:->vector
-   #:->keyword
    #:-vec
+   #:<!>
+   #:<>
    #:==
+   #:as->
    #:assoc
    #:assoc-in
    #:atom
@@ -74,6 +82,8 @@
    #:collection?
    #:comment
    #:concat
+   #:cond->
+   #:cond->>
    #:conj
    #:cons
    #:contains?
@@ -81,6 +91,7 @@
    #:cycle
    #:dec
    #:def
+   #:defmemoized
    #:deref
    #:disj
    #:dissoc
@@ -91,20 +102,21 @@
    #:empty
    #:empty?
    #:even?
+   #:every-pred
    #:every?
    #:false?
+   #:fdef
    #:filter
    #:filterv
    #:first
-   #:second
-   #:third
-   #:nth
    #:flatten
    #:fn
    #:fnil
+   #:frequencies
    #:get
    #:get-in
    #:group-by
+   #:identical?
    #:inc
    #:instance?
    #:int?
@@ -121,24 +133,28 @@
    #:lazy-seq
    #:length
    #:line-seq
-   #:map
    #:lookup
-   #:reduce
    #:lseq
-   #:merge
-   #:merge-with
+   #:map
    #:map-indexed
    #:map?
    #:mapcat
    #:mapv
+   #:max-key
    #:memoize
+   #:merge
+   #:merge-with
    #:meta
+   #:min-key
    #:named-fn
    #:nat-int?
    #:neg-int?
    #:neg?
    #:next
    #:nil?
+   #:not-any?
+   #:not-every?
+   #:nth
    #:odd?
    #:only-valid-values
    #:partial
@@ -153,26 +169,39 @@
    #:pos-int?
    #:pos?
    #:put
+   #:quot
    #:range
+   #:re-seq
+   #:reduce
    #:reduce-kv
+   #:reductions
    #:repeat
    #:repeatedly
+   #:replace
    #:reset!
    #:rest
    #:run!
+   #:second
+   #:select-keys
    #:seq
    #:sequential?
    #:set
    #:set?
-   #:select-keys
+   #:shuffle
    #:slurp
    #:some
+   #:some-<>
+   #:some-<>>
+   #:some->
+   #:some->>
    #:some-fn
    #:some?
+   #:spit
    #:split-at
    #:split-with
    #:str
    #:string?
+   #:subs
    #:swap!
    #:syntax
    #:t-set
@@ -181,6 +210,7 @@
    #:take-last
    #:take-nth
    #:take-while
+   #:third
    #:transient!
    #:transient-hash-map
    #:transient-hash-set
@@ -189,9 +219,11 @@
    #:true?
    #:update
    #:update-in
+   #:val
    #:value
    #:vec
    #:vector?
+   #:when-first
    #:with-meta
    #:zero?
    #:zipmap
@@ -272,6 +304,7 @@
                           #:pop
                           #:reduce
                           #:remove
+                          #:replace
                           #:rest
                           #:set
                           #:some
@@ -312,6 +345,7 @@
                           #:pop
                           #:reduce
                           #:remove
+                          #:replace
                           #:rest
                           #:set
                           #:some
@@ -351,6 +385,7 @@
                           #:pop
                           #:reduce
                           #:remove
+                          #:replace
                           #:rest
                           #:set
                           #:some
@@ -379,6 +414,7 @@
                           #:pop
                           #:reduce
                           #:remove
+                          #:replace
                           #:rest
                           #:set
                           #:some

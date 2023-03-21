@@ -51,6 +51,9 @@
 (defun string? (s)
   (stringp s))
 
+(defun identical? (x y)
+  (eq x y))
+
 (defun dotted-pair? (x)
   (and (consp x)
        (not (listp (cdr x)))))
@@ -60,6 +63,9 @@
 
 (defun dec (n)
   (1- n))
+
+(defun quot (x y)
+  (truncate x y))
 
 (defun fnil (f default)
   (lambda (x &rest args)
@@ -100,6 +106,9 @@
        (concatenate 'string r (to-string s)))
    things
    :initial-value ""))
+
+(defun subs (s start &optional (end (cl:length s)))
+  (subseq s start end))
 
 (defun comp (&rest functions)
   (let ((fns (reverse functions)))
