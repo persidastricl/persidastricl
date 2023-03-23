@@ -13,4 +13,4 @@
 ;; -----
 
 (defclass transient-hash-set-node (transient-node hash-set-node) ()
-  (:default-initargs :dmap (EMPTY-TRANSIENT-BITMAP-VECTOR) :nmap (EMPTY-TRANSIENT-NODE-BITMAP-VECTOR)))
+  (:default-initargs :dmap (empty-transient-bitmap-vector) :nmap (empty-transient-node-bitmap-vector)))

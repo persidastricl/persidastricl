@@ -63,13 +63,14 @@
 
 (defun pprint-persistent-vector (stream pv &rest other-args)
   (declare (ignore other-args))
-  (pprint-logical-block (stream (->list pv) :prefix "[" :suffix "]")
-    (pprint-exit-if-list-exhausted)
-    (loop
-      (write (pprint-pop) :stream stream)
+  (let ((*print-length* (min *print-bpvt-items* (or *print-lines* *print-bpvt-items*))))
+    (pprint-logical-block (stream (->list (take (inc *print-length*) (seq pv))) :prefix "[" :suffix "]")
       (pprint-exit-if-list-exhausted)
-      (write-char #\space stream)
-      (pprint-newline :fill stream))))
+      (loop
+        (write (pprint-pop) :stream stream)
+        (pprint-exit-if-list-exhausted)
+        (write-char #\space stream)
+        (pprint-newline :fill stream)))))
 
 (defmethod print-object ((object persistent-vector) stream)
   (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))

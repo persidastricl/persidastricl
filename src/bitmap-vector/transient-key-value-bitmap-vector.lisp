@@ -50,5 +50,5 @@ for key, and (1+ (* 2 determined-bit-count)) for value"
     (setf data (v:delete data (* (b:index bit-position bitmap) 2) 2)))
   bv)
 
-(defun EMPTY-TRANSIENT-KEY-VALUE-BITMAP-VECTOR ()
+(defun empty-transient-key-value-bitmap-vector ()
   (make-instance 'transient-key-value-bitmap-vector))

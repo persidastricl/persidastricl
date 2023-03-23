@@ -9,7 +9,7 @@
 
 (in-package #:persidastricl)
 
-(defvar *print-hamt-items* 10)
+(defvar *print-hamt-items* 100)
 
 (defclass hamt (metadata seqable) ())
 

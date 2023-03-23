@@ -52,7 +52,7 @@
 (defgeneric lazy-seq (obj)
   (:method (obj) (lazy-seq (list obj)))
   (:method ((s sequence)) (lazy-seq (coerce s 'list)))
-  (:method ((obj function)) (let ((head (funcall obj))) (lseq head (lazy-seq obj))))
+  (:method ((obj function)) (lazy-seq (funcall obj)))
   (:method ((obj lazy-sequence)) obj))
 
 (defmethod lazy-seq ((obj list))
@@ -64,6 +64,9 @@
   (:method ((object sequence)) (seq (coerce object 'list)))
   (:method ((object lazy-sequence)) object)
   (:method ((object hash-table)) (seq (->list object))))
+
+(defmacro lazy-seq* (&body body)
+  `(lazy-seq ,(list* `lambda `() body)) )
 
 (defun take* (n target)
   (when (> n 0)

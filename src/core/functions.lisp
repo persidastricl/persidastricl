@@ -166,20 +166,40 @@
 (defun mapv (f &rest seqs)
   (into (persistent-vector) (apply #'map f seqs)))
 
-(defun concat (&rest seqs)
-  (labels ((concat* (s &rest xs)
-             (lseq (head s)
-                   (if (tail s)
-                       (apply #'concat* (tail s) xs)
-                       (when-let ((next-s (head xs)))
-                         (apply #'concat* (seq next-s) (tail xs)))))))
-    (when seqs
-      (let ((seqs (remove-if #'empty? seqs)))
-        (apply #'concat* (seq (head seqs)) (tail seqs))))))
+(defun concat (&rest colls)
+  (labels ((cat (s more)
+             (if-let ((s (seq s)))
+               (lseq (first s) (cat (rest s) more))
+               (when more
+                 (cat (first more) (rest more))))))
+    (cat (first colls) (rest colls))))
+
+;; (defun concat (&rest seqs)
+;;   (labels ((concat* (s xs)
+;;              (if (seq s)
+;;                  (lseq (head s)
+;;                        (if (tail s)
+;;                            (concat* (tail s) xs)
+;;                            (when xs
+;;                              (concat* (seq (head xs)) (tail xs)))))
+;;                  (when xs
+;;                    (concat* (seq (head xs)) (tail xs))))))
+;;     (when seqs
+;;       (concat* (seq (head seqs)) (tail seqs)))))
 
 (defun mapcat (f s &rest seqs)
   (let ((xs (apply #'map f s seqs)))
     (apply #'concat (->list xs))))
+
+;; TODO: can we figure out a way to do this without the 'eval'?? or does it even matter??
+(defmacro lazy-cat (&rest colls)
+  `(let ((xs (map (lambda (x) (delay (eval x))) ',colls)))
+     (labels ((cat (s more)
+                (if-let ((s (seq s)))
+                  (lseq (first s) (cat (rest s) more))
+                  (when more
+                    (cat (force (first more)) (rest more))))))
+       (cat (force (first xs)) (rest xs)))))
 
 (defun filterv (pred seq)
   (into (persistent-vector) (filter pred seq)))

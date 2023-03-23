@@ -9,11 +9,8 @@ Things to do:
    -- need to iterate on the values in a collection
    -- need to iterate on the ds structure itself (the nodes) (for class changes)
 
-*  add clojure's destructuring if possible, then add `for` and `letd` (a destructuring version of let??) (or 'dlet' ??), and 'defund' (a destructuring version of defun?? (or defn?? ddefun??))
+*  add `for` and 'defund' (a destructuring version of defun?? (or defn?? ddefun??))
 *
-
-* hash maps need to be able to take 'nil as a value;
- -- right now the partition cons's the k with the nil which creates (k) rather than (k nil) :-(
 
 -- redefine = as a defmacro????
 

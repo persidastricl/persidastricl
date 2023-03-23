@@ -51,5 +51,5 @@ for key, and (1+ (* 2 determined-bit-count)) for value"
                    :bitmap bitmap
                    :data (v:delete (data bv) (* (b:index bit-position bitmap) 2) 2))))
 
-(defun EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR ()
+(defun empty-persistent-key-value-bitmap-vector ()
   (make-instance 'persistent-key-value-bitmap-vector))

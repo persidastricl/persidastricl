@@ -14,5 +14,5 @@
 
 (defclass transient-node-bitmap-vector (transient-bitmap-vector) ())
 
-(defun EMPTY-TRANSIENT-NODE-BITMAP-VECTOR ()
+(defun empty-transient-node-bitmap-vector ()
   (make-instance 'transient-node-bitmap-vector))

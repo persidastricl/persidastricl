@@ -52,13 +52,14 @@
 ;;
 (defun pprint-persistent-hash-map (stream phm &rest other-args)
   (declare (ignore other-args))
-  (pprint-logical-block (stream (->list phm) :prefix "{" :suffix "}")
-    (pprint-exit-if-list-exhausted)
-    (loop
-      (write (pprint-pop) :stream stream)
+  (let ((*print-length* (min *print-hamt-items* (or *print-lines* *print-hamt-items*))))
+    (pprint-logical-block (stream (->list (take (inc *print-length*) (seq phm))) :prefix "{" :suffix "}")
       (pprint-exit-if-list-exhausted)
-      (write-char #\space stream)
-      (pprint-newline :fill stream))))
+      (loop
+        (write (pprint-pop) :stream stream)
+        (pprint-exit-if-list-exhausted)
+        (write-char #\space stream)
+        (pprint-newline :fill stream)))))
 
 (defmethod print-object ((phm persistent-hash-map) stream)
   (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))

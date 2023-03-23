@@ -20,22 +20,22 @@
        (== (data bv1) (data bv2))))
 
 (test create-bitmap-node-vector-test
-      :description "creating empty bitmap-vector is as expected (EMPTY)"
-      (let ((bv (make-instance 'persistent-node-bitmap-vector)))
-        (is (bv-equal-p bv (EMPTY-PERSISTENT-NODE-BITMAP-VECTOR)))))
+  :description "creating empty bitmap-vector is as expected (EMPTY)"
+  (let ((bv (make-instance 'persistent-node-bitmap-vector)))
+    (is (bv-equal-p bv (empty-persistent-node-bitmap-vector)))))
 
 (test create-bitmap-key-value-vector-test
-      :description "creating empty bitmap-vector is as expected (EMPTY)"
-      (let ((bv (make-instance 'persistent-key-value-bitmap-vector)))
-        (is (bv-equal-p bv (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR)))))
+  :description "creating empty bitmap-vector is as expected (EMPTY)"
+  (let ((bv (make-instance 'persistent-key-value-bitmap-vector)))
+    (is (bv-equal-p bv (empty-persistent-key-value-bitmap-vector)))))
 
 (test simple-insert-key-value-test
   :description "insert map-entry in key/value bitmap-vector"
-  (let ((bv (ins (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR) 31 (map-entry "k1" "v1"))))
+  (let ((bv (ins (empty-persistent-key-value-bitmap-vector) 31 (map-entry "k1" "v1"))))
     (is (and (== (bitmap bv) #b10000000000000000000000000000000)
              (== (data bv) #("k1" "v1"))))))
 
-(defparameter *pkvbv* (-> (EMPTY-PERSISTENT-KEY-VALUE-BITMAP-VECTOR)
+(defparameter *pkvbv* (-> (empty-persistent-key-value-bitmap-vector)
                         (ins 31 (map-entry :k1 :v1))
                         (ins 0  (map-entry :k2 :v2))
                         (ins 15 (map-entry :k3 :v3))))
@@ -85,10 +85,10 @@
 (defparameter sub-node-3 (make-instance 'persistent-node-bitmap-vector :bitmap #b0100 :data #(4)))
 (defparameter updated-node (make-instance 'persistent-node-bitmap-vector :bitmap #b1000 :data #(8)))
 
-(defparameter *pnbv* (-> (EMPTY-PERSISTENT-NODE-BITMAP-VECTOR)
-                         (ins 31 sub-node-1)
-                         (ins 0  sub-node-2)
-                         (ins 15 sub-node-3)))
+(defparameter *pnbv* (-> (empty-persistent-node-bitmap-vector)
+                       (ins 31 sub-node-1)
+                       (ins 0  sub-node-2)
+                       (ins 15 sub-node-3)))
 
 (defun new-array (&rest elements)
   (make-array (length elements) :initial-contents elements))

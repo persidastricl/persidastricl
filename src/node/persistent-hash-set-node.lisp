@@ -13,4 +13,4 @@
 ;; -----
 
 (define-immutable-class persistent-hash-set-node (persistent-node hash-set-node) ()
-  (:default-initargs :dmap (EMPTY-PERSISTENT-BITMAP-VECTOR) :nmap (EMPTY-PERSISTENT-NODE-BITMAP-VECTOR)))
+  (:default-initargs :dmap (empty-persistent-bitmap-vector) :nmap (empty-persistent-node-bitmap-vector)))

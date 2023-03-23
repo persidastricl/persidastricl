@@ -46,5 +46,5 @@ all bits currently set below it in the bitmap."
                    :bitmap bitmap
                    :data (v:delete (data bv) (b:index bit-position bitmap)))))
 
-(defun EMPTY-PERSISTENT-BITMAP-VECTOR ()
+(defun empty-persistent-bitmap-vector ()
   (make-instance 'persistent-bitmap-vector))

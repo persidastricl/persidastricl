@@ -23,41 +23,6 @@
 (defgeneric force (obj)
   (:method (obj) obj))
 
-;; (defmethod force ((thunk thunk))
-;;   (if (and (slot-boundp thunk 'fn) (functionp (:fn thunk)))
-;;       (let ((values (multiple-value-list (funcall (:fn thunk)))))
-;;         (setf (:r thunk) values)
-;;         (slot-makunbound thunk 'fn)))
-;;   (values-list (:r thunk)))
-
-;; (defmethod force ((thunk thunk))
-;;   (if (functionp (slot-value thunk 'fn))
-;;       (let ((values (multiple-value-list (funcall (slot-value thunk 'fn)))))
-;;         (setf (slot-value thunk 'r) values)
-;;         (setf (slot-value thunk 'fn) nil)))
-;;   (values-list (slot-value thunk 'r)))
-
-;; (defmethod force ((thunk thunk))
-;;   (if (functionp (:fn thunk))
-;;       (let ((values (multiple-value-list (funcall (:fn thunk)))))
-;;         (setf (:r thunk) values)
-;;         (setf (:fn thunk) nil)))
-;;   (values-list (:r thunk)))
-
-
-;; (defmethod force ((thunk thunk))
-;;   (if (functionp (:fn thunk))
-;;       (let ((value (funcall (:fn thunk))))
-;;         (setf (:r thunk) value)
-;;         (setf (:fn thunk) nil)))
-;;   (:r thunk))
-
-;; (defmethod force ((thunk thunk))
-;;   (or (slot-value thunk 'r)
-;;       (let ((value (funcall (slot-value thunk 'fn))))
-;;         (setf (slot-value thunk 'fn) nil)
-;;         (setf (slot-value thunk 'r) value))))
-
 (defmethod force ((thunk thunk))
   (when (slot-value thunk 'fn)
     (setf (slot-value thunk 'r) (funcall (slot-value thunk 'fn)))

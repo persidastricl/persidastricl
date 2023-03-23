@@ -14,5 +14,5 @@
 
 (define-immutable-class persistent-node-bitmap-vector (persistent-bitmap-vector) ())
 
-(defun EMPTY-PERSISTENT-NODE-BITMAP-VECTOR ()
+(defun empty-persistent-node-bitmap-vector ()
   (make-instance 'persistent-node-bitmap-vector))

@@ -45,5 +45,5 @@ all bits currently set below it in the bitmap."
     (setf data (v:delete data (b:index bit-position bitmap))))
   bv)
 
-(defun EMPTY-TRANSIENT-BITMAP-VECTOR ()
+(defun empty-transient-bitmap-vector ()
   (make-instance 'transient-bitmap-vector))

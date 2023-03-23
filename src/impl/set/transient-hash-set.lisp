@@ -43,13 +43,14 @@
 
 (defun pprint-transient-hash-set (stream ths &rest other-args)
   (declare (ignore other-args))
-  (pprint-logical-block (stream (->list ths) :prefix "@#{" :suffix "}")
-    (pprint-exit-if-list-exhausted)
-    (loop
-      (write (pprint-pop) :stream stream)
+  (let ((*print-length* (min *print-hamt-items* (or *print-lines* *print-hamt-items*))))
+    (pprint-logical-block (stream (->list (take (inc *print-length*) (seq ths))) :prefix "@#{" :suffix "}")
       (pprint-exit-if-list-exhausted)
-      (write-char #\space stream)
-      (pprint-newline :fill stream))))
+      (loop
+        (write (pprint-pop) :stream stream)
+        (pprint-exit-if-list-exhausted)
+        (write-char #\space stream)
+        (pprint-newline :fill stream)))))
 
 (defmethod print-object ((object transient-hash-set) stream)
   (if (eq 'persidastricl:syntax (named-readtables:readtable-name *readtable*))
