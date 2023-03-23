@@ -16,3 +16,13 @@
 
 (defmethod cl-murmurhash:murmurhash ((object bpvt) &key (seed cl-murmurhash:*default-seed*) mix-only)
   (cl-murmurhash:murmurhash (->list object) :seed seed :mix-only mix-only))
+
+(defgeneric rseq (obj)
+  (:method ((vector bpvt)) (let ((count (count vector)))
+                             (when (pos? count)
+                               (let ((index (dec count)))
+                                 (labels ((next* (i)
+                                            (when (>= i 0)
+                                              (let ((value (get vector i)))
+                                                (lseq value (next* (1- i)))))))
+                                   (lseq (get vector index) (next* (1- index)))))))))
