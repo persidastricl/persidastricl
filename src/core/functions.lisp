@@ -369,6 +369,36 @@
 (defun repeat (x)
   (repeatedly (constantly x)))
 
+(defun distinct (coll)
+  (labels ((step* (xs seen)
+             (when (seq xs)
+               (let ((f (first xs)))
+                 (if (contains? seen f)
+                     (step* (rest xs) seen)
+                     (lseq f (step* (rest xs) (conj seen f))))))))
+    (when (seq coll)
+      (step* (seq coll) #{}))))
+
+(defun dedup (seq)
+  (labels ((next* (s prev)
+             (when (seq s)
+               (let ((v (first s)))
+                 (if (== v prev)
+                     (next* (rest s) prev)
+                     (lseq v (next* (rest s) v)))))))
+    (when (seq seq)
+      (let ((v (first seq)))
+        (lseq v (next* (rest seq) v))))))
+
+(defun distinct? (x &rest  more)
+  (labels ((distinct* (s target others)
+             (if target
+                 (if (contains? s target)
+                     nil
+                     (distinct* (conj s target) (first others) (rest others)))
+                 t)))
+    (distinct* #{} x more)))
+
 (defun shuffle (coll)
   (assert (collection? coll))
   (let* ((l (->list coll))

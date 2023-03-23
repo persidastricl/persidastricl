@@ -10,18 +10,11 @@ Things to do:
    -- need to iterate on the ds structure itself (the nodes) (for class changes)
 
 *  add `for` and 'defund' (a destructuring version of defun?? (or defn?? ddefun??))
-*
 
--- redefine = as a defmacro????
-
--- conj for all the different data types
+-- conj for all the different data types (not just sets/vectors ... add to maps, arrays, lists)
 -- contains? for all the things
--- find (maps) returns entire entry for k
+-- find (maps) returns entire entry for k ?? do we really need this ??
 
 -- rseq ??
-
--- distinct
--- distinct?
--- dedupe
 
 -- loop/recur (no need for recur on fns)
