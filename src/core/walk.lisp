@@ -41,7 +41,7 @@
              (let ((k (p::key e))
                    (v (p::value e)))
                (if (string? k)
-                   (p::map-entry (->keyword k) v)
+                   (p::map-entry (keyword k) v)
                    e))))
     (postwalk (lambda (x) (if (map? x) (into {} (map #'keywordize-entry x)) x)) m)))
 

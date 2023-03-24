@@ -122,3 +122,18 @@
 (defun partial (f &rest initial-args)
   (lambda (&rest more-args)
     (apply f (append initial-args more-args))))
+
+(defun keyword (s)
+  (if (keywordp s) s
+      (let* ((s (str s))
+             (s (cond
+                  ((every (complement #'upper-case-p) s) (string-upcase s))
+                  ((every (complement #'lower-case-p) s) (string-downcase s))
+                  (t s))))
+        (intern s "KEYWORD"))))
+
+(defun name (sym)
+  (let ((s (symbol-name sym)))
+    (cond ((every (complement #'upper-case-p) s) (string-upcase s))
+          ((every (complement #'lower-case-p) s) (string-downcase s))
+          (t s))))

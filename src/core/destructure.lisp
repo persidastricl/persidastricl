@@ -79,14 +79,14 @@
                                                                          (if (keywordp mk)
                                                                              (let ((mkn (string-downcase (symbol-name mk))))
                                                                                (cond
-                                                                                 ((string= mkn "keys") (assoc tfs mk #'->keyword))
+                                                                                 ((string= mkn "keys") (assoc tfs mk #'keyword))
                                                                                  ((string= mkn "syms") (assoc tfs mk (lambda (s)
                                                                                                                        `',s)))
                                                                                  ((string= mkn "strs") (assoc tfs mk (lambda (s)
                                                                                                                        (str s))))
                                                                                  (:otherwise tfs)))
                                                                              tfs))
-                                                                       (->keys b)
+                                                                       (keys b)
                                                                        :initial-value (persistent-hash-map))))
                                                       (reduce
                                                        (lambda (bes entry)

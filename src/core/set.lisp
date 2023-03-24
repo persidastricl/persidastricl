@@ -67,7 +67,7 @@
            (assoc m new v)
            m)))
    kmap
-   :initial-value (apply #'dissoc map (->list (->keys kmap)))))
+   :initial-value (apply #'dissoc map (->list (keys kmap)))))
 
 
 (defun rename (xrel kmap)
@@ -84,7 +84,7 @@
 (defun join (xrel yrel &optional km)
   (labels ((natural-join (xrel yrel)
              (if (and (seq xrel) (seq yrel))
-                 (let* ((ks (intersection (set (->keys (first xrel))) (set (->keys (first yrel)))))
+                 (let* ((ks (intersection (set (keys (first xrel))) (set (keys (first yrel)))))
                         (rels (if (<= (count xrel) (count yrel)) [xrel yrel] [yrel xrel]))
                         (r (get rels 0))
                         (s (get rels 1))
@@ -109,10 +109,10 @@
                     (r (get rels 0))
                     (s (get rels 1))
                     (k (get rels 2))
-                    (idx (index r (->vals k))))
+                    (idx (index r (vals k))))
                (reduce
                 (lambda (ret x)
-                  (let ((found (get idx (rename-keys (select-keys x (->keys k)) k))))
+                  (let ((found (get idx (rename-keys (select-keys x (keys k)) k))))
                     (if found
                         (reduce
                          (lambda (inner-s m)

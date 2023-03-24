@@ -579,11 +579,10 @@
     (write-string contents os))
   f)
 
-(defun ->keyword (s)
-  (if (keywordp s) s
-      (let* ((s (str s))
-             (s (cond
-                  ((every (complement #'upper-case-p) s) (string-upcase s))
-                  ((every (complement #'lower-case-p) s) (string-downcase s))
-                  (t s))))
-        (intern s "KEYWORD"))))
+(defun trampoline  (f &rest args)
+  (if args
+      (trampoline (lambda () (apply f args)))
+      (let ((ret (funcall f)))
+        (if (functionp ret)
+            (trampoline ret)
+            ret))))

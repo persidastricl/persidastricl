@@ -42,10 +42,10 @@
 (defmethod ->list ((hm hash-map))
   (into '() (seq hm)))
 
-(defmethod ->keys ((hm hash-map))
+(defmethod keys ((hm hash-map))
   (map #'key hm))
 
-(defmethod ->vals ((hm hash-map))
+(defmethod vals ((hm hash-map))
   (map #'value hm))
 
 (defmethod ->plist ((hm hash-map))

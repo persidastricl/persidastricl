@@ -34,6 +34,7 @@
   (:shadow #:cl
            #:some
            #:atom
+           #:keyword
            #:cons
            #:first
            #:second
@@ -63,11 +64,11 @@
    #:->>
    #:->alist
    #:->array
-   #:->keys
-   #:->keyword
+   #:keys
+   #:keyword
    #:->list
    #:->plist
-   #:->vals
+   #:vals
    #:->vector
    #:-vec
    #:<!>
@@ -237,6 +238,7 @@
   (:shadowing-import-from #:persidastricl
                           #:assoc
                           #:atom
+                          #:keyword
                           #:butlast
                           #:cons
                           #:count
@@ -287,6 +289,7 @@
   (:shadowing-import-from #:persidastricl
                           #:assoc
                           #:atom
+                          #:keyword
                           #:butlast
                           #:cons
                           #:count
@@ -328,6 +331,7 @@
   (:shadowing-import-from #:persidastricl
                           #:assoc
                           #:atom
+                          #:keyword
                           #:butlast
                           #:cons
                           #:count
@@ -368,6 +372,7 @@
   (:shadowing-import-from #:persidastricl
                           #:assoc
                           #:atom
+                          #:keyword
                           #:butlast
                           #:cons
                           #:count
@@ -397,6 +402,7 @@
   (:shadowing-import-from #:persidastricl
                           #:assoc
                           #:atom
+                          #:keyword
                           #:butlast
                           #:cons
                           #:count
