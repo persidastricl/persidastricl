@@ -18,6 +18,3 @@
 
 (defmethod empty? ((obj bpvt))
   (zerop (count obj)))
-
-(defmethod take (n (vector vector))
-  (take* n vector))

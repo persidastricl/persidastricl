@@ -68,28 +68,18 @@
 (defmacro lazy-seq* (&body body)
   `(lazy-seq ,(list* `lambda `() body)) )
 
-(defun take* (n target)
-  (when (> n 0)
-    (if (tail target)
-        (lseq (head target) (take* (1- n) (tail target)))
-        (list (head target)))))
-
-(defgeneric take (n seq)
-  (:method (n (seq list)) (take* n seq))
-  (:method (n (seq sequence)) (take* n (coerce seq 'list)))
-  (:method (n (seq lazy-sequence)) (take* n seq)))
+(defun take (n coll)
+  (labels ((take* (n s)
+             (when (and (seq s) (> n 0))
+               (lseq (head s) (take* (1- n) (tail s))))))
+    (take* n (seq coll))))
 
 (defun drop (n seq)
   (labels ((drop* (n s)
-             (if (and s (> n 0))
+             (if (and (seq s) (> n 0))
                  (drop* (1- n) (tail s))
                  s)))
     (drop* n (seq seq))))
-
-(defun drop (n seq)
-  (loop for i from 0 below n
-        do (setf seq (tail seq)))
-  seq)
 
 (defvar *print-lazy-items* 10)
 

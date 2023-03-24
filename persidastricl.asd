@@ -156,6 +156,7 @@
                 :serial t
                 :components ((:file "methods")
                              (:file "functions")
+                             (:file "sub-vector")
                              (:file "destructure")
                              (:file "when-let")
                              (:file "string")
