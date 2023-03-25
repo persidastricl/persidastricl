@@ -64,11 +64,8 @@
    #:->>
    #:->alist
    #:->array
-   #:keys
-   #:keyword
    #:->list
    #:->plist
-   #:vals
    #:->vector
    #:-vec
    #:<!>
@@ -82,6 +79,7 @@
    #:butlast
    #:collection?
    #:comment
+   #:comp
    #:concat
    #:cond->
    #:cond->>
@@ -91,12 +89,18 @@
    #:count
    #:cycle
    #:dec
+   #:dedup
    #:def
    #:defmemoized
+   #:delay
    #:deref
+   #:destructure
    #:disj
    #:dissoc
+   #:distinct
+   #:distinct?
    #:dlet
+   #:dotted-pair?
    #:drop
    #:drop-last
    #:drop-while
@@ -105,6 +109,7 @@
    #:even?
    #:every-pred
    #:every?
+   #:fact
    #:false?
    #:fdef
    #:filter
@@ -113,11 +118,14 @@
    #:flatten
    #:fn
    #:fnil
+   #:force
    #:frequencies
    #:get
    #:get-in
    #:group-by
    #:identical?
+   #:if-let
+   #:if-not
    #:inc
    #:instance?
    #:int?
@@ -130,7 +138,10 @@
    #:keep
    #:keep-indexed
    #:key
+   #:keys
+   #:keyword
    #:last
+   #:lazy-cat
    #:lazy-seq
    #:length
    #:line-seq
@@ -147,7 +158,8 @@
    #:merge-with
    #:meta
    #:min-key
-   #:named-fn
+   #:n-choose-k
+   #:name
    #:nat-int?
    #:neg-int?
    #:neg?
@@ -203,6 +215,7 @@
    #:str
    #:string?
    #:subs
+   #:subseq
    #:swap!
    #:syntax
    #:t-set
@@ -212,6 +225,7 @@
    #:take-nth
    #:take-while
    #:third
+   #:trampoline
    #:transient!
    #:transient-hash-map
    #:transient-hash-set
@@ -221,10 +235,15 @@
    #:update
    #:update-in
    #:val
+   #:vals
    #:value
+   #:vary-meta
    #:vec
    #:vector?
    #:when-first
+   #:when-let
+   #:when-not
+   #:while
    #:with-meta
    #:zero?
    #:zipmap
