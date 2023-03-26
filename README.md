@@ -2,7 +2,9 @@
 
 ## Persistant Data Structures in Common Lisp
 
-This project started out as another implementation of persistent and transient HAMT maps, sets, bags, and vectors in common lisp. After things settled a bit, other things were added a little at a time. These things include lazy sequences, atoms (using stmx), and some common lisp interop around some core functions similar to those found in clojure. The goal was to create a familiar and practical environment where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
+This project is very earyly ALPHA code. Everything! is subject to change so please use/proceed with caution.
+
+This project started out as a learning experience and another implementation of persistent and transient HAMT maps, sets, and vectors in common lisp. After things settled a bit, other things were added a little at a time. These things include lazy sequences, atoms (using stmx), and some common lisp interop around some core functions similar to those found in clojure. The goal was to create a familiar and practical environment where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
 
 ## Data Structures
 
@@ -33,10 +35,6 @@ Sets contain one and only one copy of any values you put in. You can check for s
 (contains? s1 :a) ;; => T
 ```
 
-### Bags
-
-TODO
-
 ## Syntax
 
 When convenient, there exists a dash of syntactic sugar for these data structures (and others to be shown below). I used named-readtables for this.  To turn-on the syntax use:
@@ -51,23 +49,30 @@ Vectors
 ```common-lisp
 (defvar v1 [1 2 3 4 5])
 (get v1 0) ;; => 1
+
+;; transient versions
+(defvar v1 @[1 2 3 4 5])
+(get v1 0) ;; => 1
 ```
 
 Maps
 ```common-lisp
 (defvar m1 {:a 1 :b 2 :c 3}
 (get m1 :a) ;; => 1
+
+;; transient versions
+(defvar m1 @{:a 1 :b 2 :c 3})
+(get m1 :a) ;; => 1
 ```
 
 Sets
 ```common-lisp
 (defvar s1 #{:a :b :c})
-(contains? m1 :a) ;; => T
-```
+(contains? s1 :a) ;; => :a
 
-Bags
-```
-;; todo
+;; transient versions
+(defvar s1 @#{:a :b :c})
+(contains? s1 :a) ;; => :a
 ```
 
 ## Lazy Sequences
@@ -92,7 +97,7 @@ All of the persistent data structures can also be made into a lazy sequence:
 
 ```common-lisp
 (seq {:a 1 :b 2 :c 3 :d 4 :e 5 :g 6})
-;; => ([:G 6] [:A 1] [:C 3] ...)
+;; => (:g 6 :a 1 :c 3 ...)
 
 (seq [1 2 3 4 5 6 7 8 9 0])
 ;; => (1 2 3 ...)
@@ -105,13 +110,13 @@ More on lazy sequences below in the Examples section.
 
 ## Atoms
 
-At the moment, a very simple (on my part) implementation of atoms exists based on the excellent work in the stmx library for common lisp. There is a `swap!` and a `reset!` function currently.
+At the moment, a very simple (on my part) implementation of atoms exists based on the excellent work in the stmx library for common lisp. There is a `swap!` and a `reset!` function currently.  In the future, a more 'from scratch' solution may be added.
 
 ## Conveniences
 
-Once these three elements were in place (persistent data structures, lazy sequences, and something like atoms), much of the familiar functionality and conveniences that I wanted could easily be implemented.
+Once these three elements were in place (persistent data structures, lazy sequences, and a basic implementation of STM atoms), much of the familiar functionality and conveniences that I wanted could easily be implemented.
 
-Much of what you can do with clojure around maps, sets, vectors, and lazy sequences you can do with this library (examples:  map, reduce, reduce-kv, keep, filter, remove, group-by, partition, interpose, juxt ... etc).  See the core functions and methods for more.  There are other functions and methods in various locations within the code that seemed better defined in those particular locations to me.  The list of exported functions in `package.lisp` might also help.
+Much of what you can do with clojure around maps, sets, vectors, and lazy sequences you can do with this library (examples:  map, reduce, reduce-kv, keep, filter, remove, group-by, partition, interpose, juxt ... etc).  See the core functions and methods for more.  There are other functions and methods in various locations within the code that seemed better defined in those particular locations to me but at the cost of them not being as easy to discover (especially since this library is not yet sufficiently doucmented).  The list of exported functions in `package.lisp` should also help.
 
 Some common lisp conveniences
 
@@ -135,6 +140,11 @@ Using common lisp data structures in a similar way to the new persistent data st
 (into ht {:a 5 :b 7})
 
 ;; TODO: more examples
+;; NOTE: there is also not some syntactic sugar around common lisp maps
+
+ %{:a 1 :b 2} ;; a common lisp hash-table 
+ 
+ ;; this will define a common lisp hash-table when the syntax is turned on
 ```
 
 Functions for creating various types of common lisp data structures for ease of interop
@@ -168,7 +178,7 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 ## Other Examples
 
 #### reduce
-   `reduce` has been shadowed to also take any sequential and/or lazy sequence. It maintains the flavor of common lisp's native reduce addint an optional keyword `:initial-value` for setting the initial argument of the reduce.
+   `reduce` has been shadowed to also take any sequential and/or lazy sequence. NOTE: This is NOT a clojure-style reduce, rather it maintains the flavor of common lisp's native reduce adding an optional keyword `:initial-value` for setting the initial argument of the reduce. 
 
 ```common-lisp
 (reduce #'+ (range 10))
@@ -177,10 +187,6 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 (reduce #'+ (range 10) :initial-value 2)
 ;; => 47
 ```
-
-#### reduce-kv
-
-### run!
 
 #### map and mapv
     `map` has been re-defined to take any sequential data structure and lazily 'map' over it applying a fn. `mapv` eagerly does the same returning a persistent vector.
@@ -196,37 +202,9 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 ;; => [1 2 3 4 5 6 7 8 9 0 10]
 ```
 
-#### map-indexed
+TODO: add more examples around what is available in the library
 
-#### keep
-
-#### filter and filterv
-
-#### concat
-
-#### take take-while take-nth take-last
-
-#### drop drop-while drop-last
-
-#### split-at split-with
-
-#### iterate 
-
-#### partition partition-all partition-by
-
-#### group-by
-
-#### cycle repeatedly
-
-#### zipmap interleave interpose
-
-#### line-seq tree-seq
-
-#### flatten some some-fn
-
-#### juxt
-
-#### merge merge-with
+FUTURE: there is a pdf guide in the works but who knows how long that will take to be presentable. 
 
 ## License
 
