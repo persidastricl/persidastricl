@@ -1,15 +1,25 @@
+;;; -----
+;;;
+;;;  Copyright (c) 2019-2023 Michael D Pendergrass, pupcus.org
+;;;
+;;;  This program and the accompanying materials are made
+;;;  available under the terms of the Eclipse Public License 2.0
+;;;  which is available at https://www.eclipse.org/legal/epl-2.0/
+;;;
+;;;  SPDX-License-Identifier: EPL-2.0
+;;;
+;;; -----
+
 ;;; -------
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;; when-let.lisp
+;;; when-first.lisp
 ;;;
 ;;; -----
 
 (in-package :persidastricl)
 
 (named-readtables:in-readtable persidastricl:syntax)
-
-;; when-let had to be defined after the dlet macro is defined in destructure.lisp and NOT in the same file as dlet
 
 (defmacro when-first (bindings &rest body)
   (assert (and (= 1 (count bindings))

@@ -1,3 +1,15 @@
+;;; -----
+;;;
+;;;  Copyright (c) 2019-2023 Michael D Pendergrass, pupcus.org
+;;;
+;;;  This program and the accompanying materials are made
+;;;  available under the terms of the Eclipse Public License 2.0
+;;;  which is available at https://www.eclipse.org/legal/epl-2.0/
+;;;
+;;;  SPDX-License-Identifier: EPL-2.0
+;;;
+;;; -----
+
 ;;; -------
 ;;; -*- mode: Lisp; -*-
 ;;;
@@ -47,10 +59,6 @@
   (defun decode-file (filename)
     (let ((js (json-stream (slurp filename) :close t)))
       (dispatch js (json-streams:json-read js)))))
-
-
-
-
 
 ;; (json-seq "{\"a\" : 1} \"test\" 1 2 3 {\"b\" : 5} ")
 

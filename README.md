@@ -230,20 +230,10 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 
 ## License
 
-TBD
+  Copyright (c) 2019-2023 Michael D Pendergrass, pupcus.org
 
-For now, it is
+  This program and the accompanying materials are made available under the terms of the Eclipse Public License 2.0 which is available at https://www.eclipse.org/legal/epl-2.0/
 
-Copyright (c) 2022-2023 Michael D Pendergrass
-Copyright (c) 2022-2023 pupcus.org
+  SPDX-License-Identifier: EPL-2.0
 
-until something is possibly useful enough to release as open source.
-
-Even then, this library, if EVER provided, is provided as-is; use at your own risk; no warranties; no guarantees; and NO obligations on my part at all!
-
-No, listen! Seriously, I could not care less if it ever works for you or not. I wrote this because I wanted it
-
-Having said that, I would love it if people help make it better. If you can make it better, then you don't need ME to make it better and we all win. I will continue to do my best to make it faster, more complete, and more useful. All I am saying here is that I make no promises I will do things how you want, when you want, or even if IF you want.  If it does not work or work well on 'some other lisp', I may or may not care.[A
-
-I will likely release this under a BSD style license at some point soon
 

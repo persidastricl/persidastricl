@@ -1,4 +1,16 @@
 ;;; -----
+;;;
+;;;  Copyright (c) 2019-2023 Michael D Pendergrass, pupcus.org
+;;;
+;;;  This program and the accompanying materials are made
+;;;  available under the terms of the Eclipse Public License 2.0
+;;;  which is available at https://www.eclipse.org/legal/epl-2.0/
+;;;
+;;;  SPDX-License-Identifier: EPL-2.0
+;;;
+;;; -----
+
+;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
 ;;;   core/functions.lisp
@@ -174,24 +186,12 @@
                  (cat (first more) (rest more))))))
     (cat (first colls) (rest colls))))
 
-;; (defun concat (&rest seqs)
-;;   (labels ((concat* (s xs)
-;;              (if (seq s)
-;;                  (lseq (head s)
-;;                        (if (tail s)
-;;                            (concat* (tail s) xs)
-;;                            (when xs
-;;                              (concat* (seq (head xs)) (tail xs)))))
-;;                  (when xs
-;;                    (concat* (seq (head xs)) (tail xs))))))
-;;     (when seqs
-;;       (concat* (seq (head seqs)) (tail seqs)))))
-
 (defun mapcat (f s &rest seqs)
   (let ((xs (apply #'map f s seqs)))
     (apply #'concat (->list xs))))
-
+;;
 ;; TODO: can we figure out a way to do this without the 'eval'?? or does it even matter??
+;;
 (defmacro lazy-cat (&rest colls)
   `(let ((xs (map (lambda (x) (delay (eval x))) ',colls)))
      (labels ((cat (s more)

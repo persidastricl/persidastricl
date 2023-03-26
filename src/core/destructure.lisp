@@ -1,11 +1,21 @@
-;; allow [a b _ &rest rv :as v]
-;; allow {:keys [a b c] :as m}
-;; allow {a :a b :b :as m}
-;; allow {{:keys [a b c]} :top-level-key :as m}
-;; allow :strs :syms
-;; allow (a b _ &rest rv :as v) ;; list destructuring form (treat same as vector)
-;; allow allow :or directive for default values
-;; see what else clojure provides that is worth adopting
+;;; -----
+;;;
+;;;  Copyright (c) 2019-2023 Michael D Pendergrass, pupcus.org
+;;;
+;;;  This program and the accompanying materials are made
+;;;  available under the terms of the Eclipse Public License 2.0
+;;;  which is available at https://www.eclipse.org/legal/epl-2.0/
+;;;
+;;;  SPDX-License-Identifier: EPL-2.0
+;;;
+;;; -----
+
+;;; -------
+;;; -*- mode: Lisp; -*-
+;;;
+;;; destructure.lisp
+;;;
+;;; -----
 
 (in-package #:persidastricl)
 
