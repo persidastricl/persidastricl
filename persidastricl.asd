@@ -202,6 +202,9 @@
                              (:file "entry")
                              (:file "vector")
                              (:file "bitmap-vector")
+                             (:file "atom")
+                             (:file "thunk")
+                             (:file "lazy-sequence")
                              (:file "hash-map")
                              (:file "hash-set"))))
 

@@ -24,5 +24,7 @@
 (defgeneric diff (d1 d2)
   (:method (d1 d2) (if (== d1 d2) [nil nil d2] [d1 d2 nil])))
 
+(defgeneric diff ((a1 associable) (a1 associable)))
+
 (defmethod diff ((s1 sequence) (s1 sequence))
   (into [] ( )))

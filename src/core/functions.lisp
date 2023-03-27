@@ -586,3 +586,20 @@
         (if (functionp ret)
             (trampoline ret)
             ret))))
+
+(defun dorun (coll)
+  (let ((s (seq coll)))
+    (when s
+      (dorun (next s)))))
+
+(defun dorun-n (n coll)
+  (when (and (seq coll) (pos? n))
+    (dorun-n (dec n) (next coll))))
+
+(defun doall (coll)
+  (dorun coll)
+  coll)
+
+(defun do-n (n coll)
+  (dorun-n n coll)
+  coll)

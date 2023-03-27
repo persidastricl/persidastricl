@@ -13,7 +13,7 @@
 ;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;;   thunk.lisp
+;;;   lazy-sequence.lisp
 ;;;
 ;;; -----
 

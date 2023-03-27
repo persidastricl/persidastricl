@@ -110,6 +110,10 @@
    #:distinct
    #:distinct?
    #:dlet
+   #:do-n
+   #:doall
+   #:dorun
+   #:dorun-n
    #:dotted-pair?
    #:drop
    #:drop-last

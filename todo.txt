@@ -3,10 +3,7 @@ Things to do:
 *  profile/work-on efficiency
 *  improve tests
 
--- add subvec to get a slice of the vector
-    - clos object with v (parent vector) start , stop
-    - like a window on the parent persistent vector
-    - modifications modify the underlying v and return a new subvec
+-- bags/multisets
 
 * rethink iterators
    -- need to iterate on the values in a collection
