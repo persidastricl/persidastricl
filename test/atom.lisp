@@ -36,7 +36,9 @@
 
 (test swap-test
   :description "test swapping an atom's value"
-  (let ((a (atom {:a 1})))
+  (let* ((a (atom {:a 1}))
+         (prev (deref a)))
     (is (= 1 (get (deref a) :a)))
     (swap! a (fn (a) (update a :a #'inc)))
-    (is (= 2 (get (deref a) :a)))))
+    (is (= 2 (get (deref a) :a)))
+    (is (== prev {:a 1}))))

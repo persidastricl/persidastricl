@@ -77,9 +77,6 @@
   (:method ((object lazy-sequence)) object)
   (:method ((object hash-table)) (seq (->list object))))
 
-(defmacro lazy-seq* (&body body)
-  `(lazy-seq ,(list* `lambda `() body)) )
-
 (defun take (n coll)
   (labels ((take* (n s)
              (when (and (seq s) (> n 0))

@@ -364,7 +364,7 @@
     (more coll)))
 
 (defun repeatedly (f)
-  (lazy-seq f))
+  (lseq (funcall f) (repeatedly f)))
 
 (defun repeat (x)
   (repeatedly (constantly x)))

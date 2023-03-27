@@ -170,7 +170,7 @@
                              (:file "functions")
                              (:file "sub-vector")
                              (:file "destructure")
-                             (:file "when-let")
+                             (:file "when-first")
                              (:file "string")
                              (:file "set")
                              (:file "walk")
