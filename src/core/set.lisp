@@ -22,9 +22,10 @@
 (named-readtables:in-readtable persidastricl:syntax)
 
 (defun union (&rest sets)
-  (reduce #'into sets))
+  (reduce #'into sets :initial-value #{}))
 
 (defun intersection (&rest sets)
+  (assert (not (empty? sets)))
   (labels ((intersect* (s1 s2)
              (reduce
               (lambda (s item)
@@ -59,7 +60,7 @@
    xrel
    :initial-value {}))
 
-(defun select (s pred)
+(defun select (pred s)
   (reduce
    (lambda (s item)
      (if (funcall pred item)
@@ -84,7 +85,6 @@
 
 (defun rename (xrel kmap)
   (with-meta (set (map (lambda (x) (rename-keys x kmap)) xrel)) (meta xrel)))
-
 
 (defun map-invert (m)
   (reduce-kv
@@ -139,15 +139,21 @@
         (natural-join xrel yrel))))
 
 (defun subset? (set1 set2)
-  (and (<= (count set1) (count set2))
-       (every?
-        (lambda (item)
-          (contains? set2 item))
-        set1)))
+  (assert (and (set? set1) (set? set2)))
+  (cond
+    ((empty? set1) t)
+    (t (and (<= (count set1) (count set2))
+            (every?
+             (lambda (item)
+               (contains? set2 item))
+             set1)))))
 
 (defun superset? (set1 set2)
-  (and (>= (count set1) (count set2))
-       (every?
-        (lambda (item)
-          (contains? set1 item))
-        set2)))
+  (assert (and (set? set1) (set? set2)))
+  (cond
+    ((empty? set2) t)
+    (t (and (>= (count set1) (count set2))
+            (every?
+             (lambda (item)
+               (contains? set1 item))
+             set2)))))

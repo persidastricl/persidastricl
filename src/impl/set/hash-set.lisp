@@ -30,8 +30,7 @@
 (defmethod contains? ((hs hash-set) item)
   (with-slots (root) hs
     (let ((r (loc root item :hash (h:hash item) :depth 0 :default :not-found)))
-      (unless (== r :not-found)
-        r))))
+      (not (== r :not-found)))))
 
 (defmethod ->vector ((hs hash-set))
   (coerce (seq hs) 'cl:vector))

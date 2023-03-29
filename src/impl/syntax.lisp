@@ -44,6 +44,8 @@
   (declare (ignore stream))
   (error "Delimiter ~S shouldn't be read alone" char))
 
+(def end-of-syntax-objects (gensym "EOSYNTAX_"))
+
 (defun read-next-object (separators delimiter
                          &optional (input-stream *standard-input*))
   (flet ((peek-next-char () (peek-char t input-stream t nil t))
@@ -51,10 +53,10 @@
     (if (and delimiter (char= (peek-next-char) delimiter))
         (progn
           (discard-next-char)
-          nil)
+          end-of-syntax-objects)
         (let ((next-char (peek-next-char)))
           (cond
-            ((and delimiter (char= next-char delimiter)) nil)
+            ((and delimiter (char= next-char delimiter)) end-of-syntax-objects)
 
             ((member next-char separators)
              (discard-next-char)
@@ -67,7 +69,7 @@
   (declare (ignore char n-arg))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
-    while object
+    while (not (eql object end-of-syntax-objects))
     collect object into objects
     finally (return (if (not (empty? objects))
                         `(assoc (make-hash-table :test #'equalp) ,@objects)
@@ -77,7 +79,7 @@
   (declare (ignore char))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
-    while object
+    while (not (eql object end-of-syntax-objects))
     collect object into objects
     finally (return `(persidastricl::persistent-hash-map ,@objects))))
 
@@ -85,7 +87,7 @@
   (declare (ignore char n-arg))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
-    while object
+    while (not (eql object end-of-syntax-objects))
     collect object into objects
     finally (return `(persidastricl::transient-hash-map ,@objects))))
 
@@ -93,7 +95,7 @@
   (declare (ignore char n-arg))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
-    while object
+    while (not (eql object end-of-syntax-objects))
     collect object into objects
     finally (return `(persidastricl::persistent-hash-set ,@objects))))
 
@@ -108,7 +110,7 @@
   (expect +left-brace+ stream)
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-brace+ stream)
-    while object
+    while (not (eql object end-of-syntax-objects))
     collect object into objects
     finally (return `(persidastricl::transient-hash-set ,@objects))))
 
@@ -116,7 +118,7 @@
   (declare (ignore char))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-bracket+ stream)
-    while object
+    while (not (eql object end-of-syntax-objects))
     collect object into objects
     finally (return `(persidastricl::persistent-vector ,@objects))))
 
@@ -124,7 +126,7 @@
   (declare (ignore char n-arg))
   (loop
     for object = (read-next-object (list +space+ +comma+) +right-bracket+ stream)
-    while object
+    while (not (eql object end-of-syntax-objects))
     collect object into objects
     finally (return `(persidastricl::transient-vector ,@objects))))
 
