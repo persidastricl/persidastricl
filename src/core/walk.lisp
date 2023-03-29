@@ -86,6 +86,5 @@
 (defun postwalk-replace (smap form)
   (postwalk (lambda (x) (let ((v (get smap x))) (or v x))) form))
 
-;; TODO: I don't think this is working quite right yet
-;; (defun macroexpand-all (form)
-;;   (prewalk (lambda (x) (if (listp x) (macroexpand x) x)) form))
+(defun macroexpand-all (form)
+  (postwalk (lambda (x) (if (listp x) (macroexpand x) x)) form))
