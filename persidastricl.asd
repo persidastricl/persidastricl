@@ -174,6 +174,7 @@
                              (:file "string")
                              (:file "set")
                              (:file "walk")
+                             (:file "data")
                              (:file "json")))
 
                (:module "sample-seqs"
@@ -211,7 +212,7 @@
                              (:file "string")
                              (:file "set")
                              (:file "walk")
-                             )))
+                             (:file "data"))))
 
   :perform (test-op (o s)
                     (uiop:symbol-call :fiveam :run! (uiop:find-symbol* :master-suite :persidastricl))))

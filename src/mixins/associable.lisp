@@ -87,6 +87,14 @@
 (defmethod get ((ht hash-table) k &optional default)
   (gethash k ht default))
 
+(defmethod keys ((ht hash-table))
+  (loop for key being the hash-keys of ht collect key))
+
+(defmethod vals ((ht hash-table))
+  (loop for v being the hash-values of ht collect v))
+
+
+
 (defmethod assoc ((vec array) index value &rest iv-pairs)
   (labels ((assoc* (v i val)
              (check-type i integer)

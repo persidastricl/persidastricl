@@ -17,3 +17,8 @@ Things to do:
 
 -- add `for` macro
 -- add `doseq` macro
+
+packages?
+-- finish json
+-- xml
+-- zip

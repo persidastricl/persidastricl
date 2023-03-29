@@ -260,8 +260,7 @@
    #:while
    #:with-meta
    #:zero?
-   #:zipmap
-   ))
+   #:zipmap))
 
 
 (defpackage #:string
@@ -356,8 +355,7 @@
            #:select
            #:subset?
            #:superset?
-           #:union
-           ))
+           #:union))
 
 (defpackage #:walk
   (:use #:cl #:persidastricl)
@@ -397,8 +395,38 @@
    #:prewalk-demo
    #:prewalk-replace
    #:stringify-keys
-   #:walk
-   ))
+   #:walk))
+
+
+(defpackage #:data
+  (:use #:cl #:persidastricl)
+  (:shadowing-import-from #:persidastricl
+                          #:assoc
+                          #:atom
+                          #:keyword
+                          #:butlast
+                          #:cons
+                          #:count
+                          #:delete
+                          #:filter
+                          #:first
+                          #:second
+                          #:third
+                          #:nth
+                          #:get
+                          #:last
+                          #:length
+                          #:map
+                          #:merge
+                          #:pop
+                          #:reduce
+                          #:remove
+                          #:replace
+                          #:rest
+                          #:set
+                          #:some
+                          #:vector)
+  (:export #:diff))
 
 (defpackage #:json
   (:use #:cl #:persidastricl #:json-streams)
