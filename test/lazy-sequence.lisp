@@ -75,3 +75,5 @@
     (is (= 1 (head l)))
     (is (eq nil (head (tail l))))
     (is (empty? (tail l)))))
+
+;; (5am:run! :lazy-sequence-tests)

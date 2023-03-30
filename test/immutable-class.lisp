@@ -21,11 +21,11 @@
 
 (in-package #:persidastricl)
 
-(def-suite :immutable-tests
+(def-suite :immutable-class-tests
   :description "testing using the immutable-class as a metaclass for immutable objects used in persistent data structures"
   :in master-suite)
 
-(in-suite :immutable-tests)
+(in-suite :immutable-class-tests)
 
 (define-immutable-class foo ()
   ((data :initarg :data :accessor :data)))
@@ -61,3 +61,5 @@
     (setf (:other my-baz) 10)
     (is (= 10 (mixin-fn my-baz)))
     (signals invalid-access-to-immutable-object (setf (:other my-bar) 10))))
+
+;; (5am:run! :immutable-class-tests)

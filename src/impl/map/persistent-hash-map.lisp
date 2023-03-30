@@ -59,16 +59,17 @@
     (if-not (empty? kvs)
             (apply #'assoc m kvs)
             m)))
-;;
-;; for a re-readable representation use pr (todo)
-;;
+
 (defun pprint-persistent-hash-map (stream phm &rest other-args)
   (declare (ignore other-args))
   (let ((*print-length* (min *print-hamt-items* (or *print-lines* *print-hamt-items*))))
     (pprint-logical-block (stream (->list (take (inc *print-length*) (seq phm))) :prefix "{" :suffix "}")
       (pprint-exit-if-list-exhausted)
       (loop
-        (write (pprint-pop) :stream stream)
+        (pprint-logical-block (stream (->list (pprint-pop)))
+          (write (pprint-pop) :stream stream)
+          (write-char #\space stream)
+          (write (pprint-pop) :stream stream))
         (pprint-exit-if-list-exhausted)
         (write-char #\space stream)
         (pprint-newline :fill stream)))))

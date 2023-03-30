@@ -13,9 +13,7 @@
 ;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;; test/hash.lisp
-;;;
-;;;  testing hashing
+;;; test/string.lisp
 ;;;
 ;;; -----
 
@@ -71,25 +69,26 @@
   (is (== "OObarfoo" (s:replace-first "foobarfoo" "f(o+)" (lambda (mv) (s:upper-case (second mv))))))
   (is (== "baz\\bangslash" (s:replace-first "bazslashbangslash" "slash" (constantly "\\")))))
 
-(test join-test
+(test join-test-with-no-separator
   :description "testing string joins with sequences of things"
   (is (== "" (s:join nil)))
   (is (== "" (s:join [])))
   (is (== "1" (s:join [1])))
-  (is (== "12" (s:join [1 2])))
+  (is (== "12" (s:join [1 2]))))
 
+(test join-test-with-separator
   (is (== "1,2,3" (s:join #\, [1 2 3])))
   (is (== "" (s:join #\, [])))
   (is (== "1" (s:join #\, [1])))
   (is (== "" (s:join #\, nil)))
-  (is (== "1 and-a 2 and-a 3" (s:join " and-a " [1 2 3])))
+  (is (== "1 and-a 2 and-a 3" (s:join " and-a " [1 2 3]))))
 
-  (test trim-newline-test
-    :description "testing trim-newline"
-    (is (== "foo" (s:trim-newline (format nil "foo~c" #\newline))))
-    (is (== "foo" (s:trim-newline (format nil "foo~c~c" #\return #\newline))))
-    (is (== "foo" (s:trim-newline "foo")))
-    (is (== "" (s:trim-newline "")))))
+(test trim-newline-test
+  :description "testing trim-newline"
+  (is (== "foo" (s:trim-newline (format nil "foo~c" #\newline))))
+  (is (== "foo" (s:trim-newline (format nil "foo~c~c" #\return #\newline))))
+  (is (== "foo" (s:trim-newline "foo")))
+  (is (== "" (s:trim-newline ""))))
 
 (test capitalize-test
   (is (== "Foobar" (s:capitalize "foobar")))
@@ -206,4 +205,4 @@
   (is (== "{}" (str {})))
   (is (== "[]" (str []))))
 
-;; (5am:run! :string-tests)
+;;(5am:run! :string-tests)

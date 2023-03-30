@@ -72,3 +72,5 @@
     (is (equalp #(0 1 4) (v:delete original 2 2)))
     (signals error (v:delete original 5))
     (is (equalp #(0 1 2 3 4) original))))
+
+;; (5am:run! :vector-tests)

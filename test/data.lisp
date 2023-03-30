@@ -27,7 +27,6 @@
 
 (in-suite :data-tests)
 
-
 (test diff-test
   (is (== [nil nil nil] (data:diff nil nil)))
   (is (== [1 2 nil] (data:diff 1 2)))

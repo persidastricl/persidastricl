@@ -67,12 +67,12 @@
     (is (bv-equal-p expected (upd bv 31 (map-entry :k1  :updated))))))
 
 (test delete-key-value-test
-      :description ""
-      (let ((bv *pkvbv*)
-            (expected (make-instance 'persistent-key-value-bitmap-vector
-                                     :bitmap #b00000000000000001000000000000001
-                                     :data #(:k2 :v2 :k3 :v3))))
-        (is (bv-equal-p expected (del bv 31)))))
+  :description ""
+  (let ((bv *pkvbv*)
+        (expected (make-instance 'persistent-key-value-bitmap-vector
+                                 :bitmap #b00000000000000001000000000000001
+                                 :data #(:k2 :v2 :k3 :v3))))
+    (is (bv-equal-p expected (del bv 31)))))
 
 (test is-set-key-value-test
   :description ""
@@ -87,9 +87,9 @@
     (is (== nil (at-position bv 2)))))
 
 (test count-test
-      :description ""
-      (let ((bv *pkvbv*))
-        (is (== 3 (count bv)))))
+  :description ""
+  (let ((bv *pkvbv*))
+    (is (== 3 (count bv)))))
 
 
 (defparameter sub-node-1 (make-instance 'persistent-node-bitmap-vector :bitmap #b0001 :data #(1)))
@@ -112,29 +112,31 @@
              (== (data bv) (new-array sub-node-2 sub-node-3 sub-node-1))))))
 
 (test update-node-test
-      :description ""
-      (let ((bv *pnbv*)
-            (expected (make-instance 'persistent-node-bitmap-vector
-                                     :bitmap #b10000000000000001000000000000001
-                                     :data (new-array sub-node-2 sub-node-3 updated-node))))
-        (is (bv-equal-p expected (upd bv 31 updated-node)))))
+  :description ""
+  (let ((bv *pnbv*)
+        (expected (make-instance 'persistent-node-bitmap-vector
+                                 :bitmap #b10000000000000001000000000000001
+                                 :data (new-array sub-node-2 sub-node-3 updated-node))))
+    (is (bv-equal-p expected (upd bv 31 updated-node)))))
 
 (test delete-key-value-test
-      :description ""
-      (let ((bv *pnbv*)
-            (expected (make-instance 'persistent-node-bitmap-vector
-                                     :bitmap #b00000000000000001000000000000001
-                                     :data (new-array sub-node-2 sub-node-3))))
-        (is (bv-equal-p expected (del bv 31)))))
+  :description ""
+  (let ((bv *pnbv*)
+        (expected (make-instance 'persistent-node-bitmap-vector
+                                 :bitmap #b00000000000000001000000000000001
+                                 :data (new-array sub-node-2 sub-node-3))))
+    (is (bv-equal-p expected (del bv 31)))))
 
 (test is-set-node-test
-      :description ""
-      (let ((bv *pnbv*))
-        (is-true  (is-set bv 15))
-        (is-false (is-set bv 2))))
+  :description ""
+  (let ((bv *pnbv*))
+    (is-true  (is-set bv 15))
+    (is-false (is-set bv 2))))
 
 (test at-position-node-test
-      :description ""
-      (let ((bv *pnbv*))
-        (is (== sub-node-3 (at-position bv 15)))
-        (is (== nil (at-position bv 2)))))
+  :description ""
+  (let ((bv *pnbv*))
+    (is (== sub-node-3 (at-position bv 15)))
+    (is (== nil (at-position bv 2)))))
+
+;; (5am:run! :bitmap-vector-tests)

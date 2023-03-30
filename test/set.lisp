@@ -31,32 +31,26 @@
 
 (test union-test
   (is (== (set:union) #{}))
-
   (is (== (set:union #{}) #{}))
   (is (== (set:union #{1}) #{1}))
   (is (== (set:union #{1 2 3}) #{1 2 3}))
-
   (is (== (set:union #{} #{}) #{}))
   (is (== (set:union #{} #{1}) #{1}))
   (is (== (set:union #{} #{1 2 3}) #{1 2 3}))
   (is (== (set:union #{1} #{}) #{1}))
   (is (== (set:union #{1 2 3} #{}) #{1 2 3}))
-
   (is (== (set:union #{1} #{2}) #{1 2}))
   (is (== (set:union #{1} #{1 2}) #{1 2}))
   (is (== (set:union #{2} #{1 2}) #{1 2}))
   (is (== (set:union #{1 2} #{3}) #{1 2 3}))
   (is (== (set:union #{1 2} #{2 3}) #{1 2 3}))
-
   (is (== (set:union #{} #{} #{}) #{}))
   (is (== (set:union #{1} #{} #{}) #{1}))
   (is (== (set:union #{} #{1} #{}) #{1}))
   (is (== (set:union #{} #{} #{1}) #{1}))
   (is (== (set:union #{1 2} #{2 3} #{}) #{1 2 3}))
-
   (is (== (set:union #{1 2} #{3 4} #{5 6}) #{1 2 3 4 5 6}))
   (is (== (set:union #{1 2} #{2 3} #{1 3 4}) #{1 2 3 4}))
-
   (is (== (set:union #{1 2}
                      #{:a :b}
                      #{nil}
@@ -70,29 +64,24 @@
 
 (test intersection-test
   (signals simple-error (set:intersection))
-
   (is (== (set:intersection #{}) #{}))
   (is (== (set:intersection #{1}) #{1}))
   (is (== (set:intersection #{1 2 3}) #{1 2 3}))
-
   (is (== (set:intersection #{} #{}) #{}))
   (is (== (set:intersection #{} #{1}) #{}))
   (is (== (set:intersection #{} #{1 2 3}) #{}))
   (is (== (set:intersection #{1} #{}) #{}))
   (is (== (set:intersection #{1 2 3} #{}) #{}))
-
   (is (== (set:intersection #{1 2} #{1 2}) #{1 2}))
   (is (== (set:intersection #{1 2} #{3 4}) #{}))
   (is (== (set:intersection #{1 2} #{1}) #{1}))
   (is (== (set:intersection #{1 2} #{2}) #{2}))
   (is (== (set:intersection #{1 2 4} #{2 3 4 5}) #{2 4}))
-
   (is (== (set:intersection #{} #{} #{}) #{}))
   (is (== (set:intersection #{1} #{} #{}) #{}))
   (is (== (set:intersection #{1} #{1} #{}) #{}))
   (is (== (set:intersection #{1} #{} #{1}) #{}))
   (is (== (set:intersection #{1 2} #{2 3} #{}) #{}))
-
   (is (== (set:intersection #{1 2} #{2 3} #{5 2}) #{2}))
   (is (== (set:intersection #{1 2 3} #{1 3 4} #{1 3}) #{1 3}))
   (is (== (set:intersection #{1 2 3} #{3 4 5} #{8 2 3}) #{3})))
@@ -101,22 +90,20 @@
   (is (== (set:difference #{}) #{}))
   (is (== (set:difference #{1}) #{1}))
   (is (== (set:difference #{1 2 3}) #{1 2 3}))
-
   (is (== (set:difference #{1 2} #{1 2}) #{}))
   (is (== (set:difference #{1 2} #{3 4}) #{1 2}))
   (is (== (set:difference #{1 2} #{1}) #{2}))
   (is (== (set:difference #{1 2} #{2}) #{1}))
   (is (== (set:difference #{1 2 4} #{2 3 4 5}) #{1}))
-
   (is (== (set:difference #{1 2} #{2 3} #{5 2}) #{1}))
   (is (== (set:difference #{1 2 3} #{1 3 4} #{1 3}) #{2}))
-  (is (== (set:difference #{1 2 3} #{3 4 5} #{8 2 3}) #{1})) )
+  (is (== (set:difference #{1 2 3} #{3 4 5} #{8 2 3}) #{1})))
 
 (test select-test
   (is (== (set:select #'int? #{}) #{}))
   (is (== (set:select #'int? #{1 2}) #{1 2}))
   (is (== (set:select #'int? #{1 2 :a :b :c}) #{1 2}))
-  (is (== (set:select #'int? #{:a :b :c}) #{})) )
+  (is (== (set:select #'int? #{:a :b :c}) #{})))
 
 (def compositions #{{:name "Canon in D" :composer "J. S. Bach"}
                     {:name "Jesu, joy of man's desiring" :composer "J. S. Bach"}
@@ -171,7 +158,6 @@
   (is (set:subset? #{nil} #{nil}))
   (is (set:subset? #{nil} #{nil 'false}))
   (is (set:subset? #{1 2 nil} #{1 2 nil 4}))
-
   (is (not (set:subset? #{1} #{})))
   (is (not (set:subset? #{2} #{1})))
   (is (not (set:subset? #{1 3} #{1})))
@@ -190,7 +176,6 @@
   (is (set:superset? #{nil} #{nil}))
   (is (set:superset? #{'false nil} #{'false}))
   (is (set:superset? #{1 2 4 nil 'false} #{1 2 nil}))
-
   (is (not (set:superset? #{} #{1})))
   (is (not (set:superset? #{2} #{1})))
   (is (not (set:superset? #{1} #{1 3})))

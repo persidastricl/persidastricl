@@ -42,3 +42,5 @@
     (swap! a (fn (a) (update a :a #'inc)))
     (is (= 2 (get (deref a) :a)))
     (is (== prev {:a 1}))))
+
+;; (5am:run! :atom-tests)

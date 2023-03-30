@@ -62,7 +62,10 @@
     (pprint-logical-block (stream (->list (take (inc *print-length*) (seq thm))) :prefix "@{" :suffix "}")
       (pprint-exit-if-list-exhausted)
       (loop
-        (write (pprint-pop) :stream stream)
+        (pprint-logical-block (stream (->list (pprint-pop)))
+          (write (pprint-pop) :stream stream)
+          (write-char #\space stream)
+          (write (pprint-pop) :stream stream))
         (pprint-exit-if-list-exhausted)
         (write-char #\space stream)
         (pprint-newline :fill stream)))))

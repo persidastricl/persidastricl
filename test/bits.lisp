@@ -52,3 +52,5 @@
   :description "given a bitmap return the number of 'on' bits below the bit-position"
   (is (= 0 (b:index 16 #b11111111111111110000000000000000)))
   (is (= 5 (b:index 31 #b11000000110000000000000000000011))))
+
+;; (5am:run! :bits-tests)

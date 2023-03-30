@@ -45,3 +45,5 @@
 (test value-tests
   :description "test pulling the value out of map entries"
   (is (eq :v (value (map-entry :k :v)))))
+
+;; (5am:run! :entry-tests)

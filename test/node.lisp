@@ -30,3 +30,5 @@
 (test simple-node-tests
   :description ""
   (is (= 1 1)))
+
+;; (5am:run! :node-tests)

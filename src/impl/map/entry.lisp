@@ -69,7 +69,7 @@
 
 (defun pprint-map-entry (stream entry &rest other-args)
   (declare (ignore other-args))
-  (pprint-logical-block (stream (->list entry))
+  (pprint-logical-block (stream (->list entry) :prefix "[" :suffix "]")
     (write (pprint-pop) :stream stream)
     (write-char #\space stream)
     (write (pprint-pop) :stream stream)))

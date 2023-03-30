@@ -40,3 +40,5 @@
 
     (is (nil? (slot-value th 'fn)))
     (is (== (slot-value th 'r) {:a 2}))))
+
+;; (5am:run! :thunk-tests)
