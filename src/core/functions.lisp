@@ -389,14 +389,16 @@
       (let ((v (first seq)))
         (lseq v (next* (rest seq) v))))))
 
-(defun distinct? (x &rest  more)
+(defun distinct? (&rest items)
   (labels ((distinct* (s target others)
              (if target
                  (if (contains? s target)
                      nil
                      (distinct* (conj s target) (first others) (rest others)))
                  t)))
-    (distinct* #{} x more)))
+    (if (seq items)
+        (distinct* #{} (first items) (rest items))
+        t)))
 
 (defun shuffle (coll)
   (assert (collection? coll))
