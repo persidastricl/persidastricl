@@ -43,7 +43,6 @@
      m
      :initial-value (vec (take (apply #'max (->list (keys m))) (repeat nil))))))
 
-
 (defun diff-associative-key (a b k)
   "Diff associative things a and b, comparing only the key k."
   (dlet ((va (get a k))
@@ -97,8 +96,6 @@
 
 (defmethod diff* ((s1 p::lazy-sequence) s2)
   (diff-sequential s1 s2))
-
-(type-of %{:a 1})
 
 (defun diff-type (x)
   (typecase x
