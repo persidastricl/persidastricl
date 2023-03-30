@@ -109,3 +109,6 @@
          tv))
      (->list (partition-all (list* index item kv-pairs) 2))
      :initial-value tv)))
+
+(defmethod with-meta ((tv transient-vector) meta)
+  (setf (slot-value tv 'meta) meta))
