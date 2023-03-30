@@ -572,7 +572,8 @@
 
 (defun slurp (f)
   (with-open-file (is f :if-does-not-exist nil)
-    (str:join #\NEWLINE (->list (line-seq is)))))
+    (when is
+      (str:join #\NEWLINE (->list (line-seq is))))))
 
 (defun spit (f contents &key (if-exists :overwrite) (if-does-not-exist :create))
   (with-open-file (os f :if-exists if-exists :if-does-not-exist if-does-not-exist :direction :output)

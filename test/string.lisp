@@ -81,6 +81,7 @@
   (is (== "1,2,3" (s:join #\, [1 2 3])))
   (is (== "" (s:join #\, [])))
   (is (== "1" (s:join #\, [1])))
+  (is (== "" (s:join #\, nil)))
   (is (== "1 and-a 2 and-a 3" (s:join " and-a " [1 2 3])))
 
   (test trim-newline-test

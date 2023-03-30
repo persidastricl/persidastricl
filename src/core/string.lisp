@@ -61,10 +61,10 @@
   (assert (string? s))
   (string-capitalize s))
 
-(defun join (delimeter-or-strings &optional strings)
+(defun join (delimeter-or-strings &optional (strings nil strings-p))
   "join strings by interposing delimeter between them"
-  (if (nil? strings)
-      (apply #'str  (->list delimeter-or-strings))
+  (if (not strings-p)
+      (apply #'str (->list delimeter-or-strings))
       (let ((join-format (format nil "~~{~~a~~^~a~~}" delimeter-or-strings)))
         (format nil join-format (->list strings)))))
 
