@@ -43,7 +43,6 @@
               (assert (= i items-in-data))
               (make-instance (type-of node) :level level :data (v:append data leaf))))))))
 
-
 (defmethod get-leaf-node ((node persistent-vector-node) first-index-of-values)
   (with-slots (level data) node
     (let ((i (b:bits first-index-of-values level))
@@ -88,7 +87,6 @@
             (progn
               (assert (= i (1- items-in-data)))
               (make-instance (type-of node) :level level :data (v:delete data i))))))))
-
 
 (defmethod add ((node persistent-vector-node) item &key index)
   (with-slots (level data) node

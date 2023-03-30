@@ -13,9 +13,9 @@
 ;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;;   bitop.lisp
+;;;   bits.lisp
 ;;;
-;;; bit operations needed for hamt/bpvt classes
+;;;  bit operations needed for hamt/bpvt classes
 ;;;
 ;;; -----
 

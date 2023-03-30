@@ -43,7 +43,6 @@
                                   :fn (lambda (obj &rest args)
                                         (apply #'do-hash #'sip-hash:hash-64-4-8 (babel:string-to-octets (str obj)) 0 0 args))))
 
-
 (defvar sip-hash128 (make-instance 'hasher
                                    :size 128
                                    :fn (lambda (obj &rest args)

@@ -262,7 +262,6 @@
    #:zero?
    #:zipmap))
 
-
 (defpackage #:string
   (:nicknames #:s #:str)
   (:use #:cl #:persidastricl)
@@ -396,7 +395,6 @@
    #:prewalk-replace
    #:stringify-keys
    #:walk))
-
 
 (defpackage #:data
   (:use #:cl #:persidastricl)

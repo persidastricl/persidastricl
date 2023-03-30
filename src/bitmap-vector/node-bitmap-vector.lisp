@@ -13,7 +13,7 @@
 ;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;;   key-value-bitmap-vector.lisp
+;;;   node-bitmap-vector.lisp
 ;;;
 ;;; -----
 

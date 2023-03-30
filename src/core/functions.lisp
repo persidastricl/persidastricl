@@ -147,7 +147,6 @@
                        (lseq r (map* (remove-if #'nil? (cl:map 'list #'tail ss)))))))))
         (map* seqs)))))
 
-
 (defun every? (f &rest seqs)
   (when (keywordp f) (make-funcallable-keyword f))
   (when seqs

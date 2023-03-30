@@ -82,7 +82,6 @@
    kmap
    :initial-value (apply #'dissoc map (->list (keys kmap)))))
 
-
 (defun rename (xrel kmap)
   (with-meta (set (map (lambda (x) (rename-keys x kmap)) xrel)) (meta xrel)))
 

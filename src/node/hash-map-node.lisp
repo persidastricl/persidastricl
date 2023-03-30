@@ -84,7 +84,6 @@
         ;; it is not here at all so return default
         (t default)))))
 
-
 (defmethod remove ((node hash-map-node) key &key hash depth)
   (with-slots (dmap nmap) node
     (let ((position (b:bits hash depth)))

@@ -28,10 +28,6 @@
 (defgeneric lookup (associable k &optional default))
 (defgeneric get (associable k &optional default))
 
-;; -----
-;;  do we really need these for lists and vectors
-;;  i.e. will we ever call them (I am thinking yes with update-in and assoc-in ???)
-
 (defmethod assoc ((lst list) k1 v1 &rest kv-pairs)
   (labels ((assoc* (l k v)
              (check-type k integer)
@@ -92,8 +88,6 @@
 
 (defmethod vals ((ht hash-table))
   (loop for v being the hash-values of ht collect v))
-
-
 
 (defmethod assoc ((vec array) index value &rest iv-pairs)
   (labels ((assoc* (v i val)
