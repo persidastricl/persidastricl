@@ -21,11 +21,11 @@
 
 (named-readtables:in-readtable persidastricl:syntax)
 
-(define-immutable-class sub-vector (collection seqable)
+(define-immutable-class sub-vector (metadata collection seqable)
   ((v :initarg :v :reader v)
    (start :initarg :start :reader start)
    (end :initarg :end :reader end))
-  (:default-initargs :v [] :start 0 :end 0))
+  (:default-initargs :v [] :start 0 :end 0 :meta nil))
 
 (defun subvec (v start &optional (end (count v)))
   (assert (vector? v))
@@ -34,15 +34,16 @@
 
 (defmethod conj ((sv sub-vector) &rest items)
   (if items
-      (let* ((items (into #() items))
-             (n (count items))
-             (end (slot-value sv 'end))
-             (nv (reduce
-                  (lambda (v i)
-                    (assoc v (+ end i) (get items i)))
-                  (range n)
-                  :initial-value (slot-value sv 'v))))
-        (subvec nv (slot-value sv 'start) (+ end n)))
+      (with-slots (v start end meta) sv
+        (let* ((items (into #() items))
+               (n (count items))
+               (end (slot-value sv 'end))
+               (nv (reduce
+                    (lambda (v* i)
+                      (assoc v* (+ end i) (get items i)))
+                    (range n)
+                    :initial-value v)))
+          (make-instance 'sub-vector :v  nv :start start :end (+ end n) :meta meta)))
       sv))
 
 (defmethod count ((sv sub-vector))
@@ -70,6 +71,17 @@
 (defmethod rest ((sv sub-vector))
   (drop 1 (seq sv)))
 
+(defmethod rseq ((sv sub-vector))
+  (with-slots (v start) sv
+    (let ((count (count sv)))
+      (when (pos? count)
+        (let ((index (+ start (dec count))))
+          (labels ((next* (i)
+                     (when (>= i 0)
+                       (let ((value (get v i)))
+                         (lseq value (next* (1- i)))))))
+            (lseq (get v index) (next* (1- index)))))))))
+
 (defmethod nth ((sv sub-vector) n &optional (default nil))
   (nth (seq sv) n default))
 
@@ -89,24 +101,24 @@
   (conj sv value))
 
 (defmethod pop ((sv sub-vector))
-  (subvec (slot-value sv 'v) (slot-value sv 'start) (dec (slot-value sv 'end))))
+  (with-slots (v start end meta) sv
+    (make-instance 'sub-vector :v v :start start :end (max start (dec end)) :meta meta)))
 
 (defmethod assoc ((sv sub-vector) index item &rest kv-pairs)
-  (let* ((start (slot-value sv 'start))
-         (end (slot-value sv 'end))
-         (new-items (- (inc (count kv-pairs)) (- (dec end) index))))
+  (with-slots (v start end meta) sv
+    (let ((new-items (- (inc (count kv-pairs)) (- (dec end) index))))
 
-    (labels ((adjust (vr k v) (conj vr (+ start k) v)))
+      (labels ((adjust (vr k v) (conj vr (+ start k) v)))
 
-      (let* ((kv-pairs (reduce
-                        (lambda (v kv-pair)
-                          (apply #'adjust v kv-pair))
-                        (partition kv-pairs 2)
-                        :initial-value (conj [] (+ start index) item)))
+        (let* ((kv-pairs (reduce
+                          (lambda (v kv-pair)
+                            (apply #'adjust v kv-pair))
+                          (partition kv-pairs 2)
+                          :initial-value (conj [] (+ start index) item)))
 
-             (nv (apply #'assoc (slot-value sv 'v) (->list kv-pairs))))
+               (nv (apply #'assoc v (->list kv-pairs))))
 
-        (subvec nv start (+ end (max 0 new-items)))))))
+          (make-instance 'sub-vector :v nv :start start :end (+ end (max 0 new-items)) :meta meta))))))
 
 (defun pprint-sub-vector (stream sv &rest other-args)
   (declare (ignore other-args))
@@ -123,3 +135,7 @@
   (format stream "~/persidastricl::pprint-sub-vector/" object))
 
 (set-pprint-dispatch 'sub-vector 'pprint-sub-vector)
+
+(defmethod with-meta ((sv sub-vector) meta)
+  (with-slots (v start end) sv
+    (make-instance 'sub-vector :v v :start start :end end :meta meta)))
