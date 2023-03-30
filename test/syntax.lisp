@@ -21,6 +21,8 @@
 
 (in-package #:persidastricl)
 
+(named-readtables:in-readtable persidastricl:syntax)
+
 (def-suite :syntax-tests
   :description "testing bit operations"
   :in master-suite)
