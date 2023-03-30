@@ -25,8 +25,8 @@
   (assert (and (= 1 (count bindings))
                (= 2 (count (first bindings)))))
   (dlet (([x xs] (first  bindings)))
-        (let ((ss (gensym)))
-          `(let ((,ss (seq ,xs)))
-             (when ,ss
-               (let ((,x (first ,ss)))
-                 ,@body))))))
+    (let ((ss (gensym)))
+      `(let ((,ss (seq ,xs)))
+         (when ,ss
+           (let ((,x (first ,ss)))
+             ,@body))))))

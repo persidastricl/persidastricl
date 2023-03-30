@@ -39,7 +39,7 @@
     (reduce
      (lambda (result e)
        (dlet (([k v] (->list e)))
-             (assoc result k v)))
+         (assoc result k v)))
      m
      :initial-value (vec (take (apply #'max (->list (keys m))) (repeat nil))))))
 
@@ -54,9 +54,9 @@
          (same (and in-a in-b
                     (or (not (nil? ab))
                         (and (nil? va) (nil? vb))))))
-        [(when (and in-a (or (not (nil? a*)) (not same))) {k a*})
-         (when (and in-b (or (not (nil? b*)) (not same))) {k b*})
-         (when same {k ab})]))
+    [(when (and in-a (or (not (nil? a*)) (not same))) {k a*})
+     (when (and in-b (or (not (nil? b*)) (not same))) {k b*})
+     (when same {k ab})]))
 
 (defun diff-associative (a b ks)
   (vec
