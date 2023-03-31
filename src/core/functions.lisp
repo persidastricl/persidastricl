@@ -69,7 +69,7 @@
 (defun frequencies (coll)
   (reduce
    (lambda (m target)
-     (assoc m x (inc (get m x 0))))
+     (assoc m target (inc (get m target 0))))
    coll
    :initial-value {}))
 

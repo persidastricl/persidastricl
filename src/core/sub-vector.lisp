@@ -30,7 +30,7 @@
 (defun subvec (v start &optional (end (count v)))
   (assert (vector? v))
   (assert (> end start))
-  (make-instance 'sub-vector :v v :start start :end end))
+  (make-instance 'sub-vector :v v :start start :end (min end (count v))))
 
 (defmethod conj ((sv sub-vector) &rest items)
   (if items
@@ -77,7 +77,7 @@
       (when (pos? count)
         (let ((index (+ start (dec count))))
           (labels ((next* (i)
-                     (when (>= i 0)
+                     (when (>= i start)
                        (let ((value (get v i)))
                          (lseq value (next* (1- i)))))))
             (lseq (get v index) (next* (1- index)))))))))
