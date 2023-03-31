@@ -89,3 +89,17 @@
      (labels ((,symbol (k &optional (default nil))
                 (lookup ,symbol k default)))
        ,@body)))
+
+(defmethod == ((ht1 hash-map) ht2)
+  (when (or (instance? 'hash-table ht2) (instance? 'hash-map ht2))
+    (or (eq ht1 ht2)
+        (let ((ks1 (set (keys ht1))))
+          (and
+           (== ks1 (set (keys ht2)))
+           (every
+            (lambda (k)
+              (== (get ht1 k) (get ht2 k)))
+            (->list ks1)))))))
+
+(defmethod == (ht1 (ht2 hash-map))
+  (== ht2 ht1))

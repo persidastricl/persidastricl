@@ -83,23 +83,40 @@
 ;;
 ;; -----
 
-(defmethod == ((s1 lazy-sequence) s2)
+;;
+;; lazy sequence equality with sequences and vectors
+
+(defmethod == ((s1 lazy-sequence) (s2 lazy-sequence))
   (or (eq s1 s2)
       (and (= (count s1) (count s2))
            (every?
             (lambda (e1 e2)
               (== e1 e2))
             s1
-            (seq s2)))))
+            s2))))
 
-(defmethod == (s1 (s2 lazy-sequence))
-  (== s2 s1))
-
-(defmethod == ((s1 vector) s2)
+(defmethod == ((s1 sequence) (s2 lazy-sequence))
   (== (seq s1) s2))
 
-(defmethod == (s1 (s2 vector))
-  (== (seq s2) s1))
+(defmethod == ((s1 lazy-sequence) (s2 sequence))
+  (== s1 (seq s2)))
+
+(defmethod == ((s1 vector) (s2 lazy-sequence))
+  (== (seq s1) s2))
+
+(defmethod == ((s1 lazy-sequence) (s2 vector))
+  (== s1 (seq s2)))
+
+;;
+;; vectors
+;;
+
+(defmethod == ((s1 vector) (s2 vector))
+  (== (seq s1) (seq s2)))
 
 (defmethod == ((s1 sequence) (s2 vector))
-  (== (seq s1) s2))
+  (when s1 (== (seq s2) (seq s1))))
+
+(defmethod == ((s1 vector) (s2 sequence))
+  (when s2 (== (seq s1) (seq s2))))
+

@@ -33,6 +33,8 @@
      (c2mop:class-slots _class))))
 
 (defgeneric == (obj1 obj2)
+  (:method ((obj1 (eql nil)) obj2) (eql obj2 nil))
+  (:method (obj1 (obj2 (eql nil))) (eql obj1 nil))
   (:method (obj1 obj2) (equalp obj1 obj2)))
 
 ;; -----
@@ -67,6 +69,9 @@
                                   (== (cdr v1) (cdr v2))))
     ((dotted-pair? v2) nil)
     ((dotted-pair? v1) nil)
+
+    ((and (nil? v1) (nil? v2)) t)
+    ((or (nil? v1) (nil? v2)) nil)
 
     (t (or (eq v1 v2)
            (and (== (cl:length v1) (cl:length v2))

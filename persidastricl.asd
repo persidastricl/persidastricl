@@ -210,6 +210,7 @@
                              (:file "syntax")
                              (:file "hash-map")
                              (:file "hash-set")
+                             (:file "equality")
                              (:file "string")
                              (:file "set")
                              (:file "walk")

@@ -23,6 +23,12 @@
 
 (defclass associable () ())
 
+(defgeneric keys (obj)
+  (:method ((obj (eql nil))) nil))
+
+(defgeneric vals (obj)
+  (:method ((obj (eql nil))) nil))
+
 (defgeneric assoc (associable k v &rest kv-pairs))
 (defgeneric dissoc (associable &rest keys))
 (defgeneric lookup (associable k &optional default))
@@ -148,3 +154,13 @@
   (format stream "~/persidastricl::pprint-hash-table/" ht))
 
 (set-pprint-dispatch 'hash-table 'pprint-hash-table)
+
+(defmethod == ((ht1 hash-table) (ht2 hash-table))
+  (or (eq ht1 ht2)
+      (let ((ks1 (set (keys ht1))))
+        (and
+         (== ks1 (set (keys ht2)))
+         (every
+          (lambda (k)
+            (== (get ht1 k) (get ht2 k)))
+          (->list ks1))))))

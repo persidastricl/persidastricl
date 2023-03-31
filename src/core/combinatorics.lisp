@@ -108,4 +108,12 @@
                                        (map (lambda (c) (map (lambda (d) (get v-items d)) c)) (index-combinations n cnt))))
                 (t (multi-comb items n)))))))
 
-;; (into [] (combinations '(1 2 3 4 5 6 7 8 9 0) 4))
+;; (setf p::*print-bpvt-items* 100)
+
+;; (n-choose-k 26 6)
+
+;; (into [] (take 100  (combinations '(:a :b :c :d :e :f :g :h :i :j :k :l :m :n :o :p :q :r :s :t :u :v :w :x :y :z) 6)))
+
+;; (count (n-choose-k 26 6))
+
+;; (combinations '(:a :b :c :d :e :f :g :h :i :j :k :l :m :n :o :p :q :r :s :t :u :v :w :x :y :z) 4)

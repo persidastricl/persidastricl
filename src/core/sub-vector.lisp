@@ -35,7 +35,7 @@
 (defmethod conj ((sv sub-vector) &rest items)
   (if items
       (with-slots (v start end meta) sv
-        (let* ((items (into #() items))
+        (let* ((items (vec items))
                (n (count items))
                (end (slot-value sv 'end))
                (nv (reduce
@@ -140,8 +140,24 @@
   (with-slots (v start end) sv
     (make-instance 'sub-vector :v v :start start :end end :meta meta)))
 
-(defmethod == ((s1 sub-vector) s2)
-  (== (seq s1) s2))
+;;
+;; equality with subvecs
+;;
 
-(defmethod == (s1 (s2 sub-vector))
-  (== (seq s2) s1))
+(defmethod == ((s1 sub-vector) (s2 sequence))
+  (== (seq s1) (seq s2)))
+
+(defmethod == ((s1 sequence) (s2 sub-vector))
+  (== (seq s2) (seq s1)))
+
+(defmethod == ((s1 sub-vector) (s2 vector))
+  (== (seq s1) (seq s2)))
+
+(defmethod == ((s1 vector) (s2 sub-vector))
+  (== (seq s2) (seq s1)))
+
+(defmethod == ((s1 sub-vector) (s2 lazy-sequence))
+  (== (seq s1) (seq s2)))
+
+(defmethod == ((s1 lazy-sequence) (s2 sub-vector))
+  (== (seq s2) (seq s1)))

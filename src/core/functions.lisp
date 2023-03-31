@@ -135,7 +135,7 @@
 
 (defun map (f &rest seqs)
   (when (keywordp f) (make-funcallable-keyword f))
-  (when seqs
+  (when  (every #'seq seqs)
     (let ((n (count seqs))
           (seqs (cl:map 'list #'seq seqs)))
       (labels ((apply* (args)
@@ -149,21 +149,22 @@
 
 (defun every? (f &rest seqs)
   (when (keywordp f) (make-funcallable-keyword f))
-  (when seqs
-    (let ((n (count seqs))
-          (seqs (cl:map 'list #'seq seqs)))
-      (labels ((apply* (args)
-                 (apply f args))
-               (every?* (ss)
-                 (let ((args (cl:map 'list #'head ss))
-                       (rest-seqs (remove-if #'nil? (cl:map 'list #'tail ss))))
-                   (when (= n (count args))
-                     (let ((r (apply* args)))
-                       (when (true? r)
-                         (if (empty? rest-seqs)
-                             t
-                             (every?* rest-seqs))))))))
-        (every?* seqs)))))
+  (cond
+    ((every (lambda (s) (nil? (seq s))) seqs) t)
+    ((every #'seq seqs) (let ((n (count seqs))
+                              (seqs (cl:map 'list #'seq seqs)))
+                          (labels ((apply* (args)
+                                     (apply f args))
+                                   (every?* (ss)
+                                     (let ((args (cl:map 'list #'head ss))
+                                           (rest-seqs (remove-if #'nil? (cl:map 'list #'tail ss))))
+                                       (when (= n (count args))
+                                         (let ((r (apply* args)))
+                                           (when (true? r)
+                                             (if (empty? rest-seqs)
+                                                 t
+                                                 (every?* rest-seqs))))))))
+                            (every?* seqs))))))
 
 (fdef not-every? (comp #'not #'every?))
 
