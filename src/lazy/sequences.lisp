@@ -71,39 +71,39 @@
 ;;
 ;; -----
 
-(defun find-next-empty-multiple (factor multiple sieve)
-  (let ((target (* multiple factor)))
-    (if (and
-         (oddp target)
-         (not (get sieve target)))
-        multiple
-        (find-next-empty-multiple factor (+ multiple 2) sieve))))
+;; (defun find-next-empty-multiple (factor multiple sieve)
+;;   (let ((target (* multiple factor)))
+;;     (if (and
+;;          (oddp target)
+;;          (not (get sieve target)))
+;;         multiple
+;;         (find-next-empty-multiple factor (+ multiple 2) sieve))))
 
-(defun is-prime-p (n sieve)
-  (if-let ((value (get (deref sieve) n)))
-    (let ((factor (first value))
-          (multiple (second value)))
-      (let ((next (find-next-empty-multiple factor multiple (deref sieve))))
-        (swap! sieve (lambda (sieve)
-                       (-> sieve
-                         (assoc (* factor next) (list factor (+ next 2)))
-                         (dissoc n))))
-        nil))
-    (let ((next (find-next-empty-multiple n 3 (deref sieve))))
-      (swap! sieve #'assoc (* n next ) (list n (+ next 2)))
-      t)))
+;; (defun is-prime-p (n sieve)
+;;   (if-let ((value (get (deref sieve) n)))
+;;     (let ((factor (first value))
+;;           (multiple (second value)))
+;;       (let ((next (find-next-empty-multiple factor multiple (deref sieve))))
+;;         (swap! sieve (lambda (sieve)
+;;                        (-> sieve
+;;                          (assoc (* factor next) (list factor (+ next 2)))
+;;                          (dissoc n))))
+;;         nil))
+;;     (let ((next (find-next-empty-multiple n 3 (deref sieve))))
+;;       (swap! sieve #'assoc (* n next ) (list n (+ next 2)))
+;;       t)))
 
-(defun next-prime (p sieve)
-  (if (is-prime-p p sieve)
-      p
-      (next-prime (+ p 2) sieve)))
+;; (defun next-prime (p sieve)
+;;   (if (is-prime-p p sieve)
+;;       p
+;;       (next-prime (+ p 2) sieve)))
 
-(defun lazy-primes (p sieve)
-  (let ((next (next-prime p sieve)))
-    (lseq next (lazy-primes (+ next 2) sieve))))
+;; (defun lazy-primes (p sieve)
+;;   (let ((next (next-prime p sieve)))
+;;     (lseq next (lazy-primes (+ next 2) sieve))))
 
-(defun primes-seq ()
-  (lseq 2 (lazy-primes 3 (atom (persistent-hash-map)))))
+;; (defun primes-seq ()
+;;   (lseq 2 (lazy-primes 3 (atom (persistent-hash-map)))))
 
 
 ;; -----
