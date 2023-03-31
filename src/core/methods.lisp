@@ -94,3 +94,12 @@
 
 (defmethod == (s1 (s2 lazy-sequence))
   (== s2 s1))
+
+(defmethod == ((s1 vector) s2)
+  (== (seq s1) s2))
+
+(defmethod == (s1 (s2 vector))
+  (== (seq s2) s1))
+
+(defmethod == ((s1 sequence) (s2 vector))
+  (== (seq s1) s2))

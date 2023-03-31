@@ -139,3 +139,9 @@
 (defmethod with-meta ((sv sub-vector) meta)
   (with-slots (v start end) sv
     (make-instance 'sub-vector :v v :start start :end end :meta meta)))
+
+(defmethod == ((s1 sub-vector) s2)
+  (== (seq s1) s2))
+
+(defmethod == (s1 (s2 sub-vector))
+  (== (seq s2) s1))
