@@ -17,7 +17,7 @@
 ;;;
 ;;; -----
 
-(in-package :persidastricl)
+(in-package :combinatorics)
 
 (named-readtables:in-readtable persidastricl:syntax)
 
@@ -107,3 +107,5 @@
                                        (->list items)
                                        (map (lambda (c) (map (lambda (d) (get v-items d)) c)) (index-combinations n cnt))))
                 (t (multi-comb items n)))))))
+
+;; (into [] (combinations '(1 2 3 4 5 6 7 8 9 0) 4))

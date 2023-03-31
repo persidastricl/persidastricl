@@ -175,7 +175,8 @@
                              (:file "set")
                              (:file "walk")
                              (:file "data")
-                             (:file "json")))
+                             (:file "json")
+                             (:file "combinatorics")))
 
                (:module "sample-seqs"
                 :pathname "src/lazy"

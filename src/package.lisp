@@ -207,6 +207,7 @@
    #:replace
    #:reset!
    #:rest
+   #:rseq
    #:run!
    #:second
    #:select-keys
@@ -230,6 +231,7 @@
    #:string?
    #:subs
    #:subseq
+   #:subvec
    #:swap!
    #:syntax
    #:t-set
@@ -425,6 +427,36 @@
                           #:some
                           #:vector)
   (:export #:diff))
+
+(defpackage #:combinatorics
+  (:use #:cl #:persidastricl)
+  (:shadowing-import-from #:persidastricl
+                          #:assoc
+                          #:atom
+                          #:keyword
+                          #:butlast
+                          #:cons
+                          #:count
+                          #:delete
+                          #:filter
+                          #:first
+                          #:second
+                          #:third
+                          #:nth
+                          #:get
+                          #:last
+                          #:length
+                          #:map
+                          #:merge
+                          #:pop
+                          #:reduce
+                          #:remove
+                          #:replace
+                          #:rest
+                          #:set
+                          #:some
+                          #:vector)
+  (:export #:combinations))
 
 (defpackage #:json
   (:use #:cl #:persidastricl #:json-streams)
