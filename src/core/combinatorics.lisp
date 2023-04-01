@@ -104,16 +104,42 @@
           (cond ((> n cnt) nil)
                 ((= n 1) (map (lambda (item) (list item)) (distinct items)) )
                 ((distinct? items) (if (= n cnt)
-                                       (->list items)
+                                       (list (->list items))
                                        (map (lambda (c) (map (lambda (d) (get v-items d)) c)) (index-combinations n cnt))))
                 (t (multi-comb items n)))))))
 
+(defun subsets (items)
+  (mapcat
+   (lambda (n)
+     (combinations items n))
+   (range (inc (count items)))))
+
+(defun cartesian-product (&rest seqs)
+  (let ((v-original-seqs (vec seqs)))
+    (labels ((step* (v-seqs)
+               (labels ((increment (v-seqs)
+                          (labels ((p (i vs)
+                                     (if (= i -1) nil
+                                         (let ((rst (next (get vs i))))
+                                           (if rst
+                                               (assoc vs i rst)
+                                               (p (dec i) (assoc vs i (get v-original-seqs i))))))))
+                            (p (dec (count v-seqs)) v-seqs))))
+                 (when v-seqs
+                   (lseq (map #'first v-seqs) (step* (increment v-seqs)))))))
+      (when (every? #'seq seqs)
+        (step* v-original-seqs)))))
+
+(defun selections (items n)
+  (apply #'cartesian-product (->list (take n (repeat items)))))
+
+
 ;; (setf p::*print-bpvt-items* 100)
-
 ;; (n-choose-k 26 6)
-
 ;; (into [] (take 100  (combinations '(:a :b :c :d :e :f :g :h :i :j :k :l :m :n :o :p :q :r :s :t :u :v :w :x :y :z) 6)))
-
 ;; (count (n-choose-k 26 6))
-
 ;; (combinations '(:a :b :c :d :e :f :g :h :i :j :k :l :m :n :o :p :q :r :s :t :u :v :w :x :y :z) 4)
+
+;; (mapcat (lambda (x) (list (list x))) (range 10))
+;; (combinations [1 2 3 4] 3)
+;; (into [] (subsets [1 2 3 4]))
