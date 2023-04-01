@@ -21,6 +21,8 @@
 
 (in-package #:persidastricl)
 
+(named-readtables:in-readtable persidastricl:syntax)
+
 (def-suite :data-tests
   :description "testing data:diff with various data structures/data"
   :in master-suite)
