@@ -69,3 +69,6 @@
        (cons value v))
    values
    :initial-value vector))
+
+(defmethod compare ((v1 vector) (v2 vector))
+  (compare (seq v1) (seq v2)))

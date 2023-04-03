@@ -49,3 +49,6 @@
      (labels ((,symbol (k)
                 (contains? ,symbol k)))
        ,@body)))
+
+(defmethod compare ((s1 hash-set) (s2 hash-set))
+  (compare (seq s1) (seq s2)))

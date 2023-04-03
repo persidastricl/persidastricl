@@ -161,3 +161,12 @@
 
 (defmethod == ((s1 lazy-sequence) (s2 sub-vector))
   (== (seq s2) (seq s1)))
+
+(defmethod compare ((sv1 sub-vector) (sv2 sub-vector))
+  (compare (seq sv1) (seq sv2)))
+
+(defmethod compare ((sv1 sub-vector) (v1 vector))
+  (compare (seq sv1) (seq v1)))
+
+(defmethod compare ((v1 vector) (sv1 sub-vector))
+  (compare (seq v1) (seq sv1)))

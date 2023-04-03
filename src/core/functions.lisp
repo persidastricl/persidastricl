@@ -63,7 +63,7 @@
                        accum)))
           (let ((init (if initial-value-p initial-value (head s)))
                 (seq (if initial-value-p s (tail s))))
-            (reduce* init seq []))))
+            (reduce* init seq [init]))))
       [initial-value]))
 
 (defun frequencies (coll)

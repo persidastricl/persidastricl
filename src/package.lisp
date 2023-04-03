@@ -90,6 +90,7 @@
    #:collection?
    #:comment
    #:comp
+   #:compare
    #:concat
    #:cond->
    #:cond->>
@@ -429,6 +430,7 @@
   (:export #:diff))
 
 (defpackage #:combinatorics
+  (:nicknames #:c)
   (:use #:cl #:persidastricl)
   (:shadowing-import-from #:persidastricl
                           #:assoc
@@ -456,7 +458,20 @@
                           #:set
                           #:some
                           #:vector)
-  (:export #:combinations))
+  (:export #:combinations
+           #:subsets
+           #:cartesian-product
+           #:selections
+           #:permutations
+           #:permuted-combinations
+           #:count-permutations
+           #:nth-permutation
+           #:drop-permutations
+           #:count-combinations
+           #:count-subsets
+           #:nth-combination
+           #:nth-subset
+           #:permutation-index))
 
 (defpackage #:json
   (:use #:cl #:persidastricl #:json-streams)

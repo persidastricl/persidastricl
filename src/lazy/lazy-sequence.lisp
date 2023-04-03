@@ -56,6 +56,9 @@
          ((empty? s) lst)
       (setf lst (append lst (list x))))))
 
+(defmethod cl-murmurhash:murmurhash ((object lazy-sequence) &key (seed cl-murmurhash:*default-seed*) mix-only)
+  (cl-murmurhash:murmurhash (->list object) :seed seed :mix-only mix-only))
+
 (defmethod ->array ((seq lazy-sequence))
   (when seq
     (let ((lst (->list seq)))
@@ -126,3 +129,9 @@
 (defmethod empty? ((seq lazy-sequence))
   (= (bounded-count 1 seq) 0))
 
+(defmethod compare ((s1 lazy-sequence) (s2 lazy-sequence))
+  (cond ((and (nil? s1) (nil? s2)) 0)
+        ((nil? s1) -1)
+        ((nil? s2)  1)
+        (t (let ((cf (compare (first s1) (first s2))))
+             (if (= 0 cf) (compare (rest s1) (rest s2)) cf)))))

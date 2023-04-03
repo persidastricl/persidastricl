@@ -32,6 +32,9 @@
 (defun atom (&optional value)
   (make-instance 'atom :value value))
 
+(defmethod cl-murmurhash:murmurhash ((object atom) &key (seed cl-murmurhash:*default-seed*) mix-only)
+  (cl-murmurhash:murmurhash (list "atom" (slot-value object 'value)) :seed seed :mix-only mix-only))
+
 (defun swap! (atom fn &rest args)
   (stmx:atomic
    (setf (slot-value atom 'value) (apply fn (slot-value atom 'value) args))))

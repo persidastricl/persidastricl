@@ -50,7 +50,8 @@
                              (:file "equality")
                              (:file "macros")
                              (:file "functions")
-                             (:file "methods")))
+                             (:file "methods")
+                             (:file "compare")))
 
                (:module "stm"
                 :pathname "src/stm"
@@ -214,7 +215,8 @@
                              (:file "string")
                              (:file "set")
                              (:file "walk")
-                             (:file "data"))))
+                             (:file "data")
+                             (:file "combinatorics"))))
 
   :perform (test-op (o s)
                     (uiop:symbol-call :fiveam :run! (uiop:find-symbol* :master-suite :persidastricl))))

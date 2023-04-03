@@ -103,3 +103,6 @@
 
 (defmethod == (ht1 (ht2 hash-map))
   (== ht2 ht1))
+
+(defmethod compare ((hm1 hash-map) (hm2 hash-map))
+  (compare (seq hm1) (seq hm2)))

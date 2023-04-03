@@ -87,3 +87,6 @@
 
 (defmethod cl-murmurhash:murmurhash ((object entry) &key (seed cl-murmurhash:*default-seed*) mix-only)
   (cl-murmurhash:murmurhash (->list object) :seed seed :mix-only mix-only))
+
+(defmethod compare ((e1 entry) (e2 entry))
+  (compare (->list e1) (->list e2)))
