@@ -42,15 +42,16 @@
         #{})))
 
 (defun difference (&rest sets)
-  (labels ((difference* (s1 s2)
-             (reduce
-              (lambda (s1 item)
-                (if (contains? s1 item)
-                    (disj s1 item)
-                    s1))
-              s2
-              :initial-value s1)))
-    (reduce #'difference* sets)))
+  (when (set? (first sets))
+    (labels ((difference* (s1 s2)
+               (reduce
+                (lambda (s1 item)
+                  (if (contains? s1 item)
+                      (disj s1 item)
+                      s1))
+                s2
+                :initial-value s1)))
+      (reduce #'difference* sets))))
 
 (defun index (xrel ks)
   (reduce
