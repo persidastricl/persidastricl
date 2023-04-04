@@ -92,8 +92,9 @@
         ;; do we have data for this hash at this depth
         ((is-set dmap position)
          (let* ((current (at-position dmap position)))
-           (when (== item current)
-             (del node position))))
+           (if (== item current)
+               (del node position)
+               node)))
 
         ;; we have nothing so return original node
         (t node)))))

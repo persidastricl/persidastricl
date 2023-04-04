@@ -96,16 +96,17 @@
            (if (single-value-node? new-node)
                (let ((keep (single-remaining-data new-node)))
                  (-> node
-                     (del position)
-                     (ins position keep)))
+                   (del position)
+                   (ins position keep)))
                (upd node position new-node))))
 
         ;; do we have data for this hash at this level
         ((is-set dmap position)
          (let* ((current (at-position dmap position))
                 (current-key (key current)))
-           (when (== key current-key)
-             (del node position))))
+           (if (== key current-key)
+               (del node position)
+               node)))
 
         ;; we have nothing so return original node
         (t node)))))

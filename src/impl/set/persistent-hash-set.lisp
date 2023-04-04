@@ -42,11 +42,11 @@
 
 (defmethod disj ((phs persistent-hash-set) &rest items)
   (with-slots (root meta) phs
-    (let ((new-root  (cl:reduce
-                      (lambda (node item)
-                        (remove node item :hash (h:hash item) :depth 0))
-                      items
-                      :initial-value root)))
+    (let ((new-root (cl:reduce
+                     (lambda (node item)
+                       (remove node item :hash (h:hash item) :depth 0))
+                     items
+                     :initial-value root)))
       (if (== new-root root)
           phs
           (make-instance 'persistent-hash-set :root new-root :meta meta)))))
