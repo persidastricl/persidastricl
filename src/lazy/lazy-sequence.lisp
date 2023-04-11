@@ -82,13 +82,15 @@
 
 (defun take (n coll)
   (labels ((take* (n s)
-             (when (and (seq s) (> n 0))
-               (lseq (head s) (take* (1- n) (tail s))))))
+             (when (seq s)
+               (cond
+                 ((= n 1) (list (head s)))
+                 ((pos? n) (lseq (head s) (take* (1- n) (tail s))))))))
     (take* n (seq coll))))
 
 (defun drop (n seq)
   (labels ((drop* (n s)
-             (if (and (seq s) (> n 0))
+             (if (and (seq s) (pos? n))
                  (drop* (1- n) (tail s))
                  s)))
     (drop* n (seq seq))))
