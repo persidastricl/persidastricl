@@ -55,25 +55,8 @@
     (t (let* ((bits (next-bits rnd 31))
               (val (mod bits n)))
          (if (< (+ (- bits val) (1- n)) 0)
-             (next-n rnd n)
+             (next-int rnd n)
              val)))))
 
-(expt 2 31)
-
-(logand 16 -16)
-
-(next-int r1 (expt 2 32))
-
-(defun rand-seq (rnd n)
-  (lseq (next-n rnd n) (rand-seq rnd n)))
-
-
-;; (frequencies (take 10000 (rand-seq r1 10)))
-
-;; (take 100 (repeatedly (lambda () (next-n r1 23))))
-
-;; (def r1 (rnd 8484848484848484))
-
-;; (next-n r1 10)
-
-(frequencies (take 10000 (repeatedly (lambda () (next-bits r1 2)))))
+(defun rand-seq (rg n)
+  (lseq (next-int rg n) (rand-seq rg n)))

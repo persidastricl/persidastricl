@@ -187,7 +187,8 @@
                (:module "user"
                 :pathname "src/user"
                 :serial t
-                :components ((:file "user"))))
+                :components ((:file "user")
+                             (:file "random"))))
 
   :in-order-to ((test-op (test-op #:persidastricl/test))))
 
