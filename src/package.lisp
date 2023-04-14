@@ -179,6 +179,7 @@
    #:neg-int?
    #:neg?
    #:next
+   #:next-int
    #:nil?
    #:not-any?
    #:not-every?
@@ -198,6 +199,9 @@
    #:pos?
    #:put
    #:quot
+   #:rand-nth
+   #:rand-seq
+   #:random-generator
    #:range
    #:re-seq
    #:reduce

@@ -62,6 +62,9 @@
 (defmethod == ((s1 string) (s2 string))
   (string= s1 s2))
 
+(defmethod == ((s1 character) (s2 character))
+  (char= s1 s2))
+
 (defmethod == ((v1 sequence) (v2 sequence))
   (cond
     ((and (dotted-pair? v1)

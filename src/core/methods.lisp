@@ -111,8 +111,9 @@
 ;; vectors
 ;;
 
-(defmethod == ((s1 vector) (s2 vector))
-  (== (seq s1) (seq s2)))
+(defmethod == ((v1 vector) (v2 vector))
+  (and (= (count v1) (count v2))
+       (== (seq v1) (seq v2))))
 
 (defmethod == ((s1 sequence) (s2 vector))
   (when s1 (== (seq s2) (seq s1))))
