@@ -23,7 +23,7 @@
   :description "persistent data structures in common lisp 'per-si-DAS-trick-el"
   :author "Michael D. Pendergrass <mdp@pupcus.org>"
   :license  "Eclipse Public License 2.0"
-  :version "0.1.0"
+  :version "0.2.0"
 
   :depends-on (#:arrow-macros
                #:babel
@@ -51,7 +51,8 @@
                              (:file "macros")
                              (:file "functions")
                              (:file "methods")
-                             (:file "compare")))
+                             (:file "compare")
+                             (:file "entry")))
 
                (:module "stm"
                 :pathname "src/stm"
@@ -69,26 +70,12 @@
                 :serial t
                 :components ((:file "immutable-class")))
 
-               (:module "src/bitmap-vector"
-                :serial t
-                :components ((:file "bitmap-vector")
-                             (:file "key-value-bitmap-vector")
-                             (:file "node-bitmap-vector")
-                             (:file "transient-bitmap-vector")
-                             (:file "persistent-bitmap-vector")
-                             (:file "transient-key-value-bitmap-vector")
-                             (:file "persistent-key-value-bitmap-vector")
-                             (:file "transient-node-bitmap-vector")
-                             (:file "persistent-node-bitmap-vector")))
-
                (:module "node"
                 :pathname "src/node"
                 :serial t
                 :components ((:file "node")
 
                              (:file "overflow-node")
-                             (:file "persistent-overflow-node")
-                             (:file "transient-overflow-node")
                              (:file "hash-set-overflow-node")
                              (:file "hash-map-overflow-node")
                              (:file "transient-hash-set-overflow-node")
@@ -97,8 +84,6 @@
                              (:file "persistent-hash-map-overflow-node")
 
                              (:file "hamt-node")
-                             (:file "transient-node")
-                             (:file "persistent-node")
                              (:file "hash-map-node")
                              (:file "hash-set-node")
                              (:file "transient-hash-map-node")
@@ -147,8 +132,7 @@
                              (:module "map"
                               :pathname "map"
                               :serial t
-                              :components ((:file "entry")
-                                           (:file "hash-map")
+                              :components ((:file "hash-map")
                                            (:file "transient-hash-map")
                                            (:file "persistent-hash-map")))
 
@@ -205,7 +189,6 @@
                              (:file "hash")
                              (:file "entry")
                              (:file "vector")
-                             (:file "bitmap-vector")
                              (:file "atom")
                              (:file "thunk")
                              (:file "lazy-sequence")

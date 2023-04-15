@@ -24,6 +24,17 @@
 ;;
 ;; -----
 
+(defgeneric ins (node position item))
+(defgeneric upd (node position item))
+(defgeneric del (node position))
+
+(defgeneric nth-value (node index))
+(defgeneric value-at (node position))
+
+(defgeneric add (node item &rest args))
+(defgeneric loc (node item &rest args))
+(defgeneric remove (node item &rest args))
+
 (defclass node () ())
 
 (defun empty-overflow-node (node)
@@ -31,10 +42,10 @@
   (labels ((replace* (s pattern replacement)
              (cl-ppcre:regex-replace pattern s replacement :preserve-case t :simple-calls t)))
     (-> (type-of node)
-      str
-      (replace* "(?i)node$" "overflow-node")
-      read-from-string
-      make-instance)))
+        str
+        (replace* "(?i)node$" "overflow-node")
+        read-from-string
+        make-instance)))
 
 (defun empty-node (node &key hash depth)
   "given the current node and the context of the caller, determine if we

@@ -51,6 +51,7 @@
            #:third
            #:rest
            #:nth
+           #:nth-value
            #:last
            #:butlast
            #:assoc

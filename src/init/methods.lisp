@@ -112,17 +112,6 @@
   (:method ((ht hash-table)) (loop for v being each hash-values of ht using (hash-key k)
                                    collect (cons k v))))
 
-(defgeneric ins (target position item))
-(defgeneric upd (target position item))
-(defgeneric del (target position))
-
-(defgeneric at-index (target index))
-(defgeneric at-position (target position))
-
-(defgeneric add (target item &rest args))
-(defgeneric loc (target item &rest args))
-(defgeneric remove (target item &rest args))
-
 (defgeneric pop (target)
   (:method ((lst list)) (cl:pop lst) lst)
   (:method ((v array)) (if (array-has-fill-pointer-p v)

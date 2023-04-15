@@ -2,28 +2,6 @@ Things to do:
 
 *  profile/work-on efficiency
 
-??????? Is it more efficient to have no bitmap-vectors (less object creation; less defmethod calls and dispatching)??
-
- -- single hamt node that contains two bitmaps and matching vectors (get rid of bitmap-vector objects)
-
- -- add, loc, remove (stay the same but will use the below functions rather than rely on bit-vectors)
-
- -- ins, upd, del either items, entries, or nodes; they call the v: and b: funcitons directly on the appropriate data/vector pairs
-
- -- at-position will become item-at (defmethod) and node-at (defun)
-     -- item-at will have one version for sets (items t) and one for maps (entry)
-
- -- at-index will become    get-item (defmethod) and get-node (defun)
-    -- get-item will return set values for sets and entries for maps
-
-
-
-
-
-
-
-
-
 -- bags/multisets
 
 * rethink iterators

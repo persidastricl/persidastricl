@@ -24,7 +24,7 @@
 ;;
 ;; -----
 
-(defclass transient-hash-map-overflow-node (transient-overflow-node hash-map-overflow-node) ())
+(defclass transient-hash-map-overflow-node (hash-map-overflow-node) ())
 
 (defmethod add ((node transient-hash-map-overflow-node) entry &key hash &allow-other-keys)
   (when (hash node) (assert (eq (hash node) hash)))

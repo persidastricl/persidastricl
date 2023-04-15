@@ -31,16 +31,16 @@
     (let ((position (b:bits hash depth)))
       (cond
         ;; do we have a node for this hash at this depth
-        ((is-set nmap position)
-         (let* ((sub-node (at-position nmap position))
-                (new-node (add (at-position nmap position) item :hash hash :depth (1+ depth))))
+        ((b:set? position nmap)
+         (let* ((sub-node (subnode-at node position))
+                (new-node (add sub-node item :hash hash :depth (1+ depth))))
            (if (eq new-node sub-node)
                node
                (upd node position new-node))))
 
         ;; do we have data for this hash at this depth
-        ((is-set dmap position)
-         (let* ((current (at-position dmap position)))
+        ((b:set? position dmap)
+         (let* ((current (value-at node position)))
            ;; do we have the same item?
            (if (== item current)
                node
@@ -60,12 +60,12 @@
 
       (cond
         ;; do we have a node for this hash at this depth
-        ((is-set nmap position)
-         (loc (at-position nmap position) item :hash hash :depth (1+ depth) :default default))
+        ((b:set? position nmap)
+         (loc (subnode-at node position) item :hash hash :depth (1+ depth) :default default))
 
         ;; do we have data for this hash at this depth
-        ((is-set dmap position)
-         (let ((target (at-position dmap position)))
+        ((b:set? position dmap)
+         (let ((target (value-at node position)))
            (if (== item target)
                target
                default)))
@@ -79,19 +79,19 @@
 
       (cond
         ;; do we have a node for this hash at this depth
-        ((is-set nmap position)
-         (let* ((sub-node (at-position nmap position))
+        ((b:set? position nmap)
+         (let* ((sub-node (subnode-at node position))
                 (new-node (remove sub-node item :hash hash :depth (1+ depth))))
            (if (single-value-node? new-node)
                (let ((keep (single-remaining-data new-node)))
                  (-> node
-                   (del position)
-                   (ins position keep)))
+                     (del position)
+                     (ins position keep)))
                (upd node position new-node))))
 
         ;; do we have data for this hash at this depth
-        ((is-set dmap position)
-         (let* ((current (at-position dmap position)))
+        ((b:set? position dmap)
+         (let* ((current (value-at node position)))
            (if (== item current)
                (del node position)
                node)))

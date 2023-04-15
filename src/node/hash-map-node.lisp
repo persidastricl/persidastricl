@@ -26,6 +26,16 @@
 
 (defclass hash-map-node (hamt-node) ())
 
+(defmethod nth-value ((node hash-map-node) index)
+  (with-slots (dvec) node
+    (let ((idx (* 2 index)))
+      (map-entry (elt dvec idx) (elt dvec (1+ idx))))))
+
+(defmethod value-at ((node hash-map-node) position)
+  (with-slots (dmap) node
+    (when (b:set? position dmap)
+      (nth-value node (b:index position dmap)))))
+
 (defmethod add ((node hash-map-node) entry &key hash depth)
   (with-slots (dmap nmap) node
     (let ((key (key entry))
@@ -34,16 +44,16 @@
 
       (cond
         ;; do we have a node for this hash slice at this depth
-        ((is-set nmap position)
-         (let* ((sub-node (at-position nmap position))
+        ((b:set? position nmap)
+         (let* ((sub-node (subnode-at node position))
                 (new-node (add sub-node entry :hash hash :depth (1+ depth))))
            (if (eq new-node sub-node)
                node
                (upd node position new-node))))
 
         ;; do we have data for this hash at this depth
-        ((is-set dmap position)
-         (let* ((current (at-position dmap position))
+        ((b:set? position dmap)
+         (let* ((current (value-at node position))
                 (current-key (key current))
                 (current-value (value current)))
 
@@ -56,11 +66,11 @@
 
                ;; different key with same hash at this depth
                (let ((new-node (-> (empty-node node :hash hash :depth depth)
-                                   (add current :hash (h:hash current-key) :depth (1+ depth))
-                                   (add entry   :hash hash                 :depth (1+ depth)))))
+                                 (add current :hash (h:hash current-key) :depth (1+ depth))
+                                 (add entry   :hash hash                 :depth (1+ depth)))))
                  (-> node
-                     (del position)
-                     (ins position new-node))))))
+                   (del position)
+                   (ins position new-node))))))
 
         ;; otherwise no node, no data, so just add the entry to this node
         (t (ins node position entry))))))
@@ -71,12 +81,12 @@
 
       (cond
         ;; do we have a node for this hash at this depth
-        ((is-set nmap position)
-         (loc (at-position nmap position) key :hash hash :depth (1+ depth) :default default))
+        ((b:set? position nmap)
+         (loc (subnode-at node position) key :hash hash :depth (1+ depth) :default default))
 
         ;; do we have data for this hash at this depth
-        ((is-set dmap position)
-         (let ((target (at-position dmap position)))
+        ((b:set? position dmap)
+         (let ((target (value-at node position)))
            (if (== key (key target))
                (value target)
                default)))
@@ -90,19 +100,19 @@
 
       (cond
         ;; do we have a node for this hash at this depth
-        ((is-set nmap position)
-         (let* ((sub-node (at-position nmap position))
+        ((b:set? position nmap)
+         (let* ((sub-node (subnode-at node position))
                 (new-node (remove sub-node key :hash hash :depth (1+ depth))))
            (if (single-value-node? new-node)
                (let ((keep (single-remaining-data new-node)))
                  (-> node
-                   (del position)
-                   (ins position keep)))
+                     (del position)
+                     (ins position keep)))
                (upd node position new-node))))
 
         ;; do we have data for this hash at this level
-        ((is-set dmap position)
-         (let* ((current (at-position dmap position))
+        ((b:set? position dmap)
+         (let* ((current (value-at node position))
                 (current-key (key current)))
            (if (== key current-key)
                (del node position)

@@ -24,5 +24,64 @@
 ;;
 ;; -----
 
-(define-immutable-class persistent-hash-map-node (persistent-node hash-map-node) ()
-  (:default-initargs :dmap (empty-persistent-key-value-bitmap-vector) :nmap (empty-persistent-node-bitmap-vector)))
+(define-immutable-class persistent-hash-map-node (hash-map-node) ())
+
+(defmethod ins ((node persistent-hash-map-node) position (new-node persistent-hash-map-node))
+  (with-slots (dmap dvec nmap nvec) node
+    (make-instance 'persistent-hash-map-node :dmap dmap
+                                             :dvec dvec
+                                             :nmap (b:set position nmap)
+                                             :nvec (v:insert nvec (b:index position nmap) new-node))))
+
+(defmethod ins ((node persistent-hash-map-node) position (new-node persistent-hash-map-overflow-node))
+  (with-slots (dmap dvec nmap nvec) node
+    (make-instance 'persistent-hash-map-node :dmap dmap
+                                             :dvec dvec
+                                             :nmap (b:set position nmap)
+                                             :nvec (v:insert nvec (b:index position nmap) new-node))))
+
+(defmethod ins ((node persistent-hash-map-node) position (entry entry))
+  (with-slots (dmap dvec nmap nvec) node
+    (make-instance 'persistent-hash-map-node :dmap (b:set position dmap)
+                                             :dvec (v:insert dvec (* (b:index position dmap) 2) (key entry) (value entry))
+                                             :nmap nmap
+                                             :nvec nvec)))
+
+(defmethod upd ((node persistent-hash-map-node) position (new-node persistent-hash-map-node))
+  (with-slots (dmap dvec nmap nvec) node
+    (make-instance 'persistent-hash-map-node :dmap dmap
+                                             :dvec dvec
+                                             :nmap nmap
+                                             :nvec (v:update nvec (b:index position nmap) new-node))))
+
+(defmethod upd ((node persistent-hash-map-node) position (new-node persistent-hash-map-overflow-node))
+  (with-slots (dmap dvec nmap nvec) node
+    (make-instance 'persistent-hash-map-node :dmap dmap
+                                             :dvec dvec
+                                             :nmap nmap
+                                             :nvec (v:update nvec (b:index position nmap) new-node))))
+
+(defmethod upd ((node persistent-hash-map-node) position (entry entry))
+  (with-slots (dmap dvec nmap nvec) node
+    (make-instance 'persistent-hash-map-node :dmap dmap
+                                             :dvec (v:update dvec (1+ (* (b:index position dmap) 2)) (value entry))
+                                             :nmap nmap
+                                             :nvec nvec)))
+
+(defmethod del ((node persistent-hash-map-node) position)
+  (with-slots (dmap dvec nmap nvec) node
+    (cond
+
+      ((b:set? position dmap)
+       (make-instance 'persistent-hash-map-node :dmap (b:clear position dmap)
+                                                :dvec (v:delete dvec (* (b:index position dmap) 2) 2)
+                                                :nmap nmap
+                                                :nvec nvec))
+
+      ((b:set? position nmap)
+       (make-instance 'persistent-hash-map-node :dmap dmap
+                                                :dvec dvec
+                                                :nmap (b:clear position nmap)
+                                                :nvec (v:delete nvec (b:index position nmap))))
+
+      (t (error "critical error: attempt to del position in persisetnt-hash-map-node that is not set for either data or subnode!")))))

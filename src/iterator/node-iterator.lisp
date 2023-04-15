@@ -36,11 +36,11 @@
 
 (defmethod current ((iterator node-iterator))
   (with-slots (node index) iterator
-    (at-index node index)))
+    (nth-value node index)))
 
 (defmethod next ((iterator node-iterator))
   (with-slots (node index) iterator
     (when (< index (count node))
-      (let ((item (at-index node index)))
+      (let ((item (nth-value node index)))
         (incf index)
         item))))

@@ -37,7 +37,7 @@
 (defmethod single-value-node? ((node overflow-node))
   (= (length (data node)) 1))
 
-(defmethod at-index ((node overflow-node) index)
+(defmethod nth-value ((node overflow-node) index)
   (elt (data node) index))
 
 (defmethod count ((node overflow-node))

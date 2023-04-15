@@ -24,7 +24,7 @@
 ;;
 ;; -----
 
-(define-immutable-class persistent-hash-set-overflow-node (persistent-overflow-node hash-set-overflow-node) ())
+(define-immutable-class persistent-hash-set-overflow-node (hash-set-overflow-node) ())
 
 (defmethod add ((node persistent-hash-set-overflow-node) item &key hash &allow-other-keys)
   (when (hash node) (assert (eq (hash node) hash)))

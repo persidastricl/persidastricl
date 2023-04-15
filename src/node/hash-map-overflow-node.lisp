@@ -26,7 +26,7 @@
 
 (defclass hash-map-overflow-node (overflow-node) ())
 
-(defmethod at-index ((node hash-map-overflow-node) index)
+(defmethod nth-value ((node hash-map-overflow-node) index)
   (let ((e (elt (data node) index)))
     (map-entry (first e) (rest e))))
 

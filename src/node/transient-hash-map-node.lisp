@@ -24,5 +24,51 @@
 ;;
 ;; -----
 
-(defclass transient-hash-map-node (transient-node hash-map-node) ()
-  (:default-initargs :dmap (empty-transient-key-value-bitmap-vector) :nmap (empty-transient-node-bitmap-vector)))
+(defclass transient-hash-map-node (hash-map-node) ())
+
+(defmethod ins ((node transient-hash-map-node) position (new-node transient-hash-map-node))
+  (with-slots (nmap nvec) node
+    (setf nmap (b:set position nmap))
+    (setf nvec (v:insert nvec (b:index position nmap) new-node)))
+  node)
+
+(defmethod ins ((node transient-hash-map-node) position (new-node transient-hash-map-overflow-node))
+  (with-slots (nmap nvec) node
+    (setf nmap (b:set position nmap))
+    (setf nvec (v:insert nvec (b:index position nmap) new-node)))
+  node)
+
+(defmethod ins ((node transient-hash-map-node) position (entry entry))
+  (with-slots (dmap dvec) node
+    (setf dmap (b:set position dmap))
+    (setf dvec (v:insert dvec (* (b:index position dmap) 2) (key entry) (value entry))))
+  node)
+
+(defmethod upd ((node transient-hash-map-node) position (new-node transient-hash-map-node))
+  (with-slots (nmap nvec) node
+    (setf nvec (v:modify nvec (b:index position nmap) new-node)))
+  node)
+
+(defmethod upd ((node transient-hash-map-node) position (new-node transient-hash-map-overflow-node))
+  (with-slots (nmap nvec) node
+    (setf nvec (v:modify nvec (b:index position nmap) new-node)))
+  node)
+
+(defmethod upd ((node transient-hash-map-node) position (entry entry))
+  (with-slots (dmap dvec) node
+    (v:modify dvec (1+ (* (b:index position dmap) 2)) (value entry)))
+  node)
+
+(defmethod del ((node transient-hash-map-node) position)
+  (with-slots (dmap dvec nmap nvec) node
+    (cond
+      ((b:set? position dmap)
+       (setf dmap (b:clear position dmap))
+       (setf dvec (v:delete dvec (* (b:index position dmap) 2) 2)))
+
+      ((b:set? posistion nmap)
+       (setf nmap (b:clear position nmap))
+       (setf nvec (v:delete nvec (b:index position nmap))))
+
+      (t (error "critical error: attempt to del position in transient-hash-map-node that is not set for either data or subnode!"))))
+  node)
