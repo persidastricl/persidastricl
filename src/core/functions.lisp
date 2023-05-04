@@ -454,6 +454,11 @@
                      (lseq v (scan* end)))))))
       (scan* 0))))
 
+(defun random-seq (n &key (seed (random 99999999999999)) (random-state (sb-ext:seed-random-state seed)))
+  (labels ((rand* (n)
+             (lseq (random n random-state) (rand* n))))
+    (lseq (random n random-state) (rand* n))))
+
 (labels ((best (pred k c1 c2 &rest contestants)
            (labels ((best* (the-one the-value challengers)
                       (let ((challenger (first challengers)))
