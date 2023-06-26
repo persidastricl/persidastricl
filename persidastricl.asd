@@ -32,8 +32,7 @@
                #:closer-mop
                #:json-streams
                #:named-readtables
-               #:sip-hash
-               #:stmx)
+               #:sip-hash)
   :serial t
 
   :components ((:module "packaging"
@@ -53,11 +52,6 @@
                              (:file "methods")
                              (:file "compare")
                              (:file "entry")))
-
-               (:module "stm"
-                :pathname "src/stm"
-                :serial t
-                :components ((:file "atom")))
 
                (:module "lazy-sequences"
                 :pathname "src/lazy"
@@ -147,6 +141,11 @@
                              (:file "node-iterator")
                              (:file "hamt-iterator")
                              (:file "methods")))
+
+               (:module "stm"
+                :pathname "src/stm"
+                :serial t
+                :components ((:file "atom")))
 
                (:module "core"
                 :pathname "src/core"

@@ -24,10 +24,10 @@
 ;;
 ;; -----
 
-(stmx:transactional
-    (defclass atom ()
-      ((value :initarg :value :reader :value))
-      (:default-initargs :value nil)))
+(defclass atom ()
+  ((value :initarg :value :reader :value)
+   (watches :initarg :watches :reader :watches))
+  (:default-initargs :value nil :watches {}))
 
 (defun atom (&optional value)
   (make-instance 'atom :value value))
@@ -35,13 +35,35 @@
 (defmethod cl-murmurhash:murmurhash ((object atom) &key (seed cl-murmurhash:*default-seed*) mix-only)
   (cl-murmurhash:murmurhash (list "atom" (slot-value object 'value)) :seed seed :mix-only mix-only))
 
-(defun swap! (atom fn &rest args)
-  (stmx:atomic
-   (setf (slot-value atom 'value) (apply fn (slot-value atom 'value) args))))
+(defgeneric deref (thing)
+  (:method ((atom atom)) (slot-value atom 'value)))
+
+(defun add-watch (atom k f)
+  (with-slots (watches) atom
+    (setf watches (assoc watches k f)))
+  atom)
+
+(defun remove-watch (atom k)
+  (with-slots (watches) atom
+    (setf watches (dissoc watches k)))
+  atom)
+
+(defun notify-watches (atom old-val new-val)
+  (with-slots (watches) atom
+    (let ((ks (->list (keys watches))))
+      (loop for k in ks
+            do (let ((f (get watches k)))
+                 (when f (funcall f k atom old-val new-val)))))))
 
 (defun reset! (atom new-value)
-  (stmx:atomic
-   (setf (slot-value atom 'value) new-value)))
+  (let ((v (deref atom)))
+    (setf (slot-value atom 'value) new-value)
+    (notify-watches atom v new-value))
+  new-value)
 
-(defgeneric deref (thing)
-  (:method ((atom atom)) (stmx:atomic (slot-value atom 'value))))
+(defun swap! (atom fn &rest args)
+  (loop do (let* ((v (deref atom))
+                  (nv (apply fn v args)))
+             (when (== v (sb-ext:compare-and-swap (slot-value atom 'value) v nv))
+               (notify-watches atom v nv)
+               (return nv)))))
