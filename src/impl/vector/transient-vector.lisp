@@ -111,4 +111,5 @@
      :initial-value tv)))
 
 (defmethod with-meta ((tv transient-vector) meta)
-  (setf (slot-value tv 'meta) meta))
+  (setf (slot-value tv 'meta) meta)
+  tv)

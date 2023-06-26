@@ -68,6 +68,7 @@
 
 (defmethod with-meta ((object hamt) (meta (eql nil))) object)
 
+;; todo: break these into persistent map/set and transient map/set?
 (defmethod with-meta ((object hamt) (meta hash-map))
   (with-slots (root) object
     (make-instance (type-of object) :root root :meta meta)))

@@ -69,3 +69,7 @@
              (when (== v (sb-ext:compare-and-swap (slot-value atom 'value) v nv))
                (notify-watches atom v nv)
                (return nv)))))
+
+(defmethod with-meta ((a atom) meta)
+  (setf (slot-value a 'meta) meta)
+  a)
