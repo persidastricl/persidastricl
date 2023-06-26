@@ -19,12 +19,14 @@
 
 (in-package #:persidastricl)
 
+(named-readtables:in-readtable persidastricl:syntax)
+
 ;; -----
 ;; atom
 ;;
 ;; -----
 
-(defclass atom ()
+(defclass atom (metadata)
   ((value :initarg :value :reader :value)
    (watches :initarg :watches :reader :watches))
   (:default-initargs :value nil :watches {}))
