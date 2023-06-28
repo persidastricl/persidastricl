@@ -70,6 +70,6 @@
                (notify-watches atom v nv)
                (return nv)))))
 
-(defmethod with-meta ((a atom) meta)
+(defmethod with-meta ((a atom) (meta hash-map))
   (setf (slot-value a 'meta) meta)
   a)
