@@ -78,3 +78,7 @@
 
 (defun t-set (object)
   (into (transient-hash-set) (seq object)))
+
+(defmethod with-meta ((object transient-hash-set) (meta hash-map))
+  (setf (slot-value object 'meta) meta)
+  object)

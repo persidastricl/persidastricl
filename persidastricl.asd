@@ -105,16 +105,14 @@
                (:module "structures"
                 :pathname "src/impl"
                 :serial t
-                :components ((:file "bpvt")
+                :components ((:file "hamt")
 
-                             (:module "vector"
-                              :pathname "vector"
+                             (:module "map"
+                              :pathname "map"
                               :serial t
-                              :components ((:file "vector")
-                                           (:file "transient-vector")
-                                           (:file "persistent-vector")))
-
-                             (:file "hamt")
+                              :components ((:file "hash-map")
+                                           (:file "transient-hash-map")
+                                           (:file "persistent-hash-map")))
 
                              (:module "set"
                               :pathname "set"
@@ -123,12 +121,14 @@
                                            (:file "transient-hash-set")
                                            (:file "persistent-hash-set")))
 
-                             (:module "map"
-                              :pathname "map"
+                             (:file "bpvt")
+
+                             (:module "vector"
+                              :pathname "vector"
                               :serial t
-                              :components ((:file "hash-map")
-                                           (:file "transient-hash-map")
-                                           (:file "persistent-hash-map")))
+                              :components ((:file "vector")
+                                           (:file "transient-vector")
+                                           (:file "persistent-vector")))
 
                              (:file "functions")
                              (:file "methods")

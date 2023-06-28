@@ -85,3 +85,7 @@
   (declare (ignore env))
   (let ((items (into '() (->plist object))))
     `(persidastricl:persistent-hash-map ,@items)))
+
+(defmethod with-meta ((object persistent-hash-map) (meta hash-map))
+  (with-slots (root) object
+    (make-instance (type-of object) :root root :meta meta)))

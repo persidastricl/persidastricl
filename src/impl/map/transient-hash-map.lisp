@@ -81,3 +81,7 @@
   (declare (ignore env))
   (let ((items (into '() (->plist object))))
     `(persidastricl:transient-hash-map ,@items)))
+
+(defmethod with-meta ((object transient-hash-map) (meta hash-map))
+  (setf (slot-value object 'meta) meta)
+  object)
