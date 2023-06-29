@@ -23,7 +23,7 @@
   :description "persistent data structures in common lisp 'per-si-DAS-trick-el"
   :author "Michael D. Pendergrass <mdp@pupcus.org>"
   :license  "Eclipse Public License 2.0"
-  :version "0.2.0"
+  :version "0.3.0"
 
   :depends-on (#:arrow-macros
                #:babel
