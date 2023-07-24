@@ -175,7 +175,7 @@ Using a bit of a hack (which I am still trying to decide if I should leave in th
 (:a m1) ;; => 1
 ```
 
-This is done when assoc'ing into the map. A function is created with the keyword as the symbol to look itself up in any map given as a arg to the function (also, a default value is optional). This may be a BAD idea and I may leave it up to the user to do that when needed.  This can be done with one of two functions:  a `make-funcallable-keyword` and `make-funcallable-keywords` which will do the smae thing under programmers control.
+This is done when assoc'ing into the map. A function is created with the keyword as the symbol to look itself up in any map given as a arg to the function (also, a default value is optional). This may be a BAD idea and I may leave it up to the user to do that when needed.  This can be done with one of two functions:  a `make-funcallable-keyword` and `make-funcallable-keywords` which will do the same thing under programmers control.
 
 There are a couple of macros to allow a context-dependent use of a map or set as a function.
 
@@ -202,7 +202,6 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 ```
 
 #### map and mapv
-
     These essentially work as they do in clojure. `map` has been re-defined to take any sequential data structure and lazily 'map' over it applying a fn. `mapv` eagerly does the same returning a persistent vector.
 
 ```common-lisp
