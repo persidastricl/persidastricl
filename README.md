@@ -2,9 +2,22 @@
 
 ## Persistant Data Structures in Common Lisp
 
-This project is very earyly ALPHA code. Everything! is subject to change so please use/proceed with caution.
+This project is very early ALPHA code. Everything! is subject to change so please use/proceed with caution.
+
+This only works with `sbcl` at the moment.
 
 This project started out as a learning experience and another implementation of persistent and transient HAMT maps, sets, and vectors in common lisp. After things settled a bit, other things were added a little at a time. These things include lazy sequences, atoms (using stmx), and some common lisp interop around some core functions similar to those found in clojure. The goal was to create a familiar and practical environment where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
+
+## Building and Testing
+
+```common-lisp
+(ql:quickload :fiveam)
+(ql:quickload :persidastricl)
+(in-package :persidastricl)
+(named-readtables:in-readtable persidastricl:syntax)
+(ql:quickload :persidastricl/test)
+(asdf:test-system :persidastricl) 
+```
 
 ## Data Structures
 
@@ -110,7 +123,7 @@ More on lazy sequences below in the Examples section.
 
 ## Atoms
 
-At the moment, a very simple (on my part) implementation of atoms exists based on the excellent work in the stmx library for common lisp. There is a `swap!` and a `reset!` function currently.  In the future, a more 'from scratch' solution may be added.
+At the moment, a very simple (on my part) implementation of atoms exists based on sbcl's `sb-ext:compare-and-swap`.
 
 ## Conveniences
 
