@@ -6,7 +6,7 @@ This project is very early ALPHA code. Everything! is subject to change so pleas
 
 This only works with `sbcl` at the moment.
 
-This project started out as a learning experience and another implementation of persistent and transient HAMT maps, sets, and vectors in common lisp. After things settled a bit, other things were added a little at a time. These things include lazy sequences, atoms (using stmx), and some common lisp interop around some core functions similar to those found in clojure. The goal was to create a familiar and practical environment where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
+This project started out as a learning experience and another implementation of persistent and transient HAMT maps, sets, and vectors in common lisp. After things settled a bit, other things were added a little at a time. These things include lazy sequences, basic atoms, and some common lisp interop around some core functions similar to those found in clojure. The goal was to create a familiar and practical environment where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
 
 ## Building and Testing
 
@@ -216,6 +216,16 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 ```
 
 TODO: add more examples around what is available in the library
+
+#### string operations
+
+#### set operations
+
+#### data (diff)
+
+#### walk
+
+#### combinatorics
 
 FUTURE: there is a pdf guide in the works but who knows how long that will take to be presentable. 
 
