@@ -202,7 +202,8 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 ```
 
 #### map and mapv
-    `map` has been re-defined to take any sequential data structure and lazily 'map' over it applying a fn. `mapv` eagerly does the same returning a persistent vector.
+
+    These essentially work as they do in clojure. `map` has been re-defined to take any sequential data structure and lazily 'map' over it applying a fn. `mapv` eagerly does the same returning a persistent vector.
 
 ```common-lisp
 (map #'identity "test")
@@ -219,15 +220,27 @@ TODO: add more examples around what is available in the library
 
 #### string operations
 
+TODO: docs/examples for the string functions
+
 #### set operations
+
+TODO: docs/examples for the set functions
 
 #### data (diff)
 
+TODO: docs/examples for the data functions
+
 #### walk
+
+TODO: docs/examples for the walk functions
 
 #### combinatorics
 
-FUTURE: there is a pdf guide in the works but who knows how long that will take to be presentable. 
+TODO: docs/examples for the combinatoric functions (not complete --- still missing the partition fns)
+
+### PDF document
+
+FUTURE: there may or may not be a pdf guide in the works but who knows how long that will take to be presentable. 
 
 ## License
 
