@@ -191,7 +191,7 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 ## Other Examples
 
 #### reduce
-   `reduce` has been shadowed to also take any sequential and/or lazy sequence. NOTE: This is NOT a clojure-style reduce, rather it maintains the flavor of common lisp's native reduce adding an optional keyword `:initial-value` for setting the initial argument of the reduce. 
+`reduce` has been shadowed to also take any sequential and/or lazy sequence. NOTE: This is NOT a clojure-style reduce, rather it maintains the flavor of common lisp's native reduce adding an optional keyword `:initial-value` for setting the initial argument of the reduce. 
 
 ```common-lisp
 (reduce #'+ (range 10))
@@ -202,7 +202,7 @@ There are a couple of macros to allow a context-dependent use of a map or set as
 ```
 
 #### map and mapv
-    These essentially work as they do in clojure. `map` has been re-defined to take any sequential data structure and lazily 'map' over it applying a fn. `mapv` eagerly does the same returning a persistent vector.
+These essentially work as they do in clojure. `map` has been re-defined to take any sequential data structure and lazily 'map' over it applying a fn. `mapv` eagerly does the same returning a persistent vector.
 
 ```common-lisp
 (map #'identity "test")
