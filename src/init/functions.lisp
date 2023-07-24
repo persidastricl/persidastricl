@@ -149,3 +149,13 @@
     (cond ((every (complement #'upper-case-p) s) (string-upcase s))
           ((every (complement #'lower-case-p) s) (string-downcase s))
           (t s))))
+
+(defun println (&rest args)
+  (format *standard-output* "~a~%" (apply #'str args)))
+
+(defun newline ()
+  (format *standard-output* "~%"))
+
+(defun println-str (&rest args)
+  (with-output-to-string (s)
+    (format s "~a" (apply #'str args))))

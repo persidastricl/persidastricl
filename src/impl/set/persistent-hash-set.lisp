@@ -83,6 +83,6 @@
 (defun set (object)
   (into (persistent-hash-set) (seq object)))
 
-(defmethod with-meta ((object persistent-hash-set) (meta hash-map))
+(defmethod with-meta ((object persistent-hash-set) (meta persistent-hash-map))
   (with-slots (root) object
     (make-instance (type-of object) :root root :meta meta)))

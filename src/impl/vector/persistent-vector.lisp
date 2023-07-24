@@ -113,7 +113,7 @@
    (->list (partition-all (list* index item kv-pairs) 2))
    :initial-value pv))
 
-(defmethod with-meta ((pv persistent-vector) (meta hash-map))
+(defmethod with-meta ((pv persistent-vector) (meta persistent-hash-map))
   (with-slots (root count tail-end tail-offset) pv
     (make-instance 'persistent-vector :root root :tail-end tail-end :tail-offset tail-offset :count count :meta meta)))
 

@@ -173,6 +173,7 @@
    #:merge
    #:merge-with
    #:meta
+   #:metadata
    #:min-key
    #:n-choose-k
    #:name

@@ -121,3 +121,21 @@
 (defmethod == ((s1 vector) (s2 sequence))
   (when s2 (== (seq s1) (seq s2))))
 
+;;
+;; NOTE: any standard-object CLOS object can be a subclass of
+;; 'metadata and have a 'meta slot with data that is any sort of map
+;; (hamt or hash-table)
+;;
+;; NOTE: any persistent-class CLOS object can only have meta that is a
+;; persistent-hash-map (see their `with-meta` defmethod definitions
+;; elsewhere) because it makes no sense (at leat to me) to have a
+;; persistent-class object with persistent meta data --mdp
+;;
+
+(defmethod with-meta ((object metadata) (meta hash-map))
+  (setf (slot-value object 'meta) meta)
+  object)
+
+(defmethod with-meta ((object metadata) (meta hash-table))
+  (setf (slot-value object 'meta) meta)
+  object)
