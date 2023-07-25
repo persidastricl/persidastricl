@@ -1,23 +1,13 @@
-Things to do:
+Things (maybe) to do:
 
 *  profile/work-on efficiency
 
--- bags/multisets
-
-* rethink iterators
-   -- need to iterate on the values in a collection
-   -- need to iterate on the ds structure itself (the nodes) (for class changes)
-
--- conj for all the different data types (not just sets/vectors ... add to maps, arrays, lists)
--- cons for all the different data types (not just sets/vectors ... add to maps, arrays, lists)
--- contains? for all the things
-
--- find for maps: returns entire entry for k ?? do we really need this ??
+-- bags/multisets ??
 
 -- add `for` macro
 -- add `doseq` macro
 
-packages?
+other packages??
 -- finish json
 -- xml
--- zip
+-- zippers
