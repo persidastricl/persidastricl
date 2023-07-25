@@ -8,9 +8,6 @@
 ;; load up the persidastricl library
 (ql:quickload :persidastricl)
 
-;; switch to the case-sensitive/syntactic sugar
-(named-readtables:in-readtable persidastricl:syntax)
-
 ;;
 ;; now define the package where my code will go and use persidastricl there
 ;; NOTE: you have to shadow those things that are re-written from CL
@@ -47,8 +44,7 @@
 ;; get into the package to write our code
 (in-package #:example)
 
-
-;; turn on the syntax here too
+;; turn on the syntax in the example package
 (named-readtables:in-readtable persidastricl:syntax)
 
 ;; now write some code (all this below is very contrived and just pointless besides for demo!!)
@@ -57,8 +53,12 @@
 
 ;; BEWARE: notice that in the persidastricl world things are case-sensitive
 
+;;
+;;  WARNING: you will get evaluation warnings here about unused vars ... the '_ and the 'my-map vars (for this example, nbd)
+;;
 (defun doit ()
-  (dlet (({:keys [A a b] {:keys [f]} :d :as my-map} m))
-    [A a b f (:g (:d (select-keys my-map [:d])))]))
+  (dlet (({:keys [A a b] {:keys [f]} :d :as my-map} m)
+         ([_ _ third] (get-in m [:d :f])))
+    [A a b f third]))
 
 (doit)
