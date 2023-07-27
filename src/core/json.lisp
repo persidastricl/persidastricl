@@ -13,7 +13,7 @@
 ;;; -------
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;; json.lisp
+;;; json.lisp --- still a [wip]
 ;;;
 ;;; -----
 
@@ -60,7 +60,50 @@
     (let ((js (json-stream (slurp filename) :close t)))
       (dispatch js (json-streams:json-read js)))))
 
+
+(defgeneric encode* (obj))
+
+(defmethod encode* ((v t)) (json-streams:json-output-value v))
+(defmethod encode* ((k symbol)) (json-streams:json-output-value (name k)))
+(defmethod encode* ((s string)) (json-streams:json-output-value s))
+
+(defmethod encode* ((ls p::lazy-sequence))
+  (encode* (->list ls)))
+
+(defmethod encode* ((s sequence)) (json-streams:with-json-array (mapv #'encode* s)))
+
+(defmethod encode* ((hm p::hash-map))
+  (json-streams:with-json-object
+    (reduce-kv
+     (lambda (_ k v)
+       (declare (ignore _))
+       (encode* k)
+       (encode* v))
+     hm
+     :initial-value nil)))
+
+
+(defmethod encode* ((hs p::hash-set))
+  (json-streams:with-json-array (mapv #'encode* hs)))
+
+(defmethod encode* ((v p::bpvt))
+  (json-streams:with-json-array (mapv #'encode* v)))
+
+(defun encode (obj)
+  (json-streams:with-json-output (nil :key-encoder #'string-downcase)
+    (encode* obj)))
+
+;;(encode {:a 1 :b 2})
+;;(encode {:a 1 :b {:c #{1 2 3}}})
+;;(encode (map (fn (k v) [k v]) (range 100) (range 100 200 1)))
+
+
+
+
 ;; (json-seq "{\"a\" : 1} \"test\" 1 2 3 {\"b\" : 5} ")
+
+;;  (encode (json-seq "[ {\"a\" : 1 } {\"b\" : 2 } \"test\" 1 2 3 {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } ]"))
+
 
 ;; (map #'walk:keywordize-keys (json-seq "[ {\"a\" : 1 } {\"b\" : 2 } \"test\" 1 2 3 {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } {\"b\" : 2 } ]"))
 
