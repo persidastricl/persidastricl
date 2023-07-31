@@ -73,11 +73,12 @@
       (is (== (list :html {:a (list "b" 1)} "") (walk:postwalk #'f coll))))))
 
 (test walk-maps
-  (is (==  (walk:walk (lambda (e)
+  (named-readtables:in-readtable persidastricl:syntax)
+  (is (==  {":a" "1"}
+           (walk:walk (lambda (e)
                         (apply #'p::map-entry (->list (map #'str e))))
                       (lambda (form)
                         form)
-                      {:a 1})
-           {":a" "1"})))
+                      {:a 1}))))
 
 ;; (5am:run! :walk-tests)
