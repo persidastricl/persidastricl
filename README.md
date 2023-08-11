@@ -469,6 +469,8 @@ Functions that are in the library and still need to be documented more fully:
 
 #### string operations
 
+Package name is `string` with nicknames `str` and `s`
+
 ```common-lisp
   blank?
   capitalize
@@ -494,7 +496,15 @@ Functions that are in the library and still need to be documented more fully:
   upper-case
 ```
 
+Example usage:
+
+```common-lisp
+(s:split  "this is a test" "\\s+")
+```
+
 #### set operations
+
+Package name is `set`
 
 ```common-lisp
   difference
@@ -513,9 +523,11 @@ Functions that are in the library and still need to be documented more fully:
 
 #### data (diff)
 
-TODO: docs/examples for the data functions
+Package name is `data`
 
 #### walk
+
+Package name is `walk`
 
 ```common-lisp
    keywordize-keys
@@ -530,7 +542,15 @@ TODO: docs/examples for the data functions
    walk
 ```
 
+Example usage:
+
+```common-lisp
+(walk:keywordize-keys {"a" 1 "b" {"c" 2}})
+```
+
 #### combinatorics
+
+Package name is `combinatorics` with nickname `c`
 
 ```common-lisp
   combinations
@@ -548,6 +568,14 @@ TODO: docs/examples for the data functions
   nth-subset
   permutation-index
 ```
+
+Example usage:
+
+```common-lisp
+(c:permutations [1 2 3 4])
+```
+
+NOTE: 'partition' functions not implemented quite yet
 
 ### PDF document
 
