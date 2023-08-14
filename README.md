@@ -93,7 +93,7 @@ Vectors
 Maps
 ```common-lisp
 ;; persistent map
-(defvar m1 {:a 1 :b 2 :c 3}
+(defvar m1 {:a 1 :b 2 :c 3})
 (get m1 :a) ;; => 1
 
 ;; transient map
