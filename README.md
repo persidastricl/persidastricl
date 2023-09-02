@@ -194,8 +194,8 @@ Using common lisp data structures in a similar way to the new persistent data st
 
 ;; NOTE: there also exists a pinch of syntactic sugar around common lisp hash tables
 
- %{:a 1 :b 2} ;; a common lisp hash-table 
- 
+ %{:a 1 :b 2} ;; a common lisp hash-table
+
  ;; this will define a common lisp hash-table when the syntax mentioned above is turned on
 ```
 
@@ -224,13 +224,13 @@ There are a couple of macros to allow a context-dependent use of a map or set as
     (m :a))) ;; => 1
 
 (let ((s1 #{:a :b :c}))
-  (with-funcallable-map (m m1)
-    (m :a))) ;; => T
+  (with-funcallable-set (s s1)
+    (s :a))) ;; => T
 ```
 ## Other Examples
 
 #### reduce
-`reduce` has been shadowed to also take any sequential and/or lazy sequence. NOTE: This is NOT a clojure-style reduce, rather it maintains the flavor of common lisp's native reduce adding an optional keyword `:initial-value` for setting the initial argument of the reduce. 
+`reduce` has been shadowed to also take any sequential and/or lazy sequence. NOTE: This is NOT a clojure-style reduce, rather it maintains the flavor of common lisp's native reduce adding an optional keyword `:initial-value` for setting the initial argument of the reduce.
 
 ```common-lisp
 (reduce #'+ (range 10))
