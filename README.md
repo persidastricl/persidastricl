@@ -575,7 +575,11 @@ Example usage:
 (c:permutations [1 2 3 4])
 ```
 
-NOTE: 'partition' functions not implemented quite yet
+NOTE: combinatorics 'partition' functions not implemented quite yet
+
+## Usage
+
+See the `examples` directory for usage examples.
 
 ### PDF document
 
