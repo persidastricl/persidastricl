@@ -318,22 +318,22 @@
   (let ((v (funcall f x)))
     (lseq v (iterate f v))))
 
-(defun partition (source n)
+(defun partition (source n &optional (step n))
   (when-let ((s (seq source)))
     (let ((v (->list (take n s)))
-          (rest (drop n s)))
+          (rest (drop step s)))
       (if rest
-          (lseq v (partition rest n))
+          (lseq v (partition rest n step))
           (if (= n (length v))
               (list v)
               '())))))
 
-(defun partition-all (source n)
+(defun partition-all (source n &optional (step n))
   (when-let ((s (seq source)))
     (let ((v (->list (take n s)))
-          (rest (drop n s)))
+          (rest (drop step s)))
       (if rest
-          (lseq v (partition-all rest n))
+          (lseq v (partition-all rest n step))
           (list v)))))
 
 (defun partition-by (f seq)
