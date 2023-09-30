@@ -66,7 +66,7 @@
        (setf dmap (b:clear position dmap))
        (setf dvec (v:delete dvec (b:index position dmap))))
 
-      ((b:set? posistion nmap)
+      ((b:set? position nmap)
        (setf nmap (b:clear position nmap))
        (setf nvec (v:delete nvec (b:index position nmap))))
 
