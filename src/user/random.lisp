@@ -58,5 +58,5 @@
              (next-int rnd n)
              val)))))
 
-(defun rand-seq (rg n)
-  (lseq (next-int rg n) (rand-seq rg n)))
+(defun rand-seq (n &optional (rg (random-generator)))
+  (lseq (next-int rg n) (rand-seq n rg)))
