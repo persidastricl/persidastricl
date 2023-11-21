@@ -79,5 +79,5 @@
   (logcount (slot-value node 'dmap)))
 
 (defmethod empty? ((node hamt-node))
-  (and (zerop (count (slot-value node 'dvec)))
-       (zerop (count (slot-value node 'nvec)))))
+  (and (zerop (logcount (slot-value node 'dmap)))
+       (zerop (logcount (slot-value node 'nmap)))))

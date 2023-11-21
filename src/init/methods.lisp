@@ -31,11 +31,14 @@
   (:method ((a array)) (zerop (length a)))
   (:method ((l list)) (zerop (length l))))
 
+
+
 (labels
     ((count* (thing &optional (n 0))
        (cond
          ((null thing) n)
          ((dotted-pair? thing) (+ n 2))
+         ((null (seq thing)) n)
          (:otherwise (count* (rest thing) (1+ n))))))
   (defgeneric count (thing)
     (:method (thing) (count* thing))
