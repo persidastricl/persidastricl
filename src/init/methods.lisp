@@ -99,7 +99,7 @@
 
 (defmethod ->list ((ht hash-table))
   (loop for v being each hash-values of ht using (hash-key k)
-        collect (list  k v)))
+        collect (list k (if (typep v 'hash-table) (->list v) v))))
 
 (defgeneric ->array (object)
   (:method (object) (make-array (length object) :initial-contents object))
@@ -108,12 +108,9 @@
 (defgeneric ->vector (object)
   (:method (object) (->array object)))
 
-(defgeneric ->plist (object)
-  (:method ((ht hash-table)) (apply #'concatenate 'list (->list ht))))
+(defgeneric ->plist (object))
 
-(defgeneric ->alist (object)
-  (:method ((ht hash-table)) (loop for v being each hash-values of ht using (hash-key k)
-                                   collect (cons k v))))
+(defgeneric ->alist (object))
 
 (defgeneric pop (target)
   (:method ((lst list)) (cl:pop lst) lst)

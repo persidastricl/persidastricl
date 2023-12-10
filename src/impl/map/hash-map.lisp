@@ -60,11 +60,41 @@
 (defmethod vals ((hm hash-map))
   (map #'value hm))
 
+(defmethod ->plist ((ht hash-table))
+  (apply #'concatenate 'list
+         (loop for v being each hash-values of ht using (hash-key k)
+               collect (list k (if (or (map? v) (typep v 'hash-table)) (->plist v) v)))))
+
+(defmethod ->alist ((ht hash-table))
+  (->list
+   (map
+    (lambda (e)
+      (let ((k (first e))
+            (v (second e)))
+        (cond
+          ((or (map? v) (typep v 'hash-table)) (cons k (->alist v)))
+          (:otherwise (cons k v)))))
+    ht)))
+
 (defmethod ->plist ((hm hash-map))
-  (mapcat #'->list hm))
+  (->list
+   (mapcat
+    (lambda (e)
+      (let ((k (key e))
+            (v (value e)))
+        (list k (if (or (map? v) (typep v 'hash-table)) (->plist v) v))))
+    hm)))
 
 (defmethod ->alist ((hm hash-map))
-  (map #'->cons hm))
+  (->list
+   (map
+    (lambda (e)
+      (let ((k (key e))
+            (v (value e)))
+        (cond
+          ((or (map? v) (typep v 'hash-table)) (cons k (->alist v)))
+          (:otherwise (cons k v)))))
+    hm)))
 
 (defmethod with-meta ((object hamt) (meta (eql nil))) object)
 
