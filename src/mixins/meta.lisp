@@ -30,5 +30,5 @@
 (defgeneric meta (object)
   (:method ((object metadata)) (with-slots (meta) object meta)))
 
-(defun vary-meta (obj f & args)
+(defun vary-meta (obj f &rest args)
   (with-meta obj (apply f (meta obj) args)))
