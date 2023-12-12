@@ -13,7 +13,7 @@
 ;;; -----
 ;;; -*- mode: Lisp; -*-
 ;;;
-;;;   core/generics.lisp
+;;;   core/methods.lisp
 ;;;
 ;;;   core (generic) functions
 ;;;
@@ -128,8 +128,8 @@
 ;;
 ;; NOTE: any persistent-class CLOS object can only have meta that is a
 ;; persistent-hash-map (see their `with-meta` defmethod definitions
-;; elsewhere) because it makes no sense (at leat to me) to have a
-;; persistent-class object with persistent meta data --mdp
+;; elsewhere) because it makes no sense (at least to me) to have a
+;; persistent-class object with immutable meta data --mdp
 ;;
 
 (defmethod with-meta ((object metadata) (meta hash-map))
