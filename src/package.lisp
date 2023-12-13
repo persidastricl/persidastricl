@@ -507,7 +507,7 @@
                           #:set
                           #:some
                           #:vector)
-  (:export #:decode-file #:decode-string))
+  (:export #:decode-file #:decode-string #:encode))
 
 (defpackage #:user
   (:use #:cl #:persidastricl #:arrow-macros)
