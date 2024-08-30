@@ -454,7 +454,7 @@
                      (lseq v (scan* end)))))))
       (scan* 0))))
 
-(defun random-seq (n &key (seed (random 99999999999999)) (random-state (sb-ext:seed-random-state seed)))
+(defun random-seq (n &key (random-state *random-state*))
   (labels ((rand* (n)
              (lseq (random n random-state) (rand* n))))
     (lseq (random n random-state) (rand* n))))

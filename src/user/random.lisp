@@ -31,7 +31,7 @@
 (defun seed-uniquifier ()
   (let* ((current seed-uniquifier)
          (next (* current 181783497276652981)))
-    (if (= current (sb-ext:compare-and-swap seed-uniquifier current next))
+    (if (= current (atomics:cas seed-uniquifier current next))
         next
         (seed-uniquifier))))
 
@@ -45,7 +45,7 @@
   (let* ((seed (slot-value rnd 'seed))
          (next (logand (+ (* seed multiplier) addend) mask)))
     (cond
-      ((= seed (sb-ext:compare-and-swap (slot-value rnd 'seed) seed next)) (ash next (- 0 (- 48 bits))))
+      ((= seed (atomics:cas (slot-value rnd 'seed) seed next)) (ash next (- 0 (- 48 bits))))
       (t (next-bits rnd bits)))))
 
 (defun next-int (rnd n)

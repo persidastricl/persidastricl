@@ -41,7 +41,7 @@
                      :initial-value root)))
       (if (eq new-root root)
           phm
-          (make-instance 'persistent-hash-map :root new-root :meta meta)))))
+          (make-instance (type-of phm) :root new-root :meta meta)))))
 
 (defmethod dissoc ((phm persistent-hash-map) &rest keys)
   (with-slots (root meta) phm
@@ -52,7 +52,7 @@
                      :initial-value root)))
       (if (== new-root root)
           phm
-          (make-instance 'persistent-hash-map :root new-root :meta meta)))))
+          (make-instance (type-of phm) :root new-root :meta meta)))))
 
 (defun persistent-hash-map (&rest kvs)
   (let ((m (make-instance 'persistent-hash-map)))

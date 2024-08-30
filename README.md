@@ -4,8 +4,6 @@
 
 This project is very early ALPHA code. Everything! is subject to change so please use/proceed with caution.
 
-This only works with `sbcl` at the moment.
-
 This project started out as a learning experience and another implementation of persistent and transient HAMT maps, sets, and vectors in common lisp. After things settled a bit, other things were added a little at a time. These things include lazy sequences, basic atoms, and some common lisp interop around some core functions similar to those found in clojure. The goal was to create a familiar and practical environment where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
 
 ## Setting up `asdf` to find persidastricl
@@ -153,7 +151,7 @@ More on lazy sequences below in the Examples section.
 
 ## Atoms
 
-At the moment, a very simple implementation of atoms exists based on sbcl's `sb-ext:compare-and-swap`.
+At the moment, a very simple implementation of atoms exists based on [Shinmera/atomics library](https://github.com/Shinmera/atomics) function `atomics:cas` for portability.
 
 ```common-lisp
 (def a (atom nil))
@@ -161,6 +159,8 @@ At the moment, a very simple implementation of atoms exists based on sbcl's `sb-
 (swap! a (fnil #'inc 0)
 (deref a)
 ```
+
+Atoms permit 'watchers' (`add-watch` and `remove-watch` are provided) that are notified on changes.
 
 ## Conveniences
 

@@ -32,7 +32,9 @@
                #:closer-mop
                #:json-streams
                #:named-readtables
-               #:sip-hash)
+               #:sip-hash
+               #:random-state
+               #:atomics)
   :serial t
 
   :components ((:module "packaging"

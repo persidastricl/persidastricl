@@ -43,7 +43,7 @@
                       (assoc v* (+ end i) (get items i)))
                     (range n)
                     :initial-value v)))
-          (make-instance 'sub-vector :v  nv :start start :end (+ end n) :meta meta)))
+          (make-instance (type-of sv) :v  nv :start start :end (+ end n) :meta meta)))
       sv))
 
 (defmethod count ((sv sub-vector))
@@ -102,7 +102,7 @@
 
 (defmethod pop ((sv sub-vector))
   (with-slots (v start end meta) sv
-    (make-instance 'sub-vector :v v :start start :end (max start (dec end)) :meta meta)))
+    (make-instance (type-of sv) :v v :start start :end (max start (dec end)) :meta meta)))
 
 (defmethod assoc ((sv sub-vector) index item &rest kv-pairs)
   (with-slots (v start end meta) sv
@@ -118,7 +118,7 @@
 
                (nv (apply #'assoc v (->list kv-pairs))))
 
-          (make-instance 'sub-vector :v nv :start start :end (+ end (max 0 new-items)) :meta meta))))))
+          (make-instance (type-of sv) :v nv :start start :end (+ end (max 0 new-items)) :meta meta))))))
 
 (defun pprint-sub-vector (stream sv &rest other-args)
   (declare (ignore other-args))
@@ -138,7 +138,7 @@
 
 (defmethod with-meta ((sv sub-vector) meta)
   (with-slots (v start end) sv
-    (make-instance 'sub-vector :v v :start start :end end :meta meta)))
+    (make-instance (type-of sv) :v v :start start :end end :meta meta)))
 
 ;;
 ;; equality with subvecs

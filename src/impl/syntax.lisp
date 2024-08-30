@@ -35,6 +35,7 @@
 (defconstant +right-bracket+ #\])
 (defconstant +comma+ #\,)
 (defconstant +space+ #\ )
+(defconstant +double-quote+ #\")
 
 (defun read-separator (stream char)
   (declare (ignore stream))
@@ -64,6 +65,19 @@
 
             (t
              (read input-stream t nil t)))))))
+
+
+(defun read-regex-literal* (stream)
+  (let (chars)
+    (do ((curr (read-char stream) (read-char stream)))
+        ((char= curr #\"))
+      (push curr chars))
+    (coerce (nreverse chars) 'string)))
+
+(defun read-regex-literal (stream char n-arg)
+  (declare (ignore char n-arg))
+  (let ((re-s (read-regex-literal* stream)))
+    (str:replace re-s "\\" "\\\\")))
 
 (defun read-hash-table-literal (stream char n-arg)
   (declare (ignore char n-arg))
@@ -138,6 +152,7 @@
   (:macro-char +right-brace+ #'read-delimiter nil)
   (:macro-char +left-brace+ #'read-persistent-map-literal nil)
   (:dispatch-macro-char +at+ +left-brace+ #'read-transient-map-literal)
+  (:dispatch-macro-char +hash+ +double-quote+ #'read-regex-literal)
   (:dispatch-macro-char +hash+ +left-brace+ #'read-persistent-set-literal)
   (:dispatch-macro-char +at+ +hash+ #'read-transient-set-literal)
   (:macro-char +right-bracket+ #'read-delimiter nil)

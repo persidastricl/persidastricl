@@ -59,14 +59,18 @@
 
 (defun reset! (atom new-value)
   (let ((v (deref atom)))
-    (setf (slot-value atom 'value) new-value)
+    (atomics:atomic-update
+     (slot-value atom 'value)
+     (lambda (v)
+       (declare (ignore v))
+       new-value))
     (notify-watches atom v new-value))
   new-value)
 
 (defun swap! (atom fn &rest args)
   (loop do (let* ((v (deref atom))
                   (nv (apply fn v args)))
-             (when (== v (sb-ext:compare-and-swap (slot-value atom 'value) v nv))
+             (when (atomics:cas (slot-value atom 'value) v nv)
                (notify-watches atom v nv)
                (return nv)))))
 

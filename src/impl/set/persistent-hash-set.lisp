@@ -38,7 +38,7 @@
                      :initial-value root)))
       (if (== new-root root)
           phs
-          (make-instance 'persistent-hash-set :root new-root :meta meta)))))
+          (make-instance (type-of phs) :root new-root :meta meta)))))
 
 (defmethod disj ((phs persistent-hash-set) &rest items)
   (with-slots (root meta) phs
@@ -49,7 +49,7 @@
                      :initial-value root)))
       (if (== new-root root)
           phs
-          (make-instance 'persistent-hash-set :root new-root :meta meta)))))
+          (make-instance (type-of phs) :root new-root :meta meta)))))
 
 (defun persistent-hash-set (&rest items)
   (let ((s (make-instance 'persistent-hash-set)))
