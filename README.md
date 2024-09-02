@@ -2,18 +2,25 @@
 
 ## Persistant Data Structures in Common Lisp
 
-This project is very early ALPHA code. Everything! is subject to change so please use/proceed with caution.
+This project is BETA code. Please use/proceed with caution.
 
-This project started out as a learning experience and another implementation of persistent and transient HAMT maps, sets, and vectors in common lisp. After things settled a bit, other things were added a little at a time. These things include lazy sequences, basic atoms, and some common lisp interop around some core functions similar to those found in clojure. The goal was to create a familiar and practical environment where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
+This project started out as a learning experience and another implementation of persistent and transient HAMT maps, sets, and vectors in common lisp. After things settled a bit, other things were added a little at a time. These things include lazy sequences, basic atoms, and some common lisp interop around some core functions similar to those found in clojure. The goal was to create a comfortable, familiar, and practical environment where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
+
+Seems to work fine (so far) with:
+ * sbcl
+ * allegro
+ 
+Please let me know if you have it running with any other Lisp systems.
 
 ## Setting up `asdf` to find persidastricl
 
 In order for quicklisp to load the project, `asdf` should be configured to find it. See this [link](https://github.com/lisp/net.comon-lisp.asdf/blob/master/README.source-registry) to configure asdf for searching for source trees and specific projects. There are several ways to configure things. Choose the setup that works for you.
 
+NOTE: the project is in [Ultralisp](https://ultralisp.org) and can be loaded with quicklisp easily if you have that repository configured.
 
 ## Building and Testing
 
-Once you have `asdf` configured for your system, you should be able to eval the following forms to load and test the project.
+Once you have `asdf` configured for your system (or [Ultralisp](https://ultralisp.org)), you should be able to eval the following forms to load and test the project on your system.
 
 ```common-lisp
 (ql:quickload :fiveam)
@@ -38,7 +45,7 @@ If, for some reason, you can't use the sytactic sugar for maps/sets/vectors etc.
 
 ## Data Structures
 
-There are three main data structures that I wanted to use in a similar way to clojure: vectors, maps, and sets.  There are both persistent and transient versions of these data structures.
+There are three main data structures that I wanted to have/use in a similar way to clojure: vectors, maps, and sets.  There are both persistent and transient versions of these data structures.
 
 ### Vectors
 
@@ -110,7 +117,7 @@ Sets
 (contains? s1 :a) ;; => :a
 ```
 
-CL hash tables (can be created and used in a similar way to the persistent/transient maps)
+Standard Common Lisp hash tables (can be created and used in a similar way to the persistent/transient maps)
 ```common-lisp
 (defvar ht %{:a 1 :b 2})
 (get ht :a) ;; => 1
@@ -151,7 +158,7 @@ More on lazy sequences below in the Examples section.
 
 ## Atoms
 
-At the moment, a very simple implementation of atoms exists based on [Shinmera/atomics library](https://github.com/Shinmera/atomics) function `atomics:cas` for portability.
+At the moment, a very simple implementation of atoms exists based on [Shinmera/atomics library](https://github.com/Shinmera/atomics) function `atomics:cas` for portability. If atomics does not support your lisp system then the default is to fall back to `setf` :-(  (not ideal)
 
 ```common-lisp
 (def a (atom nil))
@@ -160,7 +167,7 @@ At the moment, a very simple implementation of atoms exists based on [Shinmera/a
 (deref a)
 ```
 
-Atoms permit 'watchers' (`add-watch` and `remove-watch` are provided) that are notified on changes.
+Atoms also permit 'watchers' (clojure-esque functions `add-watch` and `remove-watch` are provided) that are notified on changes.
 
 ## Conveniences
 
@@ -227,6 +234,7 @@ There are a couple of macros to allow a context-dependent use of a map or set as
   (with-funcallable-set (s s1)
     (s :a))) ;; => T
 ```
+
 ## Other Examples
 
 #### reduce
@@ -254,12 +262,12 @@ These essentially work as they do in clojure. `map` has been re-defined to take 
 ;; => (116 101 115 116 105 110 103 32 49 32 ...)
 
 (mapv #'inc (range 20)
-;; => [1 2 3 4 5 6 7 8 9 0 10]
+;; => [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20]
 ```
 
 TODO: more examples
 
-NOTE: the arrow macros are re-exported from the common lisp 'arrow-macros' library.
+NOTE: the arrow macros are re-exported from the common lisp [arrow-macros](https://github.com/hipeta/arrow-macros/) library.
 
 Functions that are in the library and still need to be documented more fully:
 ```common-lisp
@@ -587,7 +595,7 @@ FUTURE: there may or may not be a pdf guide in the works but who knows how long 
 
 ## License
 
-  Copyright (c) 2019-2023 Michael D Pendergrass, pupcus.org
+  Copyright (c) 2019-2024 Michael D Pendergrass, pupcus.org
 
   This program and the accompanying materials are made available under the terms of the Eclipse Public License 2.0 which is available at https://www.eclipse.org/legal/epl-2.0/
 
