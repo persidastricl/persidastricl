@@ -33,7 +33,8 @@
   (is (= 3502813208 (h:hash "strings")))
   (is (= 2896334811 (h:hash 'symbols)))
   (is (= 2800891659 (h:hash 12345)))
-  (is (= 1311568101 (h:hash #(1 2))))
-  (is (= 240748949 (h:hash '(l i s t)))))
+  (is (= 240748949 (h:hash '(l i s t))))
+  #+sbcl
+  (is (= 1311568101 (h:hash #(1 2)))))
 
 ;; (5am:run! :hash-tests)

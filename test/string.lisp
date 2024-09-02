@@ -97,16 +97,19 @@
 (test triml-test
   (is (== "foo " (s:triml " foo ")))
   (is (== "" (s:triml "   ")))
+  #+sbcl
   (is (== "bar" (s:triml (format nil "~c ~cbar" #\U+2002 #\tab)))))
 
 (test trimr-test
   (is (== " foo" (s:trimr " foo ")))
   (is (== "" (s:trimr "   ")))
+  #+sbcl
   (is (== "bar" (s:trimr (format nil "bar~c ~c" #\tab #\U+2002)))))
 
 (test trim-test
   (is (== "foo" (s:trim (format nil "  foo  ~c~c" #\return #\newline))))
   (is (== "" (s:trim "   ")))
+  #+sbcl
   (is (== "bar" (s:trim (format nil "~cbar~c ~c" #\U+2000 #\tab #\U+2002)))))
 
 (test upper-case-test

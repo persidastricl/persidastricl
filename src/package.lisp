@@ -67,7 +67,9 @@
            #:pop
            #:reduce
            #:replace
-           #:map)
+           #:map
+           #:while
+           )
   (:export
    #:-<>
    #:-<>>

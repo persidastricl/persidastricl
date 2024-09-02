@@ -21,6 +21,16 @@
 
 (named-readtables:in-readtable persidastricl:syntax)
 
+#-sbcl
+(def WHITESPACE '(#\TAB
+                  #\Vt
+                  #\SPACE
+                  #\LINEFEED
+                  #\RETURN
+                  #\NEWLINE
+                  #\PAGE))
+
+#+sbcl
 (def WHITESPACE '(#\TAB
                   #\Vt
                   #\SPACE

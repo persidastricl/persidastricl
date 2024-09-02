@@ -57,6 +57,7 @@
             do (let ((f (get watches k)))
                  (when f (funcall f k atom old-val new-val)))))))
 
+#+atomics-cas-slot-value
 (defun reset! (atom new-value)
   (let ((v (deref atom)))
     (atomics:atomic-update
@@ -67,12 +68,34 @@
     (notify-watches atom v new-value))
   new-value)
 
+#+atomics-cas-slot-value
 (defun swap! (atom fn &rest args)
   (loop do (let* ((v (deref atom))
                   (nv (apply fn v args)))
              (when (atomics:cas (slot-value atom 'value) v nv)
                (notify-watches atom v nv)
                (return nv)))))
+
+;; -----
+;; when `atomics:cas` not supported default to `setf` for now :-(
+;;  (not ideal ... we can do better; maybe our own CLOS style locks as in Keene eventually??))
+;; -----
+#-atomics-cas-slot-value
+(defun reset! (atom new-value)
+  (let ((v (deref atom)))
+    (setf
+     (slot-value atom 'value)
+     new-value)
+    (notify-watches atom v new-value))
+  new-value)
+
+#-atomics-cas-slot-value
+(defun swap! (atom fn &rest args)
+  (let* ((v (deref atom))
+         (nv (apply fn v args)))
+    (setf (slot-value atom 'value) nv)
+    (notify-watches atom v nv)
+    nv))
 
 (defmethod with-meta ((a atom) (meta hash-map))
   (setf (slot-value a 'meta) meta)
