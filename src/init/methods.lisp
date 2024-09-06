@@ -80,10 +80,14 @@
   (:method ((seq sequence)) (rest (coerce seq 'list))))
 
 (defgeneric last (thing)
-  (:method (thing) (cl:last thing)))
+  (:method (thing) (cl:last thing))
+  (:method ((lst list)) (cl:last lst))
+  (:method ((seq sequence)) (cl:last (coerce seq 'list))))
 
 (defgeneric butlast (thing &optional n)
-  (:method (thing &optional (n 1)) (cl:butlast thing n)))
+  (:method (thing &optional (n 1)) (cl:butlast thing n))
+  (:method ((lst list) &optional (n 1)) (cl:butlast lst n))
+  (:method ((seq sequence) &optional (n 1)) (cl:butlast (coerce seq 'list) n)))
 
 (defgeneric head (obj)
   (:method (obj) (first obj))
