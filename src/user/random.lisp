@@ -45,7 +45,7 @@
   (let* ((seed (slot-value rnd 'seed))
          (next (logand (+ (* seed multiplier) addend) mask)))
     (cond
-      ((= seed (atomics:cas (slot-value rnd 'seed) seed next)) (ash next (- 0 (- 48 bits))))
+      ((atomics:cas (slot-value rnd 'seed) seed next) (ash next (- 0 (- 48 bits))))
       (t (next-bits rnd bits)))))
 
 (defun next-int (rnd n)
