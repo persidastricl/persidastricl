@@ -201,7 +201,8 @@
                              (:file "set")
                              (:file "walk")
                              (:file "data")
-                             (:file "combinatorics"))))
+                             (:file "combinatorics")
+                             (:file "random"))))
 
   :perform (test-op (o s)
                     (uiop:symbol-call :fiveam :run! (uiop:find-symbol* :master-suite :persidastricl))))
