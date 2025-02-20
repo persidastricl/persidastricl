@@ -19,7 +19,7 @@
 
 (in-package #:persidastricl)
 
-(defmacro while (condition &rest body)
+(defmacro while (condition &body body)
   `(loop while ,condition
          do (progn ,@body)))
 
@@ -53,7 +53,7 @@
            (let ((,var ,temp))
              ,@body))))))
 
-(defmacro fn (name-or-args &rest args-and-or-body)
+(defmacro fn (name-or-args &body args-and-or-body)
   (if (not (listp name-or-args))
       `(labels ((,name-or-args ,(first args-and-or-body) ,@(rest args-and-or-body)))
          #',name-or-args)

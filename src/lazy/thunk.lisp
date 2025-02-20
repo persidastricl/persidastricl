@@ -29,7 +29,7 @@
    (r  :initarg :r))
   (:default-initargs :r nil))
 
-(defmacro delay (&rest body)
+(defmacro delay (&body body)
   `(make-instance 'thunk :fn (lambda () ,@body)))
 
 (defgeneric force (obj)

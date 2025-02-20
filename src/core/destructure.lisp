@@ -123,6 +123,6 @@
 
 
 
-(defmacro dlet (bindings &rest body)
+(defmacro dlet (bindings &body body)
   `(let* ,(destructure bindings)
      ,@body))

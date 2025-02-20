@@ -21,7 +21,7 @@
 
 (named-readtables:in-readtable persidastricl:syntax)
 
-(defmacro when-first (bindings &rest body)
+(defmacro when-first (bindings &body body)
   (assert (and (= 1 (count bindings))
                (= 2 (count (first bindings)))))
   (dlet (([x xs] (first  bindings)))
