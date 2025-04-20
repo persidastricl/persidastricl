@@ -30,8 +30,9 @@
 
 (defun seed-uniquifier ()
   (let* ((current seed-uniquifier)
-         (next (* current 181783497276652981)))
-    (if (= current (atomics:cas seed-uniquifier current next))
+         (next (* current 181783497276652981))
+         (set? (atomics:cas seed-uniquifier current next)))
+    (if set?
         next
         (seed-uniquifier))))
 
