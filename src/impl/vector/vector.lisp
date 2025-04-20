@@ -48,6 +48,13 @@
 (defmethod rest ((vector vector))
   (drop 1 (seq vector)))
 
+(defmethod last ((vector vector))
+  (peek vector))
+
+;; TODO: check if using a subvec be better here
+(defmethod butlast ((vector vector) &optional (n 1))
+  (into [] (take (max 0 (- (count vector) n)) vector)))
+
 (defmethod nth ((vector vector) n &optional (default nil))
   (nth (seq vector) n default))
 
@@ -72,3 +79,6 @@
 
 (defmethod compare ((v1 vector) (v2 vector))
   (compare (seq v1) (seq v2)))
+
+(defmethod into ((v vector) sequence)
+  (reduce #'conj (seq sequence) :initial-value v))

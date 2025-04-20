@@ -37,6 +37,17 @@
 (defmethod rest ((seq lazy-sequence))
   (when-let ((tail (slot-value seq 'tail))) (force tail)))
 
+(defmethod last ((seq lazy-sequence))
+  (let* ((curr (first seq))
+         (more (rest seq)))
+    (if-not more
+            curr
+            (last more))))
+
+(defmethod butlast ((seq lazy-sequence) &optional (n 1))
+  (when (> (bounded-count (inc n) seq) n)
+    (lseq (head seq) (butlast (tail seq) n))))
+
 (defmethod nth ((seq lazy-sequence) n &optional (default nil))
   (or (first (drop n seq)) default))
 

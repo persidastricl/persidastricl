@@ -52,6 +52,9 @@
 (defmethod rest ((entry entry))
   (list (value entry)))
 
+(defmethod last ((entry entry))
+  (value entry))
+
 (defmethod head ((entry entry))
   (key entry))
 

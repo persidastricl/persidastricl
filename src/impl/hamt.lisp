@@ -37,6 +37,12 @@
 (defmethod rest ((object hamt))
   (rest (seq object)))
 
+(defmethod last ((object hamt))
+  (last (seq object)))
+
+(defmethod butlast ((object hamt) &optional (n 1))
+  (into {} (butlast (seq object) n)))
+
 (defmethod next ((object hamt))
   (next (seq object)))
 

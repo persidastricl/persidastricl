@@ -2,11 +2,11 @@
 
 ## Persistant Data Structures in Common Lisp
 
-This project is BETA code. Please use/proceed with caution.
+This project has been used on several personal projects by a handful of people with good results. Hopefully you will find it useful as well but, nevertheless, please use/proceed with caution.
 
-This project started out as a learning experience and another implementation of persistent and transient HAMT maps, sets, and vectors in common lisp. After things settled a bit, other things were added a little at a time. These things include lazy sequences, basic atoms, and some common lisp interop around some core functions similar to those found in clojure. The goal was to create a comfortable, familiar, and practical environment where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
+This project started out as a learning experience and another implementation of clojure-esque persistent and transient HAMT maps, sets, and vectors in common lisp. After things settled a bit, more things were added a little at a time. These things include lazy sequences, basic atoms, and some common lisp functions loosely similar to some of clojure's core functions. Even later still, some of clojure's helpful namespaces were added (again, loosely similar to clojure).  The goal was NOT to recreate clojure in common lisp but rather to create a comfortable, familiar, and practical environment similar to clojure where I could work as easily and efficiently in common lisp as I was used to working in clojure.  For my personal uses, the goal was achieved. For anyone else, this might not be the case so use at your own risk.
 
-Seems to work fine (so far) with:
+So far, this library seems to work fine with:
  * sbcl
  * allegro
  
@@ -16,36 +16,51 @@ Please let me know if you have it running with any other Lisp systems.
 
 In order for quicklisp to load the project, `asdf` should be configured to find it. See this [link](https://github.com/lisp/net.comon-lisp.asdf/blob/master/README.source-registry) to configure asdf for searching for source trees and specific projects. There are several ways to configure things. Choose the setup that works for you.
 
-NOTE: the project is in [Ultralisp](https://ultralisp.org) and can be loaded with quicklisp easily if you have that repository configured.
+NOTE: the project is now in [Ultralisp](https://ultralisp.org) and can be loaded with quicklisp easily if you have that repository configured.
 
 ## Building and Testing
 
 Once you have `asdf` configured for your system (or [Ultralisp](https://ultralisp.org)), you should be able to eval the following forms to load and test the project on your system.
 
 ```common-lisp
-(ql:quickload :fiveam)
-(ql:quickload :persidastricl)
-(in-package :persidastricl)
-(named-readtables:in-readtable persidastricl:syntax)
+(ql:quickload :fiveam) ;; for testing
+(ql:quickload :persidastricl) ;; base library
 (ql:quickload :persidastricl/test)
 (asdf:test-system :persidastricl) 
 ```
 
+## making things a little nicer in slime and sly
+
+Getting the maps, sets, and vectors to display as expected required the following in sly/slime (at least for me; there may be a better way):
+
+```elisp
+:init
+(defun add-syntax-table-modifications ()
+  (let ((table (syntax-table)))
+    (modify-syntax-entry ?\[ "(]" table)
+    (modify-syntax-entry ?\] ")[" table)
+    (modify-syntax-entry ?\{ "(}" table)
+    (modify-syntax-entry ?\} "){" table)))
+    
+    
+:config
+  (add-hook 'lisp-mode-hook 'add-syntax-table-modifications)
+```
+
+## The `user` "namespace" (package)
+
 There is a `user` package that has been defined where you should be able to explore things without much fuss.
 
-````common-lisp
+```common-lisp
 (in-package :user)
-````
+(named-readtables:in-readtable persidastricl:syntax) ;; execute this form if the reader complains about the syntactic sugar for maps, sets, vectors, etc.
+```
 
-If, for some reason, you can't use the sytactic sugar for maps/sets/vectors etc., then make sure the reader macros are loaded up
-
-````common-lisp
-(named-readtables:in-readtable persidastricl:syntax)
-````
+See the source for the user package to get an idea of how to configure other packages to use persidastricl.  This mainly involves shadowing a list of functions from common lisp proper (they are still available as, for example, `cl:map` or `cl:reduce`)
 
 ## Data Structures
 
-There are three main data structures that I wanted to have/use in a similar way to clojure: vectors, maps, and sets.  There are both persistent and transient versions of these data structures.
+There are three main data structures that I wanted to have/use in a similar way to clojure: vectors, maps, and sets.  There are both persistent and transient versions of these data structures.  Initially below I show them being created with a function call, BUT there is syntactic sugar so that your experience in the repl is again very similar to clojure.
 
 ### Vectors
 
@@ -55,6 +70,7 @@ Vectors contain values in order by an index.
 (defvar v1 (persistent-vector 1 2 3 4 5))
 (get v1 0) ;;=> 1
 ```
+See below for syntactic sugar for vectors `[]`
 
 ### Maps
 
@@ -64,6 +80,7 @@ You add keys and values and then pull them back out when you need them.
 (defvar m1 (peristent-hash-map :a 1 :b 2))
 (get m1 :a) ;; => 1
 ```
+See below for syntactic sugar for maps {}
 
 ### Sets
 
@@ -74,9 +91,11 @@ Sets contain one and only one copy of any values you put in. You can check for s
 (contains? s1 :a) ;; => T
 ```
 
+See below for syntactic sugar for sets `#{}`
+
 ## Familiar Syntax
 
-When convenient, you may prefer a touch of familiar syntax. For this, there exists a dash of syntactic sugar for these data structures (and other 'old favorites' from LISP to be shown below). I used named-readtables for this.  To turn-on the syntax use:
+When convenient, you may prefer a touch of familiar syntax. For this, there exists a dash of syntactic sugar for these data structures and for hash-tables from common-lisp. I used the named-readtables library for this.  To turn-on the syntax use:
 
 ```common-lisp
 (named-readtables:in-readtable persidastricl:syntax)
@@ -117,9 +136,9 @@ Sets
 (contains? s1 :a) ;; => :a
 ```
 
-Standard Common Lisp hash tables (can be created and used in a similar way to the persistent/transient maps)
+Standard Common Lisp hash tables (can be created and used in a similar way to the persistent/transient clojure-esque maps)
 ```common-lisp
-(defvar ht %{:a 1 :b 2})
+(defvar ht %{:a 1 :b 2}) ;; a common lisp hash-table
 (get ht :a) ;; => 1
 ```
 
@@ -158,7 +177,7 @@ More on lazy sequences below in the Examples section.
 
 ## Atoms
 
-At the moment, a very simple implementation of atoms exists based on [Shinmera/atomics library](https://github.com/Shinmera/atomics) function `atomics:cas` for portability. If atomics does not support your lisp system then the default is to fall back to `setf` :-(  (not ideal)
+At the moment, a very simple implementation of atoms exists based on [Shinmera/atomics library](https://github.com/Shinmera/atomics) function `atomics:cas` for portability. If atomics does not support your specific lisp compiler/interpreter then the default is to fall back to `setf` :-(  (not ideal)
 
 ```common-lisp
 (def a (atom nil))
@@ -167,11 +186,11 @@ At the moment, a very simple implementation of atoms exists based on [Shinmera/a
 (deref a)
 ```
 
-Atoms also permit 'watchers' (clojure-esque functions `add-watch` and `remove-watch` are provided) that are notified on changes.
+Atoms also permit 'watchers' (clojure-esque functions `add-watch` and `remove-watch` are provided) that are notified on any change to the watched atoms.
 
 ## Conveniences
 
-Once these three elements were in place (persistent data structures, lazy sequences, and a basic implementation of STM atoms), much of the familiar functionality and conveniences that I wanted could easily be implemented.
+Once these three elements were in place (persistent data structures, lazy sequences, and a basic implementation of clojure-esque atoms), much of the familiar functionality and conveniences that I wanted could easily be implemented.
 
 Much of what you can do with clojure around maps, sets, vectors, and lazy sequences you can do with this library (examples:  map, reduce, reduce-kv, keep, filter, remove, group-by, partition, interpose, juxt ... etc).  See the core functions and methods for more.  There are other functions and methods in various locations within the code that seemed better defined in those particular locations to me but at the cost of them not being as easy to discover (especially since this library is not yet sufficiently doucmented).  The list of exported functions in `package.lisp` should also help.
 
@@ -201,7 +220,9 @@ Using common lisp data structures in a similar way to the new persistent data st
 
 ;; NOTE: there also exists a pinch of syntactic sugar around common lisp hash tables
 
- %{:a 1 :b 2} ;; a common lisp hash-table
+(named-readtables:in-readtable persidastricl:syntax)
+
+ %{:a 1 :b 2} ;; creates a common lisp hash-table
 
  ;; this will define a common lisp hash-table when the syntax mentioned above is turned on
 ```

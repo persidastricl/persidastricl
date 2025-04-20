@@ -32,6 +32,23 @@
   (assert (> end start))
   (make-instance 'sub-vector :v v :start start :end (min end (count v))))
 
+(defmethod cl-murmurhash:murmurhash ((object sub-vector) &key (seed cl-murmurhash:*default-seed*) mix-only)
+  (cl-murmurhash:murmurhash (->list object) :seed seed :mix-only mix-only))
+
+(defun transient-underlying-vector-type? (sv)
+  "is the underlying vector type of this subvec transient"
+  (== (type-of (slot-value sv 'v)) 'transient-vector))
+
+(defun persistent-underlying-vector-type? (sv)
+  "is the underlying vector type of this subvec persistent"
+  (== (type-of (slot-value sv 'v)) 'persistent-vector))
+
+(defmethod cons ((sv sub-vector) (vector vector))
+  (let ((coerce-fn (if (transient-underlying-vector-type? sv)
+                       #'t-vec
+                       #'vec)))
+    (cons (funcall coerce-fn sv) vector)))
+
 (defmethod conj ((sv sub-vector) &rest items)
   (if items
       (with-slots (v start end meta) sv
@@ -60,6 +77,9 @@
 (defmethod peek ((sv sub-vector))
   (get (slot-value sv 'v) (dec (slot-value sv 'end))))
 
+(defmethod last ((sv sub-vector))
+  (peek sv))
+
 (defmethod seq ((sv sub-vector))
   (when (pos? (count sv))
     (labels ((next* (i)
@@ -67,6 +87,14 @@
                  (let ((value (get sv i)))
                    (lseq value (next* (1+ i)))))))
       (lseq (first sv) (next* 1)))))
+
+(defmethod butlast ((sv sub-vector) &optional (n 1))
+  (reduce
+   (lambda (sv* i)
+     (declare (ignore i))
+     (pop sv*))
+   (range n)
+   :initial-value sv))
 
 (defmethod rest ((sv sub-vector))
   (drop 1 (seq sv)))
