@@ -41,8 +41,7 @@ Getting the maps, sets, and vectors to display as expected required the followin
     (modify-syntax-entry ?\] ")[" table)
     (modify-syntax-entry ?\{ "(}" table)
     (modify-syntax-entry ?\} "){" table)))
-    
-    
+
 :config
   (add-hook 'lisp-mode-hook 'add-syntax-table-modifications)
 ```
@@ -144,7 +143,7 @@ Standard Common Lisp hash tables (can be created and used in a similar way to th
 
 ## Lazy Sequences
 
-Also, lazy sequences are defined for most of the data structures.  There is a method named `seq` that will take a variety of new (and old) data structures and turn them into lazy sequences.  Lazy sequences have a `print-object` method defined for them that relies on a variable `*print-lazy-items*` which by dfault is set to 10 items. So, when you print a lazy sequence, it will only print out 10 of them (to avoid realizing infinite sequences)
+Also, lazy sequences are defined for most of the data structures.  There is a method named `seq` that will take a variety of new (and old) data structures and turn them into lazy sequences.  Lazy sequences have a `print-object` method defined for them that relies on a variable `*print-lazy-items*` which by default is set to 10 items. So, when you print a lazy sequence, it will only print out 10 of them (to avoid realizing infinite sequences)
 
 We can make lazy sequences out of any common lisp sequence
 ```common-lisp
