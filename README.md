@@ -23,7 +23,6 @@ NOTE: the project is now in [Ultralisp](https://ultralisp.org) and can be loaded
 Once you have `asdf` configured for your system (or [Ultralisp](https://ultralisp.org)), you should be able to eval the following forms to load and test the project on your system.
 
 ```common-lisp
-(ql:quickload :fiveam) ;; for testing
 (ql:quickload :persidastricl) ;; base library
 (ql:quickload :persidastricl/test)
 (asdf:test-system :persidastricl) 

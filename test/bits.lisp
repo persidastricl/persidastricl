@@ -19,7 +19,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:persidastricl/test)
 
 (def-suite :bits-tests
   :description "testing bit operations"

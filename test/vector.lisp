@@ -19,7 +19,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:persidastricl/test)
 
 (def-suite :vector-tests
   :description "testing immutable vector operations"

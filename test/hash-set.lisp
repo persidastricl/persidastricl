@@ -17,7 +17,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:persidastricl/test)
 
 (def-suite :hash-set-tests
   :description "testing hash set operations"

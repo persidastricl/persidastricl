@@ -17,7 +17,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:persidastricl/test)
 
 (named-readtables:in-readtable persidastricl:syntax)
 
@@ -31,7 +31,7 @@
   :description "test making a lazy sequence via the lseq macro"
   (let* ((l (lseq 1 (inc 1))))
     (is (= 1 (:head l)))
-    (is (instance? 'thunk (:tail l)))))
+    (is (instance? 'p::thunk (:tail l)))))
 
 (test lazy-execution
   :description "test that the tail of a lazy-sequence is not evaluated until needed"
@@ -42,9 +42,9 @@
                  (when (pos? i)
                    (lseq i (next* (swap! a #'dec)))))))
       (let ((l (next* a)))
-        (is (= 10 (head l)))
+        (is (= 10 (p::head l)))
         (is (= 10 (deref a)))
-        (tail l)
+        (p::tail l)
         (is (= 9 (deref a)))
         (drop 2 l)
         (is (= 8 (deref a)))
@@ -72,8 +72,8 @@
 
 (test empty-lazy-sequence
   (let ((l (lseq 1 nil)))
-    (is (= 1 (head l)))
-    (is (eq nil (head (tail l))))
-    (is (empty? (tail l)))))
+    (is (= 1 (p::head l)))
+    (is (eq nil (p::head (p::tail l))))
+    (is (empty? (p::tail l)))))
 
 ;; (5am:run! :lazy-sequence-tests)

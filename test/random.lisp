@@ -17,7 +17,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:persidastricl/test)
 
 (def-suite :java-util-random-test
   :description "java.util.Random compatible random number generator"

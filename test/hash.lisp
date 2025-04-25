@@ -19,7 +19,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:persidastricl/test)
 
 (def-suite :hash-tests
   :description "testing bit operations"
@@ -31,9 +31,9 @@
   :description "test hashing various things doesn't explode"
   (is (= 3399008174 (h:hash :keywords)))
   (is (= 3502813208 (h:hash "strings")))
-  (is (= 2896334811 (h:hash 'symbols)))
+  (is (= 2184324841 (h:hash 'symbols)))
   (is (= 2800891659 (h:hash 12345)))
-  (is (= 240748949 (h:hash '(l i s t))))
+  (is (= 214199659 (h:hash '(l i s t))))
   #+sbcl
   (is (= 1311568101 (h:hash #(1 2)))))
 

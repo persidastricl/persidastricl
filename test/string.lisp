@@ -17,7 +17,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:persidastricl/test)
 
 (named-readtables:in-readtable persidastricl:syntax)
 

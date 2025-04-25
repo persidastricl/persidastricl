@@ -17,7 +17,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:persidastricl/test)
 
 (def-suite :hash-map-tests
   :description "testing hash map operations"
@@ -66,7 +66,7 @@
     (is (== (set '((:a . 1) (:b . 2))) (set a-list)))))
 
 (test hash-map-as-list
-  (is (== (list (map-entry :a 1) (map-entry :b 2))
+  (is (== (list (p::map-entry :a 1) (p::map-entry :b 2))
           (->list {:a 1 :b 2}))))
 
 (test using-into-with-hash-maps-and-tables

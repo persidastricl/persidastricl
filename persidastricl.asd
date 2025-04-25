@@ -179,12 +179,13 @@
 
 
 (asdf:defsystem #:persidastricl/test
-  :depends-on (#:persidastricl
-               #:fiveam)
+  :depends-on (#:fiveam
+               #:persidastricl)
 
   :components ((:module "test"
                 :serial t
-                :components ((:file "master")
+                :components ((:file "package")
+                             (:file "master")
                              (:file "immutable-class")
                              (:file "bits")
                              (:file "hash")
@@ -205,4 +206,4 @@
                              (:file "random"))))
 
   :perform (test-op (o s)
-                    (uiop:symbol-call :fiveam :run! (uiop:find-symbol* :master-suite :persidastricl))))
+                    (uiop:symbol-call :fiveam :run! (uiop:find-symbol* :master-suite :persidastricl/test))))

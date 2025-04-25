@@ -17,7 +17,7 @@
 ;;;
 ;;; -----
 
-(in-package #:persidastricl)
+(in-package #:persidastricl/test)
 
 (named-readtables:in-readtable persidastricl:syntax)
 
@@ -32,13 +32,13 @@
   (let* ((m {:a 1})
          (th (delay (update m :a #'inc))))
     (is (= 1 (get m :a)))
-    (is (functionp (slot-value th 'fn)))
-    (is (nil? (slot-value th 'r)))
+    (is (functionp (slot-value th 'p::fn)))
+    (is (nil? (slot-value th 'p::r)))
 
     (let ((m (force th)))
       (is (= 2 (get m :a))))
 
-    (is (nil? (slot-value th 'fn)))
-    (is (== (slot-value th 'r) {:a 2}))))
+    (is (nil? (slot-value th 'p::fn)))
+    (is (== (slot-value th 'p::r) {:a 2}))))
 
 ;; (5am:run! :thunk-tests)
