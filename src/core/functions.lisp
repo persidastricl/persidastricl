@@ -560,7 +560,7 @@
       (reduce
        (lambda (m1 m2)
          (if m2
-             (into m1 (->plist m2))
+             (into m1 m2)
              m1))
        (filter #'some? ms))))
 
